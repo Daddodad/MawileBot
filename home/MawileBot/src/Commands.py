@@ -111,6 +111,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     if route != None:
         replies.append(f'Di nuovo qui, {user["username"]}?')
         replies.append('Eheheheh... Che aiuto serve oggi?')
+        
     if random.random() > 0.01:
         await update.message.reply_text(random.choice(replies))
     else:
