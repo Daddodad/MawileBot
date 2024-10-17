@@ -1,0 +1,127 @@
+{
+    "rock": {
+        "team": ["Geodude","Nosepass","Aron","Magcargo","Lunatone","Lileep","Anorith","Corsola"],
+        "actual_team": ["Geodude","Geodude","Geodude","Geodude","Nosepass","Nosepass"],
+        "power": [24, 24, 30, 30, 36, 36],
+        "multiplier": 5
+    },
+
+    "fighting": {
+        "team": ["Combusken","Breloom","Machop","Meditite","Heracross"],
+        "actual_team": ["Meditite","Meditite","Meditite","Makuhita","Machop","Machop"],
+        "power": [33, 33, 39, 39, 45, 45],
+        "multiplier": 5
+    },
+
+    "dark": {
+        "team": ["Poochyena","Shiftry","Sableye","Carvanha","Houndour"],
+        "actual_team": ["Carvanha","Nuzleaf","Absol","Crawdaunt","Poochyena","Poochyena"],
+        "power": [45, 45, 52, 52, 59, 59],
+        "multiplier": 8
+    },
+
+    "electric": {
+        "team": ["Minun","Lanturn","Magnemite"],
+        "actual_team": ["Voltorb","Electrike","Manectric","Magnemite","Magnemite","Magneton"],
+        "power": [59, 59, 66, 66, 73, 73],
+        "multiplier": 8
+    },
+
+    "fairy": {
+        "team": ["Ralts","Azurill","Marill","Mawile"],
+        "actual_team": [],
+        "power": [70, 70, 77, 77, 84, 84],
+        "multiplier": 8
+    },
+
+    "grass": {
+        "team": ["Treecko","Lotad","Nuzleaf","Breloom","Oddish","Lileep","Tropius"],
+        "actual_team": ["Lombre","Breloom","Tropius","Grovyle","Grovyle","Sceptile"],
+        "power": [92, 92, 104, 104, 116, 116],
+        "multiplier": 11
+    },
+
+    "normal": {
+        "team": ["Zigzagoon","Taillow","Azurill","Girafarig"],
+        "actual_team": ["Zangoose","Slaking","Slaking","Jigglypuff","Delcatty","Swellow"],
+        "power": [108, 108, 120, 120, 132, 132],
+        "multiplier": 11
+    },
+
+    "fire": {
+        "team": ["Torchic","Combusken","Numel","Magcargo"],
+        "actual_team": ["Slugma","Slugma","Magcargo","Numel","Camerupt","Torkoal"],
+        "power": [120, 120, 132, 132, 144, 144],
+        "multiplier": 11
+    },
+
+    "bug": {
+        "team": ["Wurmple","Beautifly","Dustox","Surskit","Nincada","Anorith","Heracross"],
+        "actual_team": ["Shedinja","Ninjask","Volbeat","Illumise","Beautifly","Dustox"],
+        "power": [148, 148, 162, 162, 175, 175],
+        "multiplier": 14
+    },
+
+    "flying": {
+        "team": ["Beautifly","Taillow","Wingull","Zubat","Skarmory","Altaria","Tropius","Natu"],
+        "actual_team": ["Pelipper","Altaria","Swablu","Taillow","Swellow","Skarmory"],
+        "power": [171, 171, 184, 184, 198, 198],
+        "multiplier": 14
+    },
+
+    "ghost": {
+        "team": ["Sableye", "Banette", "Banette", "Shedinja", "Dusclops", "Dusclops" ],
+        "actual_team": [],
+        "power": [202, 202, 216, 216, 229, 229],
+        "multiplier": 14
+    },
+
+    "ice": {
+        "team": ["Snorunt","Spheal"],
+        "actual_team": ["Glalie","Glalie","Sealeo","Sealeo","Walrein","Walrein"],
+        "power": [240, 240, 260, 260, 280, 280],
+        "multiplier": 17
+    },
+
+    "ground": {
+        "team": ["Marshtomp","Nincada","Geodude","Numel","Sandshrew","Vibrava","Baltoy","Dustox","Zubat","Tentacool","Oddish","Gulpin"],
+        "actual_team": ["Gligar","Claydol","Rhydon","Camerupt","Camerupt","Camerupt","Ariados","Muk","Roselia","Crobat","Crobat","Crobat"],
+        "power": [255, 255, 275, 275, 295, 295],
+        "multiplier": 17
+    },
+
+    "poison": {
+        "team": ["Dustox","Zubat","Tentacool","Oddish","Gulpin","Marshtomp","Nincada","Geodude","Numel","Sandshrew","Vibrava","Baltoy"],
+        "actual_team": ["Ariados","Muk","Roselia","Crobat","Crobat","Crobat","Gligar","Claydol","Rhydon","Camerupt","Camerupt","Camerupt"],
+        "power": [270, 270, 290, 290, 310, 310],
+        "multiplier": 17
+    },
+
+    "psychic": {
+        "team": ["Ralts","Abra","Meditite","Lunatone","Baltoy","Starmie","Natu","Girafarig","Beldum"],
+        "actual_team": ["Xatu","Kadabra","Claydol","Kirlia","Lunatone","Solrock"],
+        "power": [295, 295, 315, 315, 335, 335],
+        "multiplier": 17
+    },
+
+    "water": {
+        "team": ["Mudkip","Marshtomp","Lotad","Wingull","Surskit","Marill","Tentacool","Carvanha","Starmie","Spheal","Relicanth","Chinchou","Kingdra"],
+        "actual_team": ["Kingdra","Crawdaunt","Milotic","Whiscash","Luvdisc","Sharpedo","Walrein","Swampert"],
+        "power": [341, 341, 363, 363, 385, 385],
+        "multiplier": 20
+    },
+
+    "steel": {
+        "team": ["Mawile","Aron","Magnemite","Skarmory","Beldum"],
+        "actual_team": ["Metagross", "Metagross", "Skarmory", "Mawile", "Aggron","Aggron-mega"],
+        "power": [401, 401, 423, 423, 445, 445],
+        "multiplier": 20
+    },
+
+    "dragon": {
+        "team": ["Vibrava","Altaria","Kingdra","Bagon","Latios","Charizard-mega-x","Sceptile-mega","Ampharos-mega","Altaria-mega"],
+        "actual_team": ["Latios","Latias","Flygon","Shelgon","Salamence","Altaria","Altaria-mega"],
+        "power": [418, 418, 440, 440, 462, 462],
+        "multiplier": 20
+    }
+}
