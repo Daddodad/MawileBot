@@ -124,14 +124,14 @@ def calculate_bonus_answer(bonus_pokemon, moltiplicatore):
         text = 'Non hai seguito bene le mie istruzioni... Riprova...'
     return text
 
-def check_route(chat_id):
+async def check_route(chat_id):
     jsonFile = open(PATH+"/secret_player_data.json", "r") # Open the JSON file for reading
     data = json.load(jsonFile) # Read the JSON into the buffer
     jsonFile.close() # Close the JSON file
 
     return data[chat_id]["route"]
 
-def add_route(chat_id, route):
+async def add_route(chat_id, route):
 
     jsonFile = open(PATH+"/secret_player_data.json", "r") # Open the JSON file for reading
     data = json.load(jsonFile) # Read the JSON into the buffer
@@ -421,7 +421,7 @@ def poke_lega_team_team(chat_id, enemies):
     new_column_names += [f"{col} ({potenze[k-2]})" for k, col in enumerate(concat_data.columns[2:], start=2)]
     concat_data.columns = new_column_names
 
-    #print(concat_data)
+    print(concat_data)
     #print(potenze)
     # Fin qui è corretto. Mi manca lo styling...
     path = PATH+f"/images/{chat_id}_lega_team_team.png"

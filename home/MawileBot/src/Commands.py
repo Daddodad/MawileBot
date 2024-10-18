@@ -84,33 +84,26 @@ def get_start_conversation_handler():
         ],
     )
 
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     await id_check(update)
     try:
-        print(update.effective_chat.username,'called /start')
+        print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /start')
     except:
         pass
-    added = add_new_player(update)
+
+    await update.message.reply_text('Test')
     user = update.effective_user
-    replies = [
-        "Ku ku ku... Siamo così disperati?"
-        'Hi hi hi... Hai scelto il Pokémon giusto per vincere...',
-        "Che le s̵̡͕̥̜̞̏̋͝t̶̙̤̑e̴̦̲̳̟̿̃̔̊̈́̋̄̽͜l̵͔͓͉̬̼̮̘̏̈́́̑̉̓͘̕ĺ̸̨̩̝͜͝e̴̬̤̭̫͖̿͛̀̏̅̓͛̐ tremino e l'o̶̻̫̼̒͋̃̀̿̈͜s̵̯̳̗̋͌͛͠c̸̳͂̌͌͘ͅư̵͙̣͑̐̇̀͝͝r̶͙̝̽i̸̛͙̥͈̠̔̋͋t̵̢̝̻̀̄à̶̫̀̓̄͐̑͌̕ risuoni...",
-        'Ghihihihi... Pronti per una burla?',
-        "Ku ku ku... Stai cercando guai?",
-        "Hehehe... Chiedi e sarò il tuo aiutante misterioso!",
-        "Ku ku ku... Non temere! S̵͕̒͋͜͜ä̴̧̻͔̟̪̥̞̼́̈́̈́̀̃b̶̡̤͉̍͂̏̒̽͛̚͘l̸͎̙̾͑e̶̫̺͕̻̐y̵̧̨̱͈̰̜͍͗̀̽̿̋e̶̢̙̥͋̈́ è qui...",
-        "Vincere la Lega... che cliente ambizioso!",
+    replies = ["Test"
     ]
     if user["username"]   != None:
         replies.append(f'{user["username"]}... che nome ridicolo... ma un cliente è un cliente...')
     if user["first_name"] != None:
         replies.append(f'Eheh... {user["first_name"]}, non sei in grado di vincere senza di me?')
 
-    route = check_route(str(update.effective_user.id))
+    route = await check_route(str(update.effective_user.id))
     if route != None:
         replies.append(f'Di nuovo qui, {user["username"]}?')
-        replies.append('Eheheheh... Che aiuto serve oggi?')
         
     if random.random() > 0.01:
         await update.message.reply_text(random.choice(replies))
@@ -121,12 +114,11 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         await asyncio.sleep(3)
         await update.message.reply_text("P̷e̸c̶c̷a̷t̷o̴.̵.̵.̵ ̷C̵o̵s̷a̵ ̴d̴o̶v̷r̴e̴i̸ ̷f̸a̸r̴e̷ ̸c̶o̷n̴ ̷t̷e̷ ̴a̵d̷e̵s̵s̴o̴.̴.̶.̵")
 
-    route = check_route(str(update.effective_user.id))
     if route == None:
-        add_route(str(update.effective_user.id), "Non_detta")
+        await add_route(str(update.effective_user.id), "Non_detta")
         keyboard = [
             [InlineKeyboardButton("Pari", callback_data='even'),
-             InlineKeyboardButton("Dispari", callback_data='odd')]
+            InlineKeyboardButton("Dispari", callback_data='odd')]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
         await update.message.reply_text(
@@ -137,11 +129,11 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     elif route == "Non_detta":
         keyboard = [
             [InlineKeyboardButton("Pari", callback_data='even'),
-             InlineKeyboardButton("Dispari", callback_data='odd')]
+            InlineKeyboardButton("Dispari", callback_data='odd')]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
         await update.message.reply_text(
-            "N̸͓͖͖͗o̵̫̎͑̈́͛n̸͚̬̲̈́ ̷̰͆̆i̴̹̥̍g̶̰͇͙͌͜n̶͓̭̻̰͐̋ö̶͇̙́r̷̛̯̝̠̎͜à̷͖̘̜̐̓̈́r̴̫̟͉̬̀̑m̸̖͎̙̑̇̿i̵̖͒.̵̟̣͇̭̒͒͐.̵̹͑.̵̢̜̝̽͜   dimmi il tuo percorso...",
+            "Prima mi hai ignorato... dimmi il tuo percorso...",
             reply_markup=reply_markup
         )
         return ROUTE_SELECTION
@@ -152,11 +144,11 @@ async def route_selection(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     await query.answer()
 
     route = query.data  # 'pari' or 'dispari'
-    add_route(str(update.effective_user.id), route)
+    await add_route(str(update.effective_user.id), route)
 
     keyboard = [
-            [InlineKeyboardButton("Va bene", callback_data='add_team'),
-             InlineKeyboardButton("No grazie", callback_data='no_add_team')]
+            [InlineKeyboardButton("Sì", callback_data='add_team'),
+             InlineKeyboardButton("No", callback_data='no_add_team')]
         ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     await query.edit_message_text("Grazie dell'informazione... Vuoi anche aggiungere subito la tua squadra?",reply_markup=reply_markup)
@@ -204,7 +196,7 @@ def get_bonus_conversation_handler():
 async def bonus(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     await id_check(update)
     try:
-        print(update.effective_chat.username,'called /bonus')
+        print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /bonus')
     except:
         pass
     context.user_data.clear()
@@ -290,7 +282,7 @@ HELP_HELP = "help_help"
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await id_check(update)
     try:
-        print(update.effective_chat.username,'called /help')
+        print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /help')
     except:
         pass
     await show_main_help_menu(update, context)
@@ -420,7 +412,7 @@ CHOOSING_POKEMON_GYM, CHOOSING_GYM_COUNT, CHOOSING_CUSTOM_GYM_COUNT = range(3)
 async def gym(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await id_check(update)
     try:
-        print(update.effective_chat.username,'called /gym')
+        print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /gym')
     except:
         pass
 
@@ -586,7 +578,7 @@ def change_secret_player_data_team(update: Update, index, pl, new_value): # inde
 async def team_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await id_check(update)
     try:
-        print(update.effective_chat.username,'called /team')
+        print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /team')
     except:
         pass
     chat_id = update.effective_chat.id
@@ -771,7 +763,7 @@ def get_ping_all_handler():
 async def ping_all_start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     await id_check(update)
     try:
-        print(update.effective_chat.username,'called /ping_all')
+        print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /ping_all')
     except:
         pass
     chat_id = update.effective_chat.id
@@ -817,7 +809,7 @@ async def send_ping_all(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 async def spy(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await id_check(update)
     try:
-        print(update.effective_chat.username,'called /spy')
+        print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /spy')
     except:
         pass
     chat_id = update.effective_chat.id
@@ -857,7 +849,7 @@ async def spy(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 async def dex_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await id_check(update)
     try:
-        print(update.effective_chat.username,'called /dex')
+        print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /dex')
     except:
         pass
     if not context.args:
@@ -878,7 +870,7 @@ WAITING_FOR_X = 0
 async def cell_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await id_check(update)
     try:
-        print(update.effective_chat.username,'called /cell')
+        print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /cell')
     except:
         pass
     keyboard = [
@@ -989,7 +981,7 @@ CHANGE_POKEMON = "change_pokemon"
 async def lega_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await id_check(update)
     try:
-        print(update.effective_chat.username,'called /lega')
+        print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /lega')
     except:
         pass
     keyboard = [
@@ -1221,7 +1213,7 @@ TRAINER = 'trainer'
 async def fight_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await id_check(update)
     try:
-        print(update.effective_chat.username,'called /fight')
+        print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /fight')
     except:
         pass
 
@@ -1329,7 +1321,7 @@ def get_pokemon_image_path(pokemon_name):
 async def card_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await id_check(update)
     try:
-        print(update.effective_chat.username,'called /card')
+        print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /card')
     except:
         pass
     text = "Nah, hai sbagliato bot... Però posso provare..."
