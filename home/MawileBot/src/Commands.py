@@ -124,6 +124,19 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
             await update.message.reply_text("P̷e̸c̶c̷a̷t̷o̴.̵.̵.̵ ̷C̵o̵s̷a̵ ̴d̴o̶v̷r̴e̴i̸ ̷f̸a̸r̴e̷ ̸c̶o̷n̴ ̷t̷e̷ ̴a̵d̷e̵s̵s̴o̴.̴.̶.̵")
 
     if route == None:
+        text = "Benvenuto! Questa è la prima volta che ci incontriamo, no?\n\n" \
+        f'Il mio nome è SableyeBot, e sono un Bot creato al solo scopo di aiutarti a vincere la Lega.\n' \
+        'La mia esistenza oramai non è più un segreto, sentitene libero di parlare anche con altri giocatori! Ma veniamo al dunque...\n\n'\
+        "Questo bot è costruito indipendentemente dal bot della Lega (qualunque nome esso abbia adesso...). Le informazioni che ha a disposizione sono tutte pubbliche.\n"\
+        "Ciò significa che, per quanto mi riguarda, puoi rimpiazzarmi con un pezzo di carta e una matita. Ma non credo ti convenga...\n\n"\
+        "Per informazioni sui comandi dei bot, dai uno sguardo al comando /help. Sono troppi per spiegarli tutti qui...\n\nIntanto, tieni a mente solo qualche cosa:\n\n"
+        await update.message.reply_text(text)
+        text = "Se il bot non risponde ad un comando, prova ad inviarlo di nuovo. Ogni tanto, potrebbe 'perdersi' qualche richiesta. O ignorarti di proposito... Ehehehe...\n\nIl bot potrebbe chiedere di aspettare un attimo... In quel caso, evita di scrivere comandi fin quando non manderà un altro messaggio."
+        await update.message.reply_text(text)
+        text = "Se il bot continua a non rispondere, potrebbe essere spento o bloccato. In quel caso, prova scriverlo sul gruppo per confrontarti. Gli sviluppatori provvederanno a fare qualcosa.\n\nAnche quando chiede di aspettare, solitamente si tratta di un minuto al massimo. Se dovesse non rispondere per più tempo, prova a ricominciare da capo."
+        await update.message.reply_text(text)
+        text = "Come ripetuto prima, il bot è indipendente dalla lega e le sue informazioni sono limitate. Controlla sempre quanto Sableye ti dice, non fidarti alla cieca. E se commette errori, o ci sono bug, puoi farlo presente sul gruppo ufficiale."
+        await update.message.reply_text(text)
         await add_route(str(update.effective_user.id), "Non_detta")
         keyboard = [
             [InlineKeyboardButton("Pari", callback_data='even'),
@@ -131,7 +144,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
         await update.message.reply_text(
-            "Mh... è la prima volta che ci incontriamo... dimmi il percorso su cui ti trovi",
+            "Quindi, bando alle ciance e iniziamo! Per prima cosa, dimmi il percorso su cui ti trovi",
             reply_markup=reply_markup
         )
         return ROUTE_SELECTION
@@ -143,7 +156,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
         await update.message.reply_text(
-            "Prima mi hai ignorato... dimmi il tuo percorso...",
+            "Prima mi hai ignorato... dimmi il tuo percorso... Guarda che altrimenti non posso funzionare per bene...",
             reply_markup=reply_markup
         )
         return ROUTE_SELECTION
