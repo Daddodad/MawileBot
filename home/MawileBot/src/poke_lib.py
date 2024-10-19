@@ -868,7 +868,7 @@ def create_text_image(text, background_color,lines_left_top_right_bottom = (True
 
     draw = ImageDraw.Draw(image) # Prepare to add text
     try: # Load bold font for the text
-        if len(text) > 10:
+        if len(text) > 11:
             font = ImageFont.truetype("arialbd.ttf", 24)  # Smaller font if text is longer than 8 characters
         else:
             font = ImageFont.truetype("arialbd.ttf", 45)  # Regular font for short text
@@ -1012,7 +1012,7 @@ def create_pokemon_collage(df, type = 'gym', path=None, enemy_powers=None):
     collage_image.paste(name_image, (0,0))
     for index, (pokemon_name, power) in enumerate(zip(df['Pokemon'].tolist(), df['Potenza Base'].tolist())):
         name_position = (0, (index+1) * image_height) # Position for Pokémon name
-        name_image = create_pokemon_image(pokemon_name, power, front = True, shiny_or_default = 'default', lines_left_top_right_bottom = (False,False,True,False))
+        name_image = create_pokemon_image(pokemon_name, power, front = False, shiny_or_default = 'default', lines_left_top_right_bottom = (False,False,True,False))
         collage_image.paste(name_image, name_position)
 
     # Crea le altre colonne
@@ -1028,7 +1028,7 @@ def create_pokemon_collage(df, type = 'gym', path=None, enemy_powers=None):
                 pokemon_name = column_name.split(' ')[0]
             except:
                 pokemon_name = column_name
-            individual_image = create_pokemon_name_image(column_name,True,randomly_shiny(),lines_left_top_right_bottom = (False,False,False,True))  # Create the Pokémon image
+            individual_image = create_pokemon_name_image(pokemon_name,True,randomly_shiny(),lines_left_top_right_bottom = (False,False,False,True))  # Create the Pokémon image
         collage_image.paste(individual_image, position)
         for index in range(num_rows):
             scaled_power = int(df[column_name][index].split(' ')[0].replace('(','').replace(')',''))
