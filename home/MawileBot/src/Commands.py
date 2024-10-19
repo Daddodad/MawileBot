@@ -91,28 +91,37 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /start')
     except:
         pass
-
-    await update.message.reply_text('Test')
+    added = add_new_player(update) # IMPORTANTE, anche se non usiamo added
     user = update.effective_user
-    replies = ["Test"
+
+    replies = [
+        "Ku ku ku... Siamo così disperati?",
+        'Hi hi hi... Hai scelto il Pokémon giusto per vincere...',
+        "Che le s̵̡͕̥̜̞̏̋͝t̶̙̤̑e̴̦̲̳̟̿̃̔̊̈́̋̄̽͜l̵͔͓͉̬̼̮̘̏̈́́̑̉̓͘̕ĺ̸̨̩̝͜͝e̴̬̤̭̫͖̿͛̀̏̅̓͛̐ tremino e l'o̶̻̫̼̒͋̃̀̿̈͜s̵̯̳̗̋͌͛͠c̸̳͂̌͌͘ͅư̵͙̣͑̐̇̀͝͝r̶͙̝̽i̸̛͙̥͈̠̔̋͋t̵̢̝̻̀̄à̶̫̀̓̄͐̑͌̕ risuoni...",
+        'Ghihihihi... Pronti per una burla?',
+        "Ku ku ku... Stai cercando guai?",
+        "Hehehe... Chiedi e sarò il tuo aiutante misterioso!",
+        "Ku ku ku... Non temere! S̵͕̒͋͜͜ä̴̧̻͔̟̪̥̞̼́̈́̈́̀̃b̶̡̤͉̍͂̏̒̽͛̚͘l̸͎̙̾͑e̶̫̺͕̻̐y̵̧̨̱͈̰̜͍͗̀̽̿̋e̶̢̙̥͋̈́ è qui...",
+        "Vincere la Lega... che cliente ambizioso!",
     ]
+
     if user["username"]   != None:
         replies.append(f'{user["username"]}... che nome ridicolo... ma un cliente è un cliente...')
     if user["first_name"] != None:
         replies.append(f'Eheh... {user["first_name"]}, non sei in grado di vincere senza di me?')
 
     route = await check_route(str(update.effective_user.id))
-    if route != None:
+
+    if route != None and route!= 'Non_detta':
         replies.append(f'Di nuovo qui, {user["username"]}?')
-        
-    if random.random() > 0.01:
-        await update.message.reply_text(random.choice(replies))
-    else:
-        await update.message.reply_text('Non so davvero se dovrei aiutarti... lasciamolo decidere al caso, Croce!')
-        await asyncio.sleep(2)
-        await update.message.reply_text('🪙')
-        await asyncio.sleep(3)
-        await update.message.reply_text("P̷e̸c̶c̷a̷t̷o̴.̵.̵.̵ ̷C̵o̵s̷a̵ ̴d̴o̶v̷r̴e̴i̸ ̷f̸a̸r̴e̷ ̸c̶o̷n̴ ̷t̷e̷ ̴a̵d̷e̵s̵s̴o̴.̴.̶.̵")
+        if random.random() > 0.01:
+            await update.message.reply_text(random.choice(replies))
+        else:
+            await update.message.reply_text('Non so davvero se dovrei aiutarti... lasciamolo decidere al caso, Croce!')
+            await asyncio.sleep(2)
+            await update.message.reply_text('🪙')
+            await asyncio.sleep(3)
+            await update.message.reply_text("P̷e̸c̶c̷a̷t̷o̴.̵.̵.̵ ̷C̵o̵s̷a̵ ̴d̴o̶v̷r̴e̴i̸ ̷f̸a̸r̴e̷ ̸c̶o̷n̴ ̷t̷e̷ ̴a̵d̷e̵s̵s̴o̴.̴.̶.̵")
 
     if route == None:
         await add_route(str(update.effective_user.id), "Non_detta")
@@ -126,6 +135,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
             reply_markup=reply_markup
         )
         return ROUTE_SELECTION
+    
     elif route == "Non_detta":
         keyboard = [
             [InlineKeyboardButton("Pari", callback_data='even'),
@@ -467,7 +477,7 @@ async def gym_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
 async def choose_pokemon_gym(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     pokemon_name = update.message.text.strip().capitalize()
-    print('Pokémon received:', pokemon_name)
+    #print('Pokémon received:', pokemon_name)
     if " " not in pokemon_name:
         if poke_exist(pokemon_name):
             await update.message.reply_text("Assumerò il livello sia 0...")
@@ -1121,6 +1131,7 @@ async def lega_team_main(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     chat_id = update.effective_chat.id
 
     image_path = poke_lega_team_team(str(chat_id), context.user_data['counter_team'])
+    
     # Open the image file
     cap = "Ecco il risultato del tuo team contro la squadra che mi hai inviato"
     with open(image_path, 'rb') as image_file:
@@ -1254,13 +1265,13 @@ async def enter_pokemons(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Attendi un attimo per l'immagine...")
     try:
         if context.user_data['fight_type'] == 'trainer':
-            image_path,e_p = poke_fight(str(update.effective_chat.id),
+            image_path,e_p = await poke_fight(str(update.effective_chat.id),
                                   True,
                                   poke_list
                                   )
             cap = f"Ecco il risultato del tuo team contro questo allenatore.\n\n🔴: batte la fascia bassa ({e_p[0]})\n🟡: batte la fascia media ({e_p[1]})\n🟢: batte la fascia alta ({e_p[2]})"
         else:
-            image_path,e_p = poke_fight(str(update.effective_chat.id),
+            image_path,e_p = await poke_fight(str(update.effective_chat.id),
                                   False,
                                   poke_list
                                   )

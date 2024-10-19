@@ -8,6 +8,10 @@ import seaborn as sns
 import pandas as pd
 import dataframe_image as dfi
 import os
+from PIL import Image, ImageDraw, ImageFont
+from io import BytesIO
+
+import requests
 
 import sys
 if os.path.exists('/home/SableyeBot/src'):
@@ -343,54 +347,13 @@ def poke_dex2(pokemon_name: str) -> str:
 def get_power(pokemon, lvl):
     return round(lvl*get_poke_bst(pokemon)/100)
 
-def save_dataframe_as_image(df, path):
-
-    # Check if df is a Styler object
-    if isinstance(df, pd.io.formats.style.Styler):
-        styled_df = df
-    else:
-        styled_df = df.style
-
-    # Save the styled DataFrame as an image
-    dfi.export(styled_df.background_gradient(), path, table_conversion='matplotlib')
-
 def extract_first_number(cell):
     try:
         # Extract the first number before the parentheses
         return float(str(cell).split()[0])
     except:
         return None
-
-def style_dataframe_with_thresholds(df, thresholds):
-    # Create a copy of the DataFrame to avoid modifying the original
-    styled_df = df.style
-
-    # Apply conditional formatting for each column starting from the third column
-    for col_idx, (col_name, threshold) in enumerate(zip(df.columns[2:], thresholds), start=2):
-
-        # Define the styling function for this column
-        def style_column(val, threshold=threshold):  # Use default argument to capture current threshold
-            try:
-                first_num = extract_first_number(val)
-                if first_num is not None and first_num > threshold:
-                    return 'background-color: green'
-            except:
-                pass
-            return ''
-
-        # Apply the styling to this column
-        styled_df = styled_df.applymap(style_column, subset=[col_name])
-
-    return styled_df
-
-def save_dataframe_as_image_alt(df, path, thresholds):
-    # Apply the conditional formatting
-    styled_df = style_dataframe_with_thresholds(df, thresholds)
-
-    # Save the styled DataFrame as an image
-    dfi.export(styled_df, path, table_conversion='matplotlib')
-    #print(f"Successfully saved styled DataFrame to {path}")
-
+    
 def poke_lega_team_team(chat_id, enemies):
     with open(PATH+'/secret_player_data.json', 'r') as file:
         priv_data = json.load(file)
@@ -402,30 +365,22 @@ def poke_lega_team_team(chat_id, enemies):
         enemy_powers = [enemy_powers,enemy_powers,enemy_powers]
         enemy = [enemy]
         multiplier = 20
-        tab = match_prevision(team, enemy, enemy_powers, multiplier)
+        tab, limits = match_prevision(team, enemy, enemy_powers, multiplier)
         dfs.append(tab)
 
     # Step 1: Concatenate the data (not styles)
-    dfs_data = [df.data for df in dfs]  # Extract data from styled DataFrames
-
-    # Keep the first two columns only in the first DataFrame
+    dfs_data = [df for df in dfs]  # Extract data from DataFrames
     dfs_data[1:] = [df.iloc[:, 2:] for df in dfs_data[1:]]  # Keep only the third column from subsequent DataFrames
-
-    # Concatenate along columns
     concat_data = pd.concat(dfs_data, axis=1)
-
-    # Rename the columns: keep the first two columns' names as is, and update the rest
-    new_column_names = list(concat_data.columns[:2])  # Keep the first two column names
-
-    # Append the corresponding threshold value to the name of each subsequent column
+    new_column_names = list(concat_data.columns[:2]) 
     new_column_names += [f"{col} ({potenze[k-2]})" for k, col in enumerate(concat_data.columns[2:], start=2)]
     concat_data.columns = new_column_names
 
-    print(concat_data)
-    #print(potenze)
-    # Fin qui è corretto. Mi manca lo styling...
     path = PATH+f"/images/{chat_id}_lega_team_team.png"
-    save_dataframe_as_image_alt(concat_data, path,potenze)
+    create_pokemon_collage(concat_data, type = 'lega', path=path, enemy_powers=None)
+
+    #save_dataframe_as_image_alt(concat_data, path,potenze) # OLD IMAGE METHOD
+
     return path
 
 def poke_gym(chat_id, gym):
@@ -440,16 +395,17 @@ def poke_gym(chat_id, gym):
         enemy = gym_data[gym]["actual_team"]
     enemy_powers = gym_data[gym]["power"]
     multiplier = gym_data[gym]["multiplier"]
-    tab = match_prevision(team, enemy, enemy_powers, multiplier)
+    tab, limits = match_prevision(team, enemy, enemy_powers, multiplier)
 
-
-    # If tab is a DataFrame and has a 'style' attribute, it means style.apply was used
-    if isinstance(tab, pd.DataFrame) and hasattr(tab, 'style'):
-        tab = tab.style.apply(highlight_max, subset=tab.columns[2:], args=enemy_powers)
+    # If tab is a DataFrame and has a 'style' attribute, it means style.apply was used  # OLD IMAGE METHOD
+    #if isinstance(tab, pd.DataFrame) and hasattr(tab, 'style'):
+        #tab = tab.style.apply(highlight_max, subset=tab.columns[2:], args=enemy_powers)
 
 
     path = PATH+f"/images/{chat_id}.png"
-    save_dataframe_as_image(tab, path)
+    create_pokemon_collage(tab, type = 'gym', path=path, enemy_powers = limits)
+
+    #save_dataframe_as_image(tab, path)  # OLD IMAGE METHOD
     return path
 
 
@@ -466,32 +422,10 @@ def match_prevision(team, enemy, enemy_powers, multiplier):
         #print('1v1')
         limits = [enemy_powers[0],enemy_powers[0],enemy_powers[0]]
 
-    #print('TABELLA COMPATITIBILITÀ : gli avversari hanno ',enemy_powers)
     bonus_netti,tab = match_table(team,enemy,multiplier,limits = limits)
 
-    return tab
+    return tab, limits
 
-
-def highlight_max(s,LOW_LIM,MID_LIM,UPP_LIM):
-    '''
-    highlight the maximum in a Series yellow.
-    '''
-    # s is the column (i think)
-    colors = []
-    for el in s:
-        n = el.split(' ')
-        n = int(n[0])
-        if n >= UPP_LIM:
-            colors.append('background-color: green')
-        else:
-            if n >= MID_LIM :
-                colors.append('background-color: yellow')
-            else:
-                if n >= LOW_LIM :
-                    colors.append('background-color: red')
-                else:
-                    colors.append('background-color: grey')
-    return colors
 
 def match_table(team,enemy,multiplier,limits = None):
     bonus_netti = []
@@ -519,15 +453,17 @@ def match_table(team,enemy,multiplier,limits = None):
                 name = e +' '+ str(i)
             cols.append(name)
     tab.columns = cols
-    if limits != None:
-        tab = tab.style.apply(highlight_max, subset=cols[2:],args=limits)
+
+    #if limits != None:   # OLD IMAGE METHOD
+        #tab = tab.style.apply(highlight_max, subset=cols[2:],args=limits)
+
     return(bonus_netti,tab)
 
 
 
 
 def poke_cell(cell):
-    start = date(2024,7,10)
+    start = date(2024,10,10)
     today = datetime.now().date()
     offset = cell
     pausa = 5
@@ -619,7 +555,7 @@ def poke_evo_level(chat_id,pokemon):
     return lvl
 
 def poke_cell_specific(route,cell,encounters):
-    start = date(2024,7,10)
+    start = date(2024,10,10)
     today = datetime.now().date()
     offset = cell
     pausa = 5
@@ -645,21 +581,21 @@ def poke_cell_specific(route,cell,encounters):
         return None
 
 
-def poke_fight(chat_id,trainer,pokemons):
+async def poke_fight(chat_id,trainer,pokemons):
     if trainer == True:
-        path, enemy_powers = poke_trainer(chat_id,pokemons)
+        path, enemy_powers = await poke_trainer(chat_id,pokemons)
     else:
-        path, enemy_powers = poke_encounter(chat_id,pokemons)
+        path, enemy_powers = await poke_encounter(chat_id,pokemons)
     return path, enemy_powers
 
 
-def poke_trainer(chat_id,pokemons):
+async def poke_trainer(chat_id,pokemons):
     with open(PATH+'/secret_player_data.json', 'r') as file:
         priv_data = json.load(file)
     team = [[pokemon[0], get_power(pokemon[0], pokemon[1])] for pokemon in priv_data[chat_id]["team"] if pokemon[0]]
 
 
-    start = date(2024,7,10)
+    start = date(2024,10,10)
     today = datetime.now().date()
     pausa = 5
     casella = int(((today-start).days-pausa)/2)
@@ -671,27 +607,27 @@ def poke_trainer(chat_id,pokemons):
 
     _, enemy_powers, _, multiplier, _ = poke_cell(offset)
 
-
-    tab = match_prevision(team, pokemons, enemy_powers, multiplier)
-
+    tab, limits = match_prevision(team, pokemons, enemy_powers, multiplier)
 
     # If tab is a DataFrame and has a 'style' attribute, it means style.apply was used
-    if isinstance(tab, pd.DataFrame) and hasattr(tab, 'style'):
-        tab = tab.style.apply(highlight_max, subset=tab.columns[2:], args=enemy_powers)
+    #if isinstance(tab, pd.DataFrame) and hasattr(tab, 'style'):  # OLD IMAGE METHOD
+        #tab = tab.style.apply(highlight_max, subset=tab.columns[2:], args=enemy_powers)
 
 
     path = PATH+f"/images/{chat_id}.png"
-    save_dataframe_as_image(tab, path)
+    create_pokemon_collage(tab, type = 'trainer', path=path, enemy_powers = enemy_powers)
+
+    #save_dataframe_as_image(tab, path) # OLD IMAGE METHOD
     return path, enemy_powers
 
 
-def poke_encounter(chat_id,encounter):
+async def poke_encounter(chat_id,encounter):
     with open(PATH+'/secret_player_data.json', 'r') as file:
         priv_data = json.load(file)
     team = [[pokemon[0], get_power(pokemon[0], pokemon[1])] for pokemon in priv_data[chat_id]["team"] if pokemon[0]]
     route = priv_data[chat_id]["route"]
 
-    start = date(2024,7,10)
+    start = date(2024,10,10)
     today = datetime.now().date()
     pausa = 5
     casella = int(((today-start).days-pausa)/2)
@@ -704,13 +640,16 @@ def poke_encounter(chat_id,encounter):
     enemy_powers, multiplier = poke_cell_specific(route,offset,encounter)
 
     tab = encounter_prevision(team, encounter, enemy_powers, multiplier)
+    print('ooo',enemy_powers)
 
     # If tab is a DataFrame and has a 'style' attribute, it means style.apply was used
-    if isinstance(tab, pd.DataFrame) and hasattr(tab, 'style'):
-        tab = tab.style.apply(highlight_max, subset=tab.columns[2:], args=enemy_powers)
+    #if isinstance(tab, pd.DataFrame) and hasattr(tab, 'style'):  # OLD IMAGE METHOD
+        #tab = tab.style.apply(highlight_max, subset=tab.columns[2:], args=enemy_powers)
 
     path = PATH+f"/images/{chat_id}.png"
-    save_dataframe_as_image(tab, path)
+    create_pokemon_collage(tab, type = 'encounter', path=path, enemy_powers = enemy_powers)
+
+    # save_dataframe_as_image(tab, path)  # OLD IMAGE METHOD
     return path, enemy_powers
 
 
@@ -720,27 +659,6 @@ def encounter_prevision(team, enemy, enemy_powers, multiplier):
     bonus_netti,tab = encounter_table(team,enemy,multiplier,limits = enemy_powers)
 
     return tab
-
-
-
-def encounter_highlight_max(s, limits, col_index):
-    '''
-    highlight the maximum in a Series yellow.
-    '''
-    colors = []
-    for el in s:
-        n = el.split(' ')
-        n = int(n[0])
-        if n >= limits[col_index]:
-            colors.append('background-color: green')
-        elif n >= limits[1]:
-            colors.append('background-color: yellow')
-        elif n >= limits[0]:
-            colors.append('background-color: red')
-        else:
-            colors.append('background-color: grey')
-    #is_max = s == s.max()
-    return colors
 
 def encounter_table(team,enemy,multiplier,limits = None):
     bonus_netti = []
@@ -768,6 +686,8 @@ def encounter_table(team,enemy,multiplier,limits = None):
                 name = e +' '+ str(i)
             cols.append(name)
     tab.columns = cols
+
+    """  # OLD IMAGE METHOD
     if limits != None:
         # Create a Styler object
         styler = tab.style
@@ -778,6 +698,8 @@ def encounter_table(team,enemy,multiplier,limits = None):
 
         # Set the styled DataFrame
         tab = styler
+
+    """
     return(bonus_netti,tab)
 
 
@@ -811,7 +733,7 @@ def poke_counter(pokemon, level=100):
 
 def poke_gym_test(chat_id, pokemon, livello=0, next=4):
 
-    start = date(2024,7,10)
+    start = date(2024,10,10)
     today = datetime.now().date()
     pausa = 5
     casella = int(((today-start).days-pausa)/2)
@@ -926,3 +848,319 @@ def poke_gym_test(chat_id, pokemon, livello=0, next=4):
             results.append([gym, average, min_bonus, max_bonus])
 
     return results
+
+
+#############################################################################################################################################################
+#############################################################################################################################################################
+#############################################################################################################################################################
+#############################################################################################################################################################
+
+# CREAZIONE DELLE IMMAGINI DI GYM, LEGA, FIGHT...
+
+#############################################################################################################################################################
+#############################################################################################################################################################
+#############################################################################################################################################################
+#############################################################################################################################################################
+
+
+def create_text_image(text, background_color,lines_left_top_right_bottom = (True,True,True,True)):
+    image = Image.new('RGB', (250, 98), background_color) #  Create a blank image (250x96) with the specified background color
+
+    draw = ImageDraw.Draw(image) # Prepare to add text
+    try: # Load bold font for the text
+        if len(text) > 10:
+            font = ImageFont.truetype("arialbd.ttf", 24)  # Smaller font if text is longer than 8 characters
+        else:
+            font = ImageFont.truetype("arialbd.ttf", 45)  # Regular font for short text
+    except IOError:
+        font = ImageFont.load_default()  # Fallback to default font if custom font isn't available
+    position = (30, 25)  # Add the text at a fixed position
+    draw.text(position, text, fill="black", font=font)
+
+    border_width = 1
+    image_width, image_height = image.size
+    if lines_left_top_right_bottom[1]:
+        draw.line([(0, 0), (image_width, 0)], fill="black", width=border_width) #Draw top line
+    if lines_left_top_right_bottom[3]:
+        draw.line([(0, image_height - 1), (image_width, image_height - 1)], fill="black", width=border_width) # Draw bottom line
+    if lines_left_top_right_bottom[0]:
+        draw.line([(0, 0), (0, image_height)], fill="black", width=border_width) # Draw left line
+    if lines_left_top_right_bottom[2]:
+        draw.line([(image_width - 1, 0), (image_width - 1, image_height)], fill="black", width=border_width) # Draw right line
+
+    return image
+
+def create_pokemon_name_image(pokemon_name, front = True, shiny_or_default = 'default', lines_left_top_right_bottom = (True,True,True,True)):
+    blank_image = Image.new('RGB', (250, 98), (255, 255, 255)) # Create a blank image (250x96) with white background
+
+    sprite_image = Image.new('RGB', (96, 96), (0, 0, 0)).convert("RGBA")
+    try:
+        pokemon = poke.get(name=pokemon_name.lower())
+        if not front:
+            try:
+                sprite_url = pokemon.sprites.back[shiny_or_default]
+                response = requests.get(sprite_url)
+            except:
+                sprite_url = pokemon.sprites.front[shiny_or_default]
+                response = requests.get(sprite_url)
+        else:
+            sprite_url = pokemon.sprites.front[shiny_or_default]
+            response = requests.get(sprite_url)
+        sprite_image = Image.open(BytesIO(response.content)).convert("RGBA") # Fetch the sprite imag
+    except:
+        pass
+
+    sprite_image = sprite_image.resize((96, 96)) # Resize sprite if needed to fit the blank image (optional)
+    blank_image.paste(sprite_image, (1, 1), sprite_image) # Paste the sprite on the left side of the blank image (use alpha for transparency)
+   
+    draw = ImageDraw.Draw(blank_image)  # Prepare to add text
+    try:
+        if len(pokemon_name) > 12:
+            font_bold = ImageFont.truetype("arialbd.ttf", 14)  # Smaller font if the name is longer than 12 characters
+        else:
+            font_bold = ImageFont.truetype("arialbd.ttf", 24)  # Regular bold font for shorter names
+    except IOError:
+        font_bold = ImageFont.load_default()  # Fallback to default font if custom font isn't available
+    if len(pokemon_name) > 12: # Add the Pokémon name to the right of the sprite
+        draw.text((110, 40), pokemon_name, fill="black", font=font_bold)  # Center the name vertically
+    else:
+        draw.text((110, 35), pokemon_name, fill="black", font=font_bold)  # Center the name vertically
+
+    border_width = 1
+    image_width, image_height = blank_image.size
+    if lines_left_top_right_bottom[1]:
+        draw.line([(0, 0), (image_width, 0)], fill="black", width=border_width) #Draw top line
+    if lines_left_top_right_bottom[3]:
+        draw.line([(0, image_height - 1), (image_width, image_height - 1)], fill="black", width=border_width) # Draw bottom line
+    if lines_left_top_right_bottom[0]:
+        draw.line([(0, 0), (0, image_height)], fill="black", width=border_width) # Draw left line
+    if lines_left_top_right_bottom[2]:
+        draw.line([(image_width - 1, 0), (image_width - 1, image_height)], fill="black", width=border_width) # Draw right line
+
+    return blank_image
+
+def create_pokemon_image(pokemon_name, power, front = False, shiny_or_default = 'default', lines_left_top_right_bottom = (True,True,True,True)):
+    blank_image = Image.new('RGB', (250, 98), (255, 255, 255))  # Create a blank image (250x98) with white background
+
+    sprite_image = Image.new('RGB', (96, 96), (0, 0, 0)).convert("RGBA") # Default Sprite
+    try: # Import the Sprite
+        pokemon = poke.get(name=pokemon_name.lower())
+        if not front:
+            try:
+                sprite_url = pokemon.sprites.back[shiny_or_default]
+                response = requests.get(sprite_url)
+            except:
+                sprite_url = pokemon.sprites.front[shiny_or_default]
+                response = requests.get(sprite_url)
+        else:
+            sprite_url = pokemon.sprites.front[shiny_or_default]
+            response = requests.get(sprite_url)
+        sprite_image = Image.open(BytesIO(response.content)).convert("RGBA")  # Fetch the sprite imag
+    except:
+        pass
+
+    sprite_image = sprite_image.resize((96, 96))  # Resize sprite if needed to fit the blank image (optional)
+    blank_image.paste(sprite_image, (1, 1), sprite_image) # Paste the sprite on the left side of the blank image (use alpha for transparency)
+
+    draw = ImageDraw.Draw(blank_image) # Prepare to add text
+    try:     # Load bold font for the name and a larger font for the power number
+        if len(pokemon_name) > 12:
+            font_bold = ImageFont.truetype("arialbd.ttf", 14)  # Smaller font if the name is longer than 12 characters
+        else:
+            font_bold = ImageFont.truetype("arialbd.ttf", 24)  # Regular bold font for shorter names
+        font_large = ImageFont.truetype("arialbd.ttf", 44)  # Larger bold font for power number
+    except IOError:
+        font_bold = ImageFont.load_default()  # Fallback to default font if custom font isn't available
+        font_large = ImageFont.load_default()
+    if len(pokemon_name) > 12:  # Add the Pokémon name to the right of the sprite
+        draw.text((110, 17), pokemon_name, fill="black", font=font_bold)  # Position (110, 17)
+    else:
+        draw.text((110, 10), pokemon_name, fill="black", font=font_bold)  # Position (110, 10)
+    draw.text((110, 40), str(power), fill="black", font=font_large)  # Add the power number below the name with larger font
+
+    border_width = 1 # Draw lines
+    image_width, image_height = blank_image.size
+    if lines_left_top_right_bottom[1]:
+        draw.line([(0, 0), (image_width, 0)], fill="black", width=border_width) #Draw top line
+    if lines_left_top_right_bottom[3]:
+        draw.line([(0, image_height - 1), (image_width, image_height - 1)], fill="black", width=border_width) # Draw bottom line
+    if lines_left_top_right_bottom[0]:
+        draw.line([(0, 0), (0, image_height)], fill="black", width=border_width) # Draw left line
+    if lines_left_top_right_bottom[2]:
+        draw.line([(image_width - 1, 0), (image_width - 1, image_height)], fill="black", width=border_width) # Draw right line
+
+    return blank_image
+
+def create_pokemon_collage(df, type = 'gym', path=None, enemy_powers=None):
+
+    def randomly_shiny():
+        if random.randint(0,1023) == 1:
+            return "shiny"
+        else:
+            return "default"
+        
+    image_width = 250 # Assuming all images have the same size (250x98)
+    image_height = 98
+
+    num_rows, num_cols = df.shape # Create a blank collage image with a grid layout (grid_size is a tuple of (rows, cols))
+    collage_width = (num_cols-1) * image_width
+    collage_height = (num_rows+1) * image_height
+    collage_image = Image.new('RGB', (collage_width, collage_height), (255, 255, 255))  # White background
+    
+    # Crea prima colonna, squadra.
+    name_image = create_text_image(f'{type.title()} →',(255,255,255),(False,False,True,True))
+    collage_image.paste(name_image, (0,0))
+    for index, (pokemon_name, power) in enumerate(zip(df['Pokemon'].tolist(), df['Potenza Base'].tolist())):
+        name_position = (0, (index+1) * image_height) # Position for Pokémon name
+        name_image = create_pokemon_image(pokemon_name, power, front = True, shiny_or_default = 'default', lines_left_top_right_bottom = (False,False,True,False))
+        collage_image.paste(name_image, name_position)
+
+    # Crea le altre colonne
+    for col in range(2, num_cols):
+        position = ((col-1) * image_width, 0)
+        column_name = df.columns[col]  # Get column name (e.g., "Yanma (195)")
+        if type == 'lega':
+            pokemon_name, power = column_name.split(' ')
+            power = int(power.replace('(','').replace(')',''))
+            individual_image = create_pokemon_image(pokemon_name,power,True,randomly_shiny(),(False,False,False,True))  # Create the Pokémon image
+        else:
+            try: # Fixa i pokemon delle palestre tipo (Geodude, Geodude 2, Geodude 3)
+                pokemon_name = column_name.split(' ')[0]
+            except:
+                pokemon_name = column_name
+            individual_image = create_pokemon_name_image(column_name,True,randomly_shiny(),lines_left_top_right_bottom = (False,False,False,True))  # Create the Pokémon image
+        collage_image.paste(individual_image, position)
+        for index in range(num_rows):
+            scaled_power = int(df[column_name][index].split(' ')[0].replace('(','').replace(')',''))
+            position = ((col-1) * image_width, (index+1) * image_height)
+            if type == 'lega':
+                if scaled_power > power:
+                    bg = (99, 238, 99)
+                else:
+                    bg = (255,255,255)
+            elif type == 'encounter':
+                try: #Se enemy_power = None o corto almeno non si blocca
+                    if scaled_power > enemy_powers[0]:
+                        bg = (255, 111, 111) # Red
+                        if scaled_power > enemy_powers[1]:
+                            bg = (255, 255, 111) # Yellow
+                            if scaled_power > enemy_powers[col]: # nel caso encounter, enemy_powers è [bassa,media,boss1,boss2,boss3 ...],l'indice col ci fa un grand favore partendo da 2
+                                bg = (99, 238, 99) # Green
+                    else:
+                        bg = (255,255,255)
+                except:
+                    bg = (0,0,0)
+            else:
+                try: #Se enemy_power = None o corto almeno non si blocca
+                    if scaled_power > enemy_powers[0]:
+                        bg = (255, 111, 111) # Red
+                        if scaled_power > enemy_powers[1]:
+                            bg = (255, 255, 111) # Yellow
+                            if scaled_power > enemy_powers[2]:
+                                bg = (99, 238, 99) # Green
+                    else:
+                        bg = (255,255,255)
+                except:
+                    bg = (0,0,0)
+
+            text_image = create_text_image(df[column_name][index], bg,(False,False,False,False))  # White text on blue
+            collage_image.paste(text_image, position)
+        
+    # Save or return the final collage image
+    if path:
+        collage_image.save(path)
+    return collage_image
+
+
+#############################################################################################################################################################
+#############################################################################################################################################################
+#############################################################################################################################################################
+#############################################################################################################################################################
+
+# OLD IMAGE METHOD (Cerca questo tag per le altre parti)
+
+#############################################################################################################################################################
+#############################################################################################################################################################
+#############################################################################################################################################################
+#############################################################################################################################################################
+
+
+def save_dataframe_as_image(df, path):
+
+    # Check if df is a Styler object
+    if isinstance(df, pd.io.formats.style.Styler):
+        styled_df = df
+    else:
+        styled_df = df.style
+
+    # Save the styled DataFrame as an image
+    dfi.export(styled_df.background_gradient(), path, table_conversion='matplotlib')
+
+def style_dataframe_with_thresholds(df, thresholds):
+    # Create a copy of the DataFrame to avoid modifying the original
+    styled_df = df.style
+
+    # Apply conditional formatting for each column starting from the third column
+    for col_idx, (col_name, threshold) in enumerate(zip(df.columns[2:], thresholds), start=2):
+
+        # Define the styling function for this column
+        def style_column(val, threshold=threshold):  # Use default argument to capture current threshold
+            try:
+                first_num = extract_first_number(val)
+                if first_num is not None and first_num > threshold:
+                    return 'background-color: green'
+            except:
+                pass
+            return ''
+
+        # Apply the styling to this column
+        styled_df = styled_df.applymap(style_column, subset=[col_name])
+
+    return styled_df
+
+def save_dataframe_as_image_alt(df, path, thresholds):
+    # Apply the conditional formatting
+    styled_df = style_dataframe_with_thresholds(df, thresholds)
+
+    # Save the styled DataFrame as an image
+    dfi.export(styled_df, path, table_conversion='matplotlib')
+
+def highlight_max(s,LOW_LIM,MID_LIM,UPP_LIM):
+    '''
+    highlight the maximum in a Series yellow.
+    '''
+    # s is the column (i think)
+    colors = []
+    for el in s:
+        n = el.split(' ')
+        n = int(n[0])
+        if n >= UPP_LIM:
+            colors.append('background-color: green')
+        else:
+            if n >= MID_LIM :
+                colors.append('background-color: yellow')
+            else:
+                if n >= LOW_LIM :
+                    colors.append('background-color: red')
+                else:
+                    colors.append('background-color: grey')
+    return colors
+
+def encounter_highlight_max(s, limits, col_index):
+    '''
+    highlight the maximum in a Series yellow.
+    '''
+    colors = []
+    for el in s:
+        n = el.split(' ')
+        n = int(n[0])
+        if n >= limits[col_index]:
+            colors.append('background-color: green')
+        elif n >= limits[1]:
+            colors.append('background-color: yellow')
+        elif n >= limits[0]:
+            colors.append('background-color: red')
+        else:
+            colors.append('background-color: grey')
+    #is_max = s == s.max()
+    return colors
