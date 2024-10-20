@@ -19,11 +19,11 @@ class UnauthorizedAccess(Exception):
 
 import sys
 if os.path.exists('/home/SableyeBot/src'):
-    PATH = '/home/SableyeBot/src'
-    sys.path.insert(0,PATH) # SableyeBot
+    ENV_PATH = '/home/SableyeBot/src'
+    sys.path.insert(0,ENV_PATH) # SableyeBot
 else:
-    PATH = 'home/MawileBot/src'
-    sys.path.insert(0,PATH) # MawileBot
+    ENV_PATH = 'home/MawileBot/src'
+    sys.path.insert(0,ENV_PATH) # MawileBot
 
 
 from poke_lib import calculate_bonus_answer, random_pokemon, random_player, get_power, poke_evo_level,format_types_emoji
@@ -131,12 +131,16 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         "Ciò significa che, per quanto mi riguarda, puoi rimpiazzarmi con un pezzo di carta e una matita. Ma non credo ti convenga...\n\n"\
         "Per informazioni sui comandi dei bot, dai uno sguardo al comando /help. Sono troppi per spiegarli tutti qui...\n\nIntanto, tieni a mente solo qualche cosa:\n\n"
         await update.message.reply_text(text)
+        await asyncio.sleep(5)
         text = "Se il bot non risponde ad un comando, prova ad inviarlo di nuovo. Ogni tanto, potrebbe 'perdersi' qualche richiesta. O ignorarti di proposito... Ehehehe...\n\nIl bot potrebbe chiedere di aspettare un attimo... In quel caso, evita di scrivere comandi fin quando non manderà un altro messaggio."
         await update.message.reply_text(text)
+        await asyncio.sleep(5)
         text = "Se il bot continua a non rispondere, potrebbe essere spento o bloccato. In quel caso, prova scriverlo sul gruppo per confrontarti. Gli sviluppatori provvederanno a fare qualcosa.\n\nAnche quando chiede di aspettare, solitamente si tratta di un minuto al massimo. Se dovesse non rispondere per più tempo, prova a ricominciare da capo."
         await update.message.reply_text(text)
+        await asyncio.sleep(5)
         text = "Come ripetuto prima, il bot è indipendente dalla lega e le sue informazioni sono limitate. Controlla sempre quanto Sableye ti dice, non fidarti alla cieca. E se commette errori, o ci sono bug, puoi farlo presente sul gruppo ufficiale."
         await update.message.reply_text(text)
+        await asyncio.sleep(5)
         await add_route(str(update.effective_user.id), "Non_detta")
         keyboard = [
             [InlineKeyboardButton("Pari", callback_data='even'),
@@ -321,7 +325,7 @@ async def show_main_help_menu(update: Update, context: ContextTypes.DEFAULT_TYPE
         [InlineKeyboardButton("/lega", callback_data=HELP_LEGA)],
         [InlineKeyboardButton("/cell", callback_data=HELP_CELL)],
         [InlineKeyboardButton("/dex", callback_data=HELP_DEX)],
-        [InlineKeyboardButton("Altro", callback_data=HELP_ALTRO)],
+        [InlineKeyboardButton("Altro e FAQ", callback_data=HELP_ALTRO)],
 
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -339,39 +343,32 @@ async def show_command_help(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     await query.answer()
 
     if query.data == HELP_START:
-        text = "Il comando /start inizia la conversazione principale con Sableye... ma se sei già qui non credo serva spiegartelo."
+        text = "Il comando /start inizia la conversazione principale con Sableye\. ma se sei già qui non credo serva spiegartelo\."
     elif query.data == HELP_BONUS:
-        text = "Il comando /bonus calcola i bonus nel combattimento tra due Pokémon.\nQuando usi /bonus, ti verranno chiesti i Pokémon.\n" \
-        f'Per esempio, rispondigli "{random_pokemon()} {random_pokemon()}" per sapere chi la spunterebbe.' \
-        '\nIl moltiplicatore usato dipende dalla giornata, ma può essere cambiato seguendo le istruzioni.\nE attento a non sbagliare i nomi...'
+        text = "Il comando /bonus calcola i bonus nel combattimento tra due Pokémon\.\nQuando usi /bonus, ti verranno chiesti i Pokémon\.\n" \
+        f'Per esempio, rispondigli "{random_pokemon()} {random_pokemon()}" per sapere chi la spunterebbe\.' \
+        '\nIl moltiplicatore usato dipende dalla giornata, ma può essere cambiato seguendo le istruzioni\.\nE attento a non sbagliare i nomi\.'
     elif query.data == HELP_LEGA:
-        #r = random_player()
-        text = "Il comando /lega da varie possibilità utili per combattimenti in endgame." \
-        """\n\nL'opzione "Migliori Pokémon" restituisce il matchup dei pokemon con 500+ BST con loro stessi. In pratica, mostra quanto ogni pokemon (tra i più forti)""" \
-        " sia avvantaggiato o svantaggiato dal proprio typing"
-        #text += """\n\nL'opzione "1 vs Team" calcola tutti i matchup di un singolo Pokémon contro un avversario.""" \
-        #f'\n Ti verrà subito chiesto il nome di un giocatore, poi un Pokémon e il suo livello.' \
-        #f'\nPer esempio, al giocatore, rispondiamo "{r}". Ti verrà chiesto un Pokémon e il suo livello. Rispondi "{random_pokemon()} {int(random.random()*100)}".' \
-        #f'\nIl bot ti risponderà con tutti i Pokémon catturati da {r} fino ad adesso, seguiti dal bonus netto del tuo Pokémon e dal livello massimo a cui il tuo Pokémon li batterebbe.' \
-        #f'\n\nTip: Se non sai quali giocatori stiano giocando, o vuoi una analisi generale, scrivi "generic". Otterrai il matchup con tutti i pokemon di Hoenn con 500+ di BST.' \
-        #'\nIl moltiplicatore standard è 20, ma può essere cambiato seguendo le istruzioni.'
-        text += """\n\n L'opzione "Team vs Team" è lo state-of-the-art di una lega a carte scoperte. Comunica la squadra che strai fronteggiando, e ti darà infromazioni su come battere il tuo nemico!"""
+        text = "Il comando /lega da varie possibilità utili per combattimenti in endgame\." \
+        """\n\nL'opzione "Migliori Pokémon" restituisce il matchup dei pokemon con 500\+ BST con loro stessi\. In pratica, mostra quanto ogni pokemon \(tra i più forti\)""" \
+        " sia avvantaggiato o svantaggiato dal proprio typing\."
+        text += """\n\n L'opzione "Team vs Team" è lo state\-of\-the\-art di una lega a carte scoperte\. Comunica la squadra che strai fronteggiando, e ti darà informazioni su come battere il tuo nemico\!"""
     elif query.data == HELP_GYM:
-        text = """Il comando /gym ti permette di testare la tua squadra contro le varie palestre del gioco. Puoi selezionare una palestra e fronteggiarla con la tua squadra.\n\nAltrimenti, la funzione "Testa un Pokémon" ti permette di controllare la prestazione di un Pokémon contro varie palestre senza doverlo aggiungere al Team. Geniale, no?"""
+        text = """Il comando /gym ti permette di testare la tua squadra contro le varie palestre del gioco\. Puoi selezionare una palestra e fronteggiarla con la tua squadra\.\n\nAltrimenti, la funzione "Testa un Pokémon" ti permette di controllare la prestazione di un Pokémon contro varie palestre senza doverlo aggiungere al Team\. Geniale, no\?"""
     elif query.data == HELP_TEAM:
-        text = "Il comando /team ti permette di creare e modificare a tuo piacimento la tua squadra, così da poterla testare contro palestre, selvatici, allenatori e altri giocatori."
+        text = "Il comando /team ti permette di creare e modificare a tuo piacimento la tua squadra, così da poterla testare contro palestre, selvatici, allenatori e altri giocatori\."
     elif query.data == HELP_DEX:
         r = random_pokemon()
-        text =f'La sintassi del comando /dex è, per esempio, "/dex '+r+'"'
+        text =f'La sintassi del comando /dex è, per esempio, "/dex {r}"'
     elif query.data == HELP_FIGHT:
-        text = "Il comando /fight ti permette di testare la tua squadra contro le prossime ostilità." \
-        """\n\nL'opzione "Selvatici" permette di mettere alla prova la tua squadra contro dei Pokémon della potenza pari alla prossima casella cattura (nel caso ci si trovi su una, quella attuale).""" \
-        """\n\nL'opzione "Allenatore" permette di mettere alla prova la tua squadra contro i Pokémon di un allenatore dalla potenza pari alla prossima casella palestra (nel caso ci si trovi su una, quella attuale)."""
+        text = "Il comando /fight ti permette di testare la tua squadra contro le prossime ostilità\." \
+        """\n\nL'opzione "Selvatici" permette di mettere alla prova la tua squadra contro dei Pokémon della potenza pari alla prossima casella cattura \(nel caso ci si trovi su una, quella attuale\)\.""" \
+        """\n\nL'opzione "Allenatore" permette di mettere alla prova la tua squadra contro i Pokémon di un allenatore dalla potenza pari alla prossima casella palestra \(nel caso ci si trovi su una, quella attuale\)\."""
     elif query.data == HELP_CELL:
-        text = "Il comando /cell ti permette di verificare potenze e livelli dei Pokémon presenti nella casella Corrente, Prossima o tra x Caselle."
+        text = "Il comando /cell ti permette di verificare potenze e livelli dei Pokémon presenti nella casella Corrente, Prossima o tra x Caselle\."
     elif query.data == HELP_HELP:
         await query.edit_message_text(text="◉‿◉")
-        for _ in range(random.randint(1,6)):
+        for _ in range(random.randint(0,6)):
             chat_id = query.message.chat_id  # Get the chat ID to send the message to
             await context.bot.send_message(chat_id=chat_id, text="◉‿◉")
             time.sleep(1)
@@ -379,17 +376,22 @@ async def show_command_help(update: Update, context: ContextTypes.DEFAULT_TYPE) 
         reply_markup = InlineKeyboardMarkup(keyboard)
         await context.bot.send_message(chat_id=chat_id, text="◉‿◉", reply_markup=reply_markup)
     elif query.data == HELP_ALTRO:
-        text = '"/cancel" è il comando per uscire da ogni funzione. Se una funzione non si comporta come dovrebbe, prova ad inviare "/cancel" e ricominciare.' \
-        '\n\nSe il bot non risponde a nessun comando, non spammare. Alcune funzioni sono lente, o è semplicemente spento. \n\nSe incontri un bug, o una funzione non si comporta come dovrebbe, sentiti libero di comunicarlo agli sviluppatori.' \
-        '\n\nSableyeBot ha 3 comandi segreti... Alcuni possono usarli solo chi voglio io... Però magari ci sono delle sorprese...'
-    else:
-        text = "Cosa hai detto? Non saresti dovuto finire qui..."
+        text = '"/cancel" è il comando per uscire da ogni funzione\. Se una funzione non si comporta come dovrebbe, prova ad inviare "/cancel" e ricominciare\.' \
+        '\n\nSe il bot non risponde a nessun comando, non spammare\. Alcune funzioni sono lente, o è semplicemente spento\. \n\nSe incontri un bug, o una funzione non si comporta come dovrebbe, sentiti libero di comunicarlo agli sviluppatori\.' \
+        '\n\nSableyeBot ha 3 comandi segreti\. Alcuni possono usarli solo chi voglio io\. Però magari ci sono delle sorprese\.\.\.'\
+        "\n\n\n*FAQ*\n\n"\
+        "*Q: Gli sviluppatori hanno accesso in chiaro alle informazioni della mia squadra?*\n*A:* Sì\n\n"\
+        "*Q: Come si chiama Farfetch\'d?*\n*A:* Farfetchd\n\n"\
+        "*Q: Come si chiama Mega Sableye? E Mega Sableye Y?*\n*A:* Sableye\-mega e Sableye\-mega\-y\n\n"
 
+    else:
+        text = "Cosa hai detto\? Non saresti dovuto finire qui\."
 
     keyboard = [[InlineKeyboardButton("Indietro", callback_data=HELP_BACK)]]
     reply_markup = InlineKeyboardMarkup(keyboard)
     if query.data != HELP_HELP:
-        await query.edit_message_text(text=text, reply_markup=reply_markup)
+        await query.edit_message_text(text=text, parse_mode='MarkdownV2', reply_markup=reply_markup)
+
 
 async def help_button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.callback_query
@@ -470,7 +472,7 @@ async def gym_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         # Rest of your existing code for handling other gym types
         gym_type = query.data.split('_')[1]
         chat_id = update.effective_chat.id
-        with open(PATH+'/gym_data.json', 'r') as file:
+        with open(ENV_PATH+'/gym_data.json', 'r') as file:
             gym_data = json.load(file)
         enemy_powers = gym_data[gym_type]["power"]
         temp_multi   = gym_data[gym_type]["multiplier"]
@@ -588,13 +590,13 @@ CONFIRM_EDIT, CHOOSING_POKEMON, CHOOSING_LEVEL = range(3)
 
 def change_secret_player_data_team(update: Update, index, pl, new_value): # index is the pokemon index (0-9), pl is 0-1 (0 = pokemon, 1 = livello)
 
-    with open(PATH+'/secret_player_data.json', 'r') as file:
+    with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
         data = json.load(file)
 
     data[str(update.effective_user.id)]["team"][index][pl] = new_value
 
     ## Save our changes to JSON file
-    jsonFile = open(PATH+"/secret_player_data.json", "w+")
+    jsonFile = open(ENV_PATH+"/secret_player_data.json", "w+")
     jsonFile.write(json.dumps(data))
     jsonFile.close()
 
@@ -605,7 +607,7 @@ async def team_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     except:
         pass
     chat_id = update.effective_chat.id
-    with open(PATH+'/secret_player_data.json', 'r') as file:
+    with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
         data = json.load(file)
         current_team = data[str(chat_id)]["team"]
     keyboard = create_team_keyboard(current_team)
@@ -662,7 +664,7 @@ async def choose_level(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
 
         # Read updated team to show
         chat_id = update.effective_chat.id
-        with open(PATH+'/secret_player_data.json', 'r') as file:
+        with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
             data = json.load(file)
             current_team = data[str(chat_id)]["team"]
 
@@ -683,7 +685,7 @@ async def team_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
     # Qui ci stanno un botto di cambi di valori. Quindi modifico direttamente il file. Brutto ma chissene...
     if action in ['minus', 'plus']:
 
-        with open(PATH+'/secret_player_data.json', 'r') as file:
+        with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
             data = json.load(file)
 
         current_team = data[str(update.effective_user.id)]["team"]
@@ -706,7 +708,7 @@ async def team_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
 
         data[str(update.effective_user.id)]["team"] = current_team
         ## Save our changes to JSON file
-        jsonFile = open(PATH+"/secret_player_data.json", "w+")
+        jsonFile = open(ENV_PATH+"/secret_player_data.json", "w+")
         jsonFile.write(json.dumps(data))
         jsonFile.close()
 
@@ -738,7 +740,7 @@ async def confirm_edit(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
     elif query.data == "edit_confirm_no":
         # Read the current team data
         chat_id = update.effective_chat.id
-        with open(PATH+'/secret_player_data.json', 'r') as file:
+        with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
             data = json.load(file)
             current_team = data[str(chat_id)]["team"]
 
@@ -798,29 +800,44 @@ async def ping_all_start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         return ConversationHandler.END
 
 async def send_ping_all(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    bot = Bot(token="7119226556:AAErwxsF7x0rksunnoKp3_ItLcQPfQdlqlM")
-    with open(PATH+'/secret_player_data.json', 'r') as file:
+    #bot = Bot(token="7119226556:AAErwxsF7x0rksunnoKp3_ItLcQPfQdlqlM")
+    with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
         accounts = json.load(file)
         if update.message.text:
             content = update.message.text
             for idd in accounts.keys():
-                await bot.send_message(chat_id=idd, text = content)
+                try:
+                    await context.bot.send_message(chat_id=idd, text = content)
+                except:
+                    print(f'ping_all to id : {idd} failed. (Probably no chat existing with the bot)')
         elif update.message.photo:
             content = update.message.photo[-1].file_id  # Get the largest photo
             for idd in accounts.keys():
-                await bot.send_photo(chat_id=idd, photo=content)
+                try:
+                    await context.bot.send_photo(chat_id=idd, photo=content)
+                except:
+                    print(f'ping_all to id : {idd} failed. (Probably no chat existing with the bot)')
         elif update.message.document:
             content = update.message.document.file_id
             for idd in accounts.keys():
-                await bot.send_document(chat_id=idd, document=content)
+                try:
+                    await context.bot.send_document(chat_id=idd, document=content)
+                except:
+                    print(f'ping_all to id : {idd} failed. (Probably no chat existing with the bot)')
         elif update.message.audio:
             content = update.message.audio.file_id
             for idd in accounts.keys():
-                await bot.send_audio(chat_id=idd, audio=content)
+                try:
+                    await context.bot.send_audio(chat_id=idd, audio=content) # File audio, non messaggi audio
+                except:
+                    print(f'ping_all to id : {idd} failed. (Probably no chat existing with the bot)')
         elif update.message.video:
             content = update.message.video.file_id
             for idd in accounts.keys():
-                await bot.send_video(chat_id=idd, video=content)
+                try:
+                    await context.bot.send_video(chat_id=idd, video=content)
+                except:
+                    print(f'ping_all to id : {idd} failed. (Probably no chat existing with the bot)')
         else:
             await update.message.reply_text("Nah... Questo non lo posso inviare... Per adesso...")
     return ConversationHandler.END
@@ -837,7 +854,7 @@ async def spy(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         pass
     chat_id = update.effective_chat.id
     if whitelist(chat_id):
-        with open(PATH+'/secret_player_data.json', 'r') as file:
+        with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
             accounts = json.load(file)
             for id in accounts.keys():
                 await update.message.reply_text(f'Id: {id}, username: {accounts[id]["username"]}, first_name: {accounts[id]["first_name"]}')
@@ -1046,7 +1063,7 @@ async def lega_button_callback(update: Update, context: ContextTypes.DEFAULT_TYP
 
 async def lega_single_get_trainer(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.user_data['enemy_trainer'] = update.message.text
-    with open(PATH+'/public_player_data.json', 'r') as file:
+    with open(ENV_PATH+'/public_player_data.json', 'r') as file:
         enemies = json.load(file)
     if context.user_data['enemy_trainer'] in enemies.keys():
         await update.message.reply_text("Dimmi un Pokémon e un livello.\n\nScrivi \"Pokémon Livello\"... ")
@@ -1333,7 +1350,7 @@ def get_pokemon_image_path(pokemon_name):
     Searches for the image in the /images/pokemons folder.
     Returns 'Missing.png' if the specific Pokemon image is not found.
     """
-    base_path = PATH+"/images/pokemons"
+    base_path = ENV_PATH+"/images/pokemons"
     pokemon_image = f"{pokemon_name}.png"
     full_path = os.path.join(base_path, pokemon_image)
 
@@ -1352,7 +1369,7 @@ async def card_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     await update.message.reply_text(text)
     # Read updated team to show
     chat_id = str(update.effective_chat.id)
-    with open(PATH+'/secret_player_data.json', 'r') as file:
+    with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
         data = json.load(file)
         team = data[str(chat_id)]["team"]
 
