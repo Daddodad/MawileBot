@@ -35,7 +35,7 @@ async def set_bot_commands(application: Application) -> None:
         BotCommand("gym", "Alla conquista di una medaglia."),
         BotCommand("lega", "Solo i migliori vinceranno..."),
         BotCommand("cell", "Vuoi conoscere il futuro?"),
-        BotCommand("dex", "Chi non conosci?"),
+        BotCommand("dex", "Serve un ripasso?"),
     ]
     await application.bot.set_my_commands(commands)
 

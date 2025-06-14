@@ -15,11 +15,11 @@ import requests
 
 import sys
 if os.path.exists('/home/SableyeBot/src'):
-    PATH = '/home/SableyeBot/src'
-    sys.path.insert(0,PATH) # SableyeBot
+    ENV_PATH = '/home/SableyeBot/src'
+    sys.path.insert(0,ENV_PATH) # SableyeBot
 else:
-    PATH = 'home/MawileBot/src'
-    sys.path.insert(0,PATH) # MawileBot
+    ENV_PATH = 'home/MawileBot/src'
+    sys.path.insert(0,ENV_PATH) # MawileBot
 
 from datetime import datetime, date
 LvL = [5,6,7,8,10,11,13,13,15,16,17,19,20,22,22,23,25,26,27,29,30,31,33,36,38,41,43,45,46,48,51,54,57,59,62,62,65,67,69,71,73,76]
@@ -69,7 +69,7 @@ def random_pokemon():
     return poke.get(dex = r).name.capitalize()
 
 def random_player():
-    with open(PATH+'/public_player_data.json', 'r') as file:
+    with open(ENV_PATH+'/public_player_data.json', 'r') as file:
         data = json.load(file)
     return random.choice(list(data.keys()))
 
@@ -129,7 +129,7 @@ def calculate_bonus_answer(bonus_pokemon, moltiplicatore):
     return text
 
 async def check_route(chat_id):
-    jsonFile = open(PATH+"/secret_player_data.json", "r") # Open the JSON file for reading
+    jsonFile = open(ENV_PATH+"/secret_player_data.json", "r") # Open the JSON file for reading
     data = json.load(jsonFile) # Read the JSON into the buffer
     jsonFile.close() # Close the JSON file
 
@@ -137,21 +137,21 @@ async def check_route(chat_id):
 
 async def add_route(chat_id, route):
 
-    jsonFile = open(PATH+"/secret_player_data.json", "r") # Open the JSON file for reading
+    jsonFile = open(ENV_PATH+"/secret_player_data.json", "r") # Open the JSON file for reading
     data = json.load(jsonFile) # Read the JSON into the buffer
     jsonFile.close() # Close the JSON file
 
     data[chat_id]["route"] = route
 
     ## Save our changes to JSON file
-    jsonFile = open(PATH+"/secret_player_data.json", "w+")
+    jsonFile = open(ENV_PATH+"/secret_player_data.json", "w+")
     jsonFile.write(json.dumps(data))
     jsonFile.close()
 
 
 def add_new_player(update: Update):
 
-    jsonFile = open(PATH+"/secret_player_data.json", "r") # Open the JSON file for reading
+    jsonFile = open(ENV_PATH+"/secret_player_data.json", "r") # Open the JSON file for reading
     data = json.load(jsonFile) # Read the JSON into the buffer
     jsonFile.close() # Close the JSON file
 
@@ -165,7 +165,7 @@ def add_new_player(update: Update):
         }
 
         ## Save our changes to JSON file
-        jsonFile = open(PATH+"/secret_player_data.json", "w+")
+        jsonFile = open(ENV_PATH+"/secret_player_data.json", "w+")
         jsonFile.write(json.dumps(data))
         jsonFile.close()
 
@@ -199,7 +199,7 @@ def poke_lega_team(poke_liv, name,molt):
 
 
 def has_a_team(chat_id):
-    jsonFile = open(PATH+"/secret_player_data.json", "r") # Open the JSON file for reading
+    jsonFile = open(ENV_PATH+"/secret_player_data.json", "r") # Open the JSON file for reading
     data = json.load(jsonFile) # Read the JSON into the buffer
     jsonFile.close() # Close the JSON file
 
@@ -214,7 +214,7 @@ def poke_lega_test(pokemon, level, name, multiplier ,only_perc = False):
 
     message = f'Trainer: {name}\n'
 
-    with open(PATH+'/public_player_data.json', 'r') as file:
+    with open(ENV_PATH+'/public_player_data.json', 'r') as file:
         enemies = json.load(file)
 
     pokemon_bst = get_poke_bst(pokemon)
@@ -268,7 +268,7 @@ def poke_lega_all(multiplier):
     #message = f'Trainer: {name}\n'
     message = ''
 
-    with open(PATH+'/public_player_data.json', 'r') as file:
+    with open(ENV_PATH+'/public_player_data.json', 'r') as file:
         enemies = json.load(file)
 
     order = []
@@ -355,7 +355,7 @@ def extract_first_number(cell):
         return None
     
 def poke_lega_team_team(chat_id, enemies):
-    with open(PATH+'/secret_player_data.json', 'r') as file:
+    with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
         priv_data = json.load(file)
     team = [[pokemon[0], get_power(pokemon[0], pokemon[1])] for pokemon in priv_data[chat_id]["team"] if pokemon[0]]
     dfs = []
@@ -376,7 +376,7 @@ def poke_lega_team_team(chat_id, enemies):
     new_column_names += [f"{col} ({potenze[k-2]})" for k, col in enumerate(concat_data.columns[2:], start=2)]
     concat_data.columns = new_column_names
 
-    path = PATH+f"/images/{chat_id}_lega_team_team.png"
+    path = ENV_PATH+f"/images/{chat_id}_lega_team_team.png"
     create_pokemon_collage(concat_data, type = 'lega', path=path, enemy_powers=None)
 
     #save_dataframe_as_image_alt(concat_data, path,potenze) # OLD IMAGE METHOD
@@ -384,10 +384,10 @@ def poke_lega_team_team(chat_id, enemies):
     return path
 
 def poke_gym(chat_id, gym):
-    with open(PATH+'/secret_player_data.json', 'r') as file:
+    with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
         priv_data = json.load(file)
     team = [[pokemon[0], get_power(pokemon[0], pokemon[1])] for pokemon in priv_data[chat_id]["team"] if pokemon[0]]
-    with open(PATH+'/gym_data.json', 'r') as file:
+    with open(ENV_PATH+'/gym_data.json', 'r') as file:
         gym_data = json.load(file)
     if gym_data[gym]["actual_team"] == []:
         enemy = gym_data[gym]["team"]
@@ -402,7 +402,7 @@ def poke_gym(chat_id, gym):
         #tab = tab.style.apply(highlight_max, subset=tab.columns[2:], args=enemy_powers)
 
 
-    path = PATH+f"/images/{chat_id}.png"
+    path = ENV_PATH+f"/images/{chat_id}.png"
     create_pokemon_collage(tab, type = 'gym', path=path, enemy_powers = limits)
 
     #save_dataframe_as_image(tab, path)  # OLD IMAGE METHOD
@@ -490,11 +490,11 @@ def poke_cell(cell):
 
 
 async def poke_check_if_evo(chat_id,pokemon,lvl):
-    with open(PATH+"/secret_player_data.json", 'r') as f:
+    with open(ENV_PATH+"/secret_player_data.json", 'r') as f:
         secret = json.load(f)
     route = secret[chat_id]["route"]
 
-    with open(PATH+f"/{route}_evo_file.json", 'r') as ef:
+    with open(ENV_PATH+f"/{route}_evo_file.json", 'r') as ef:
         evo_dict = json.load(ef)
 
     if pokemon in evo_dict:
@@ -513,11 +513,11 @@ async def poke_check_if_evo(chat_id,pokemon,lvl):
     return pokemon
 
 def poke_check_if_evo_not_async(chat_id,pokemon,lvl):
-    with open(PATH+"/secret_player_data.json", 'r') as f:
+    with open(ENV_PATH+"/secret_player_data.json", 'r') as f:
         secret = json.load(f)
     route = secret[chat_id]["route"]
 
-    with open(PATH+f"/{route}_evo_file.json", 'r') as ef:
+    with open(ENV_PATH+f"/{route}_evo_file.json", 'r') as ef:
         evo_dict = json.load(ef)
 
     if pokemon in evo_dict:
@@ -536,11 +536,11 @@ def poke_check_if_evo_not_async(chat_id,pokemon,lvl):
     return pokemon
 
 def poke_evo_level(chat_id,pokemon):
-    with open(PATH+"/secret_player_data.json", 'r') as f:
+    with open(ENV_PATH+"/secret_player_data.json", 'r') as f:
         secret = json.load(f)
     route = secret[chat_id]["route"]
 
-    with open(PATH+f"/{route}_evo_file.json", 'r') as ef:
+    with open(ENV_PATH+f"/{route}_evo_file.json", 'r') as ef:
         evo_dict = json.load(ef)
 
     lvl = '-'
@@ -562,7 +562,7 @@ def poke_cell_specific(route,cell,encounters):
     casella = int(((today-start).days-pausa)/2) + offset
     multiplier = 5 + 3*int(casella/7)
 
-    with open(PATH+f"/{route}_evo_file.json", 'r') as ef:
+    with open(ENV_PATH+f"/{route}_evo_file.json", 'r') as ef:
         evo_dict = json.load(ef)
 
     if casella < 42:
@@ -590,7 +590,7 @@ async def poke_fight(chat_id,trainer,pokemons):
 
 
 async def poke_trainer(chat_id,pokemons):
-    with open(PATH+'/secret_player_data.json', 'r') as file:
+    with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
         priv_data = json.load(file)
     team = [[pokemon[0], get_power(pokemon[0], pokemon[1])] for pokemon in priv_data[chat_id]["team"] if pokemon[0]]
 
@@ -614,7 +614,7 @@ async def poke_trainer(chat_id,pokemons):
         #tab = tab.style.apply(highlight_max, subset=tab.columns[2:], args=enemy_powers)
 
 
-    path = PATH+f"/images/{chat_id}.png"
+    path = ENV_PATH+f"/images/{chat_id}.png"
     create_pokemon_collage(tab, type = 'trainer', path=path, enemy_powers = enemy_powers)
 
     #save_dataframe_as_image(tab, path) # OLD IMAGE METHOD
@@ -622,7 +622,7 @@ async def poke_trainer(chat_id,pokemons):
 
 
 async def poke_encounter(chat_id,encounter):
-    with open(PATH+'/secret_player_data.json', 'r') as file:
+    with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
         priv_data = json.load(file)
     team = [[pokemon[0], get_power(pokemon[0], pokemon[1])] for pokemon in priv_data[chat_id]["team"] if pokemon[0]]
     route = priv_data[chat_id]["route"]
@@ -646,7 +646,7 @@ async def poke_encounter(chat_id,encounter):
     #if isinstance(tab, pd.DataFrame) and hasattr(tab, 'style'):  # OLD IMAGE METHOD
         #tab = tab.style.apply(highlight_max, subset=tab.columns[2:], args=enemy_powers)
 
-    path = PATH+f"/images/{chat_id}.png"
+    path = ENV_PATH+f"/images/{chat_id}.png"
     create_pokemon_collage(tab, type = 'encounter', path=path, enemy_powers = enemy_powers)
 
     # save_dataframe_as_image(tab, path)  # OLD IMAGE METHOD
@@ -708,7 +708,7 @@ def poke_counter(pokemon, level=100):
 
     multiplier = 20
 
-    with open(PATH+'/public_player_data.json', 'r') as file:
+    with open(ENV_PATH+'/public_player_data.json', 'r') as file:
         enemies = json.load(file)['generic']
 
     pokemon_bst = get_poke_bst(pokemon)
@@ -742,14 +742,14 @@ def poke_gym_test(chat_id, pokemon, livello=0, next=4):
     while casella+1 > gym_cell[offset]:
         offset += 1
 
-    with open(PATH+'/gym_data.json', 'r') as file:
+    with open(ENV_PATH+'/gym_data.json', 'r') as file:
         gym_data = json.load(file)
 
-    with open(PATH+"/secret_player_data.json", 'r') as f:
+    with open(ENV_PATH+"/secret_player_data.json", 'r') as f:
         secret = json.load(f)
     route = secret[chat_id]["route"]
 
-    with open(PATH+f"/{route}_evo_file.json", 'r') as ef:
+    with open(ENV_PATH+f"/{route}_evo_file.json", 'r') as ef:
         evo_dict = json.load(ef)
 
     results = []
@@ -869,9 +869,9 @@ def create_text_image(text, background_color,lines_left_top_right_bottom = (True
     draw = ImageDraw.Draw(image) # Prepare to add text
     try: # Load bold font for the text
         if len(text) > 11:
-            font = ImageFont.truetype("arialbd.ttf", 24)  # Smaller font if text is longer than 8 characters
+            font = ImageFont.truetype(os.path.join(ENV_PATH, 'arialbd.ttf'), 24)  # Smaller font if text is longer than 8 characters
         else:
-            font = ImageFont.truetype("arialbd.ttf", 45)  # Regular font for short text
+            font = ImageFont.truetype(os.path.join(ENV_PATH, 'arialbd.ttf'), 45)  # Regular font for short text
     except IOError:
         font = ImageFont.load_default()  # Fallback to default font if custom font isn't available
     position = (30, 25)  # Add the text at a fixed position
@@ -916,9 +916,9 @@ def create_pokemon_name_image(pokemon_name, front = True, shiny_or_default = 'de
     draw = ImageDraw.Draw(blank_image)  # Prepare to add text
     try:
         if len(pokemon_name) > 12:
-            font_bold = ImageFont.truetype("arialbd.ttf", 14)  # Smaller font if the name is longer than 12 characters
+            font_bold = ImageFont.truetype(os.path.join(ENV_PATH, 'arialbd.ttf'), 14)  # Smaller font if the name is longer than 12 characters
         else:
-            font_bold = ImageFont.truetype("arialbd.ttf", 24)  # Regular bold font for shorter names
+            font_bold = ImageFont.truetype(os.path.join(ENV_PATH, 'arialbd.ttf'), 24)  # Regular bold font for shorter names
     except IOError:
         font_bold = ImageFont.load_default()  # Fallback to default font if custom font isn't available
     if len(pokemon_name) > 12: # Add the Pokémon name to the right of the sprite
@@ -965,10 +965,10 @@ def create_pokemon_image(pokemon_name, power, front = False, shiny_or_default = 
     draw = ImageDraw.Draw(blank_image) # Prepare to add text
     try:     # Load bold font for the name and a larger font for the power number
         if len(pokemon_name) > 12:
-            font_bold = ImageFont.truetype("arialbd.ttf", 14)  # Smaller font if the name is longer than 12 characters
+            font_bold = ImageFont.truetype(os.path.join(ENV_PATH, 'arialbd.ttf'), 14)  # Smaller font if the name is longer than 12 characters
         else:
-            font_bold = ImageFont.truetype("arialbd.ttf", 24)  # Regular bold font for shorter names
-        font_large = ImageFont.truetype("arialbd.ttf", 44)  # Larger bold font for power number
+            font_bold = ImageFont.truetype(os.path.join(ENV_PATH, 'arialbd.ttf'), 24)  # Regular bold font for shorter names
+        font_large = ImageFont.truetype(os.path.join(ENV_PATH, 'arialbd.ttf'), 44)  # Larger bold font for power number
     except IOError:
         font_bold = ImageFont.load_default()  # Fallback to default font if custom font isn't available
         font_large = ImageFont.load_default()

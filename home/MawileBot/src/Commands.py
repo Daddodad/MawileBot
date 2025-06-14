@@ -371,7 +371,7 @@ async def show_command_help(update: Update, context: ContextTypes.DEFAULT_TYPE) 
         for _ in range(random.randint(0,6)):
             chat_id = query.message.chat_id  # Get the chat ID to send the message to
             await context.bot.send_message(chat_id=chat_id, text="◉‿◉")
-            time.sleep(1)
+            await asyncio.sleep(1)
         keyboard = [[InlineKeyboardButton("Indietro", callback_data=HELP_BACK)]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         await context.bot.send_message(chat_id=chat_id, text="◉‿◉", reply_markup=reply_markup)
