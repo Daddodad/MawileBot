@@ -1,2 +1,5 @@
-src/__pycache__/
-D:\Desktop_fake\MawileBot\home\MawileBot\src\__pycache__
+# Ignore all __pycache__ folders recursively
+**/__pycache__/
+
+# Or more specifically:
+home/MawileBot/src/__pycache__/
