@@ -1164,3 +1164,7 @@ def encounter_highlight_max(s, limits, col_index):
             colors.append('background-color: grey')
     #is_max = s == s.max()
     return colors
+
+async def automatic_card_reader(image): # wants PIL image (for testing)
+    print('OOOOOOOOOOOOOOOOOOO')
+    return None

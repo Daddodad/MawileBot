@@ -22,14 +22,16 @@ if os.path.exists('/home/SableyeBot/src'):
     ENV_PATH = '/home/SableyeBot/src'
     sys.path.insert(0,ENV_PATH) # SableyeBot
 else:
-    ENV_PATH = 'home/MawileBot/src'
+    ENV_PATH = './home/MawileBot/src'
     sys.path.insert(0,ENV_PATH) # MawileBot
+    sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 
 
 from poke_lib import calculate_bonus_answer, random_pokemon, random_player, get_power, poke_evo_level,format_types_emoji
 from poke_lib import add_new_player, poke_lega_single, poke_lega_all, poke_gym, poke_exist, poke_dex1, poke_dex2, poke_cell
 from poke_lib import add_route,check_route, poke_check_if_evo, poke_fight, poke_counter, has_a_team, poke_gym_test, poke_lega_team_team
-
+from poke_lib import automatic_card_reader
 # ----------------------------------------------------------------- GENERIC COMMANDS --------------------------------------------------------------------------------
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -65,8 +67,6 @@ async def id_check(update: Update) ->None:
         raise UnauthorizedAccess("You are not authorized to use this bot.") # Soluzione terribile, but it works...
 
 
-
-
 # ----------------------------------------------------------------- START COMMAND -----------------------------------------------------------------------------------
 ROUTE_SELECTION, ADDING_TEAM = range(2)
 
@@ -84,9 +84,43 @@ def get_start_conversation_handler():
         ],
     )
 
+async def curse_player(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    cursed_replies = [
+            "Ancora tu?! Uff...",
+            "Daiii... di nuovo tu?",
+            "Ancora qui? Non ti basta mai?",
+            "Ma non ce la fai da solo?",
+            "Non ti basta mai? Non hai amici?",
+            "Proprio non riesci, eh?",
+            "Non me lo hai già chiesto?",
+            "Sei davvero così disperato?",
+        ]
+    cursed_stikers = [
+                "CAACAgQAAxkBAAE2SQpoTVebbLxq92-_A3-6isFYSzINJAACHRAAAtMaIFJZzabuUDgjbTYE",
+                "CAACAgQAAxkBAAE2SQxoTVeqkbq1rZE2mV-8H2c3np0PmgAC4QADgKNGBFpj3sLWH-PsNgQ",
+                "CAACAgQAAxkBAAE2SRBoTVfqsadgQv9WYJ4CD1s2vTKS4wAC6g4AApX1MFGvnwdiJDE_EDYE",
+                "CAACAgQAAxkBAAE2SRZoTVgZ9Hx9vle53mkjxagGV_PiPgACzgIAAuld0hQGV7PTLBbxhDYE",
+                "CAACAgQAAxkBAAE2SSpoTVneOJpmvNpYYY3hb2zKONHWvQAC5QADgKNGBPPD-fs8i4h5NgQ",
+                "CAACAgQAAxkBAAE2SSxoTVn1MxBdN87LQP35E_gPAcHcLQAC_QADgKNGBIqshWXCwam8NgQ",
+                "CAACAgQAAxkBAAE2STRoTVounHt6Pl5w4v96xpKZ78cLIAACuwkAAg6_-FFqh7ktU56NZzYE",
+                "CAACAgQAAxkBAAE2STZoTVo6DJy9k86xgrvUm6kis9rV9gACXQgAAs0T4VN2G8WyqVK6ozYE",
+                "CAACAgQAAxkBAAE2SThoTVpI-VUQhGu0pkVEunOJ-9yXgQACpQoAAt1GoVIn2PM9ZiAkmzYE",
+                "CAACAgQAAxkBAAE2STxoTVqSWKpJsgABZOMc_Cyqwo5emqkAAn4AA0tp7hATAAFh4WBoDl02BA",
+                "CAACAgQAAxkBAAE2STpoTVqElBoxDdzAe3o3NfGHvrch9wACfQAEOuQGGu4twcvDFPs2BA"
+            ]
+    if random.random() > 0.95:
+        await update.message.reply_text(random.choice(cursed_replies))
+        await asyncio.sleep(1)
+        if random.random() > 0.50:
+            await update.message.reply_sticker(random.choice(cursed_stikers))
+        await asyncio.sleep(1)
+
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     await id_check(update)
+
+    #await curse_player(update, context) # Non lo metterei su start.
+
     try:
         print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /start')
     except:
@@ -222,6 +256,7 @@ def get_bonus_conversation_handler():
     )
 async def bonus(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     await id_check(update)
+    await curse_player(update, context)
     try:
         print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /bonus')
     except:
@@ -436,6 +471,7 @@ CHOOSING_POKEMON_GYM, CHOOSING_GYM_COUNT, CHOOSING_CUSTOM_GYM_COUNT = range(3)
 
 async def gym(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await id_check(update)
+    await curse_player(update, context)
     try:
         print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /gym')
     except:
@@ -602,6 +638,7 @@ def change_secret_player_data_team(update: Update, index, pl, new_value): # inde
 
 async def team_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await id_check(update)
+    await curse_player(update, context)
     try:
         print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /team')
     except:
@@ -888,6 +925,7 @@ async def spy(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 async def dex_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await id_check(update)
+    await curse_player(update, context)
     try:
         print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /dex')
     except:
@@ -909,6 +947,7 @@ WAITING_FOR_X = 0
 
 async def cell_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await id_check(update)
+    await curse_player(update, context)
     try:
         print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /cell')
     except:
@@ -1020,6 +1059,7 @@ CHANGE_POKEMON = "change_pokemon"
 
 async def lega_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await id_check(update)
+    await curse_player(update, context)
     try:
         print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /lega')
     except:
@@ -1253,6 +1293,7 @@ TRAINER = 'trainer'
 
 async def fight_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await id_check(update)
+    await curse_player(update, context)
     try:
         print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /fight')
     except:
@@ -1450,3 +1491,60 @@ async def card_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
             chat_id=chat_id,
             photo=image_file,
         )
+
+# --------------------------------------------------------------------------- AUTOMATIC TEAM UPDATE -------------------------------------------------------------------------------------------
+
+async def team_update(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    await id_check(update)
+    message = update.message
+    caption = message.caption  # for media messages (photo, video, etc.)
+    photo = message.photo  # list of PhotoSize objects, from smallest to largest
+
+    if photo and not caption:
+        await update.message.reply_text("Stai provando ad inviarmi la tua card? Devi girarmi l'intero messaggio...\n\nAltrimenti che fai, mi mandi i meme?")
+
+    elif photo and caption:
+        if caption.strip() == "Ecco la tua card aggiornata!":
+            try:
+                print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') sent a card')
+            except:
+                pass
+            photo_file = photo[-1] # Get the last photo.
+            file = await context.bot.get_file(photo_file.file_id)
+            photo_bytes = await file.download_as_bytearray()
+            pil_image = Image.open(BytesIO(photo_bytes))
+            
+            temp = await automatic_card_reader(pil_image)
+
+            # Qualcosa del GeneratorExit
+            # def change_secret_player_data_team(update: Update, index, pl, new_value): # index is the pokemon index (0-9), pl is 0-1 (0 = pokemon, 1 = livello)
+
+            # with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
+            #     data = json.load(file)
+
+            # data[str(update.effective_user.id)]["team"][index][pl] = new_value
+
+            # ## Save our changes to JSON file
+            # jsonFile = open(ENV_PATH+"/secret_player_data.json", "w+")
+            # jsonFile.write(json.dumps(data))
+            # jsonFile.close()
+
+        return ConversationHandler.END
+
+    return ConversationHandler.END  # Fallback
+
+
+
+def auto_team_update():   # prende solo le immagini (spero)
+    return ConversationHandler(
+        entry_points=[MessageHandler(
+            (filters.Caption() | filters.PHOTO) & ~filters.COMMAND,
+            team_update
+        )],
+        states={},
+        fallbacks=[
+            CommandHandler("cancel", cancel),
+            MessageHandler(filters.COMMAND, end_conversation),
+        ],
+        per_message = False
+    )

@@ -21,6 +21,7 @@ from src.Commands import get_cell_handlers
 from src.Commands import lega_command, get_lega_conversation_handler
 from src.Commands import get_fight_conversation_handler
 from src.Commands import card_command
+from src.Commands import auto_team_update
 
 #from src.Commands import
 # ------------------------------------------------------------------- LISTA COMANDI ----------------------------------------------------------------
@@ -44,8 +45,8 @@ async def set_bot_commands(application: Application) -> None:
 def main() -> None:
     application = Application.builder().token("8115605790:AAF2BAAGm48-Rt-d5U44Mw7rLD02yo2v1hY").post_init(set_bot_commands).build()
 
-    # Add basic answer
-    # application.add_handler(get_edgy_answer(), group = 666)
+    # Add photo answer
+    application.add_handler(auto_team_update(), group = 666)
 
     application.add_handler(get_start_conversation_handler(), group = 1 )
 
