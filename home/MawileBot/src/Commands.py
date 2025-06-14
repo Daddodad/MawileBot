@@ -138,7 +138,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         text = "Se il bot continua a non rispondere, potrebbe essere spento o bloccato. In quel caso, prova scriverlo sul gruppo per confrontarti. Gli sviluppatori provvederanno a fare qualcosa.\n\nAnche quando chiede di aspettare, solitamente si tratta di un minuto al massimo. Se dovesse non rispondere per più tempo, prova a ricominciare da capo."
         await update.message.reply_text(text)
         await asyncio.sleep(5)
-        text = "Come ripetuto prima, il bot è indipendente dalla lega e le sue informazioni sono limitate. Controlla sempre quanto Sableye ti dice, non fidarti alla cieca. E se commette errori, o ci sono bug, puoi farlo presente sul gruppo ufficiale."
+        text = "Come ripetuto prima, il bot è indipendente dalla lega e le sue informazioni sono limitate. Controlla sempre quanto Sableye ti dice, non fidarti alla cieca. E se commette errori, o ci sono bug, puoi farlo presente sul gruppo ufficiale, ma se sbagli la colpa sarà tua..."
         await update.message.reply_text(text)
         await asyncio.sleep(5)
         await add_route(str(update.effective_user.id), "Non_detta")
