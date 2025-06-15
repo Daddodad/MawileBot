@@ -6,4 +6,9 @@ Ogni modifica a ./scr può essere sposata su SableyeBot (almeno, dovrebbe, contr
 
 Ogni modifica a MawileBot.py deve essere trasportata manualmente su SableyeBot.py E SableyeBotApp.py
 
-NOTA PER ME: Lanciarlo da dentro MawileBot con python .\home\MawileBot\MawileBot.py
+NOTA PER ME: 
+    Per il .venv + jupyter-lab:
+        ./..\CNR\av-anomaly-detection\av-anomaly-detection\.venv\Scripts\activate 
+        jupyter-lab
+    Lanciarlo da dentro MawileBot con python:
+        .\home\MawileBot\MawileBot.py
