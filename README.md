@@ -7,6 +7,7 @@ Ogni modifica a ./scr può essere sposata su SableyeBot (almeno, dovrebbe, contr
 Ogni modifica a MawileBot.py deve essere trasportata manualmente su SableyeBot.py E SableyeBotApp.py
 
 NOTA PER ME: 
+    NEW PC:
     Per il .venv + jupyter-lab:
         ./..\CNR\av-anomaly-detection\av-anomaly-detection\.venv\Scripts\activate 
         jupyter-lab
