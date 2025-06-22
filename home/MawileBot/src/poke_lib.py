@@ -12,7 +12,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageOps
 from io import BytesIO
 from skimage.metrics import structural_similarity as ssim
 import base64
-
+import difflib
 import requests
 
 import sys
@@ -1327,7 +1327,11 @@ def compare_with_saved_data_json(splits, json_name='alphabet.json'):
         return ''.join(pokemon_probable_name)
     except:
         return ''.join(str(x) for x in pokemon_probable_name)
-    
+
+def most_similar(query, choices):
+    matches = difflib.get_close_matches(query, choices, n=1, cutoff=0.0)
+    return matches[0] if matches else None
+         
 async def automatic_card_reader(image):
     # Estrai i nomi e i livelli:
     secret_data =[]
@@ -1358,10 +1362,18 @@ async def automatic_card_reader(image):
             splits = process_image_to_remove_black(binary_img)
 
             pokemon_probable_level = compare_with_saved_data_json(splits)
-            pokemon_probable_level = int(pokemon_probable_level)
 
-            if pokemon_probable_name != '' and poke_exist(pokemon_probable_name):
-                secret_data.append([pokemon_probable_name,pokemon_probable_level])
+            if pokemon_probable_name != '':
+                if poke_exist(pokemon_probable_name):
+                    secret_data.append([pokemon_probable_name,int(pokemon_probable_level)])
+                else:
+                    with open(ENV_PATH+'/pokemon_list.json', 'r', encoding="utf-8") as f:
+                        choices = json.load(f)
+
+                    pokemon_name = most_similar(pokemon_probable_name, choices)
+                    print('Not reconized : ',pokemon_probable_name,'. Sub with',pokemon_name)
+
+                    secret_data.append([pokemon_name,int(pokemon_probable_level)])
             else:
                 secret_data.append([None,1])
                              
