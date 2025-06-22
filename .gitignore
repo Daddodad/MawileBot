@@ -4,4 +4,6 @@
 # Or more specifically:
 home/MawileBot/src/__pycache__/
 /home/.ipynb_checkpoints
-home/output_splits/temp/*
+
+# Ignore the whole temp folder
+home/output_splits/temp/
