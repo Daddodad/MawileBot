@@ -1453,33 +1453,33 @@ async def card_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         # Get Pokemon name and image path
         pokemon_name = team[i][0]
         pokemon_image_path = get_pokemon_image_path(pokemon_name)
+        if pokemon_name:
+            # Draw title
+            draw.text((x + 10, y + 5), pokemon_name, fill='black', font=font)
 
-        # Draw title
-        draw.text((x + 10, y + 5), pokemon_name, fill='black', font=font)
+            # Draw separator line
+            draw.line([(x, y + 30), (x + cell_width, y + 30)], fill='black', width=2)
 
-        # Draw separator line
-        draw.line([(x, y + 30), (x + cell_width, y + 30)], fill='black', width=2)
+            # Load and draw Pokemon image
+            try:
+                pokemon_image = Image.open(pokemon_image_path)
+                resized_pokemon = pokemon_image.resize((cell_width - 20, cell_height - 140))
+                image.paste(resized_pokemon, (x + 10, y + 40), resized_pokemon.convert('RGBA'))
+            except Exception as e:
+                #print(f"Error loading image for {pokemon_name}: {e}")
+                placeholder = Image.new('RGB', (cell_width - 20, cell_height - 140), color='lightgray')
+                draw.text((x + 15, y + 45), f"No image for {pokemon_name}", fill='black', font=font)
+                image.paste(placeholder, (x + 10, y + 40))
 
-        # Load and draw Pokemon image
-        try:
-            pokemon_image = Image.open(pokemon_image_path)
-            resized_pokemon = pokemon_image.resize((cell_width - 20, cell_height - 140))
-            image.paste(resized_pokemon, (x + 10, y + 40), resized_pokemon.convert('RGBA'))
-        except Exception as e:
-            #print(f"Error loading image for {pokemon_name}: {e}")
-            placeholder = Image.new('RGB', (cell_width - 20, cell_height - 140), color='lightgray')
-            draw.text((x + 15, y + 45), f"No image for {pokemon_name}", fill='black', font=font)
-            image.paste(placeholder, (x + 10, y + 40))
-
-        # Draw bottom text
-        texts = [["Tipo:",50,f'{format_types_emoji(poke.get(name = pokemon_name).types)}'], ["Potenza:",90,f"{get_power(team[i][0],team[i][1])}"], ["Livello:",80,f"{team[i][1]}"], ["Livello Evo:",110,f"{poke_evo_level(chat_id,pokemon_name)}"]]
-        for j, text in enumerate(texts):
-            text_y = y + cell_height - 108 + j * 22
-            text_y_text = y + cell_height - 108 + j * 23
-            # Draw line above each text, including "Tipo"
-            draw.line([(x, text_y + 15), (x + cell_width, text_y + 15)], fill='black', width=1)
-            draw.text((x + 10, text_y_text + 15), text[0], fill='black', font=font_small)
-            draw.text((x + text[1], text_y_text + 14), text[2], fill='black', font=font)
+            # Draw bottom text
+            texts = [["Tipo:",50,f'{format_types_emoji(poke.get(name = pokemon_name).types)}'], ["Potenza:",90,f"{get_power(team[i][0],team[i][1])}"], ["Livello:",80,f"{team[i][1]}"], ["Livello Evo:",110,f"{poke_evo_level(chat_id,pokemon_name)}"]]
+            for j, text in enumerate(texts):
+                text_y = y + cell_height - 108 + j * 22
+                text_y_text = y + cell_height - 108 + j * 23
+                # Draw line above each text, including "Tipo"
+                draw.line([(x, text_y + 15), (x + cell_width, text_y + 15)], fill='black', width=1)
+                draw.text((x + 10, text_y_text + 15), text[0], fill='black', font=font_small)
+                draw.text((x + text[1], text_y_text + 14), text[2], fill='black', font=font)
 
     # Save the image
     os.makedirs('./images', exist_ok=True)

@@ -11,7 +11,7 @@ import os
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 from io import BytesIO
 from skimage.metrics import structural_similarity as ssim
-
+import base64
 
 import requests
 
@@ -1302,32 +1302,18 @@ def calculate_ssim(pil1,pil2):
     score, _ = ssim(img1, img2, full=True, win_size=win_size)
     return score
 
-def compare_with_saved_data(splits, folder_path='./output_splits'):
-    
-    ########################################################
+def compare_with_saved_data_json(splits, json_name='alphabet.json'):
+
+    # Load JSON file
+    with open(ENV_PATH+'/'+json_name, 'r') as f:
+        data = json.load(f)
+
+    # Decode base64 strings into PIL images
     alphabet = {}
-    for filename in os.listdir(folder_path):
-        if filename.lower().endswith(('.png', '.jpg', '.jpeg')):
-            key = os.path.splitext(filename)[0]
-            image_path = os.path.join(folder_path, filename)
-            img = Image.open(image_path)
-
-            # Determine size of padding
-            width, height = img.size
-            pad_width = max(5 - width, 0)
-            pad_height = max(5 - height, 0)
-
-            # Calculate padding for each side to center the image
-            left = pad_width // 2
-            right = pad_width - left
-            top = pad_height // 2
-            bottom = pad_height - top
-
-            # Pad only if needed
-            padded_img = ImageOps.expand(img, (left, top, right, bottom), fill=0)
-
-            alphabet[key] = padded_img
-    # Quando abbiamo tutte le lettere, salviamo il json direttamente
+    for key, img_str in data.items():
+        img_bytes = base64.b64decode(img_str)
+        img = Image.open(BytesIO(img_bytes))
+        alphabet[key] = img
     
     pokemon_probable_name = []
     for sp in splits:
@@ -1358,7 +1344,7 @@ async def automatic_card_reader(image):
             
             splits = process_image_to_remove_black(binary_img)
             
-            pokemon_probable_name = compare_with_saved_data(splits)
+            pokemon_probable_name = compare_with_saved_data_json(splits)
 
             box_width = 120
             box_height = 47
@@ -1371,8 +1357,10 @@ async def automatic_card_reader(image):
             
             splits = process_image_to_remove_black(binary_img)
 
-            pokemon_probable_level = compare_with_saved_data(splits)
-            if pokemon_probable_name != '' and poke_exist(pokemon_probable_level):
+            pokemon_probable_level = compare_with_saved_data_json(splits)
+            pokemon_probable_level = int(pokemon_probable_level)
+
+            if pokemon_probable_name != '' and poke_exist(pokemon_probable_name):
                 secret_data.append([pokemon_probable_name,pokemon_probable_level])
             else:
                 secret_data.append([None,1])

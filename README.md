@@ -12,4 +12,4 @@ NOTA PER ME:
         ./..\CNR\av-anomaly-detection\av-anomaly-detection\.venv\Scripts\activate 
         jupyter-lab
     Lanciarlo da dentro MawileBot con python:
-        .\home\MawileBot\MawileBot.py
+        python .\home\MawileBot\MawileBot.py
