@@ -1514,20 +1514,16 @@ async def team_update(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
             photo_bytes = await file.download_as_bytearray()
             pil_image = Image.open(BytesIO(photo_bytes))
             
-            temp = await automatic_card_reader(pil_image)
+            secret_data = await automatic_card_reader(pil_image)
+            await update.message.reply_text(secret_data)
 
-            # Qualcosa del GeneratorExit
-            # def change_secret_player_data_team(update: Update, index, pl, new_value): # index is the pokemon index (0-9), pl is 0-1 (0 = pokemon, 1 = livello)
-
-            # with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
-            #     data = json.load(file)
-
-            # data[str(update.effective_user.id)]["team"][index][pl] = new_value
-
-            # ## Save our changes to JSON file
-            # jsonFile = open(ENV_PATH+"/secret_player_data.json", "w+")
-            # jsonFile.write(json.dumps(data))
-            # jsonFile.close()
+            with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
+                 data = json.load(file)
+            data[str(update.effective_user.id)]["team"] = secret_data
+            ## Save our changes to JSON file
+            jsonFile = open(ENV_PATH+"/secret_player_data.json", "w+")
+            jsonFile.write(json.dumps(data))
+            jsonFile.close()
 
         return ConversationHandler.END
 
