@@ -1335,6 +1335,8 @@ def most_similar(query, choices):
 async def automatic_card_reader(image):
     # Estrai i nomi e i livelli:
     secret_data =[]
+    errors = []
+
     for row in range(3):
         for col in range(3):
             box_width = 300
@@ -1362,19 +1364,20 @@ async def automatic_card_reader(image):
             splits = process_image_to_remove_black(binary_img)
 
             pokemon_probable_level = compare_with_saved_data_json(splits)
-
             if pokemon_probable_name != '':
                 if poke_exist(pokemon_probable_name):
                     secret_data.append([pokemon_probable_name,int(pokemon_probable_level)])
+                    errors.append(0)
                 else:
                     with open(ENV_PATH+'/pokemon_list.json', 'r', encoding="utf-8") as f:
                         choices = json.load(f)
 
                     pokemon_name = most_similar(pokemon_probable_name, choices)
-                    print('Not reconized : ',pokemon_probable_name,'. Sub with',pokemon_name)
-
+                    #print('Not recognized : ',pokemon_probable_name,'. Sub with',pokemon_name)
+                    errors.append(1)
                     secret_data.append([pokemon_name,int(pokemon_probable_level)])
             else:
                 secret_data.append([None,1])
-                             
-    return secret_data
+                errors.append(0)
+
+    return secret_data,errors
