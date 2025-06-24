@@ -175,6 +175,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         text = "Come ripetuto prima, il bot è indipendente dalla lega e le sue informazioni sono limitate. Controlla sempre quanto Sableye ti dice, non fidarti alla cieca. E se commette errori, o ci sono bug, puoi farlo presente sul gruppo ufficiale, ma se sbagli la colpa sarà tua..."
         await update.message.reply_text(text)
         await asyncio.sleep(5)
+        text = "🎉🎉NOVITÀ🎉🎉 \n\n Sto imparando a leggere, quindi adesso, invece di usare il comando /team, puoi inviarmi direttamente il messaggio contentente la tua card... \n\nControlla sempre che quel che leggo ia corretto! Un ⚠️ accanto al nome significa che non ho capito bene qualcosa, ma non è detto che abbia sbagliato..."
+        await update.message.reply_text(text)
+        await asyncio.sleep(5)
         await add_route(str(update.effective_user.id), "Non_detta")
         keyboard = [
             [InlineKeyboardButton("Pari", callback_data='even'),
@@ -1431,12 +1434,17 @@ async def card_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     try:
         font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 20)
     except IOError:
-        font = ImageFont.load_default()
-
+        try: 
+            font = ImageFont.truetype(ENV_PATH+'/arialbd.ttf',20)
+        except:
+            font = ImageFont.load_default()
     try:
         font_small = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 17)
     except IOError:
-        font_small = ImageFont.load_default()
+        try: 
+            font_small = ImageFont.truetype(ENV_PATH+'/arialbd.ttf',17)
+        except:
+            font_small = ImageFont.load_default()
 
     # Draw grid
     for i in range(1, 3):
@@ -1514,8 +1522,15 @@ async def team_update(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
             photo_bytes = await file.download_as_bytearray()
             pil_image = Image.open(BytesIO(photo_bytes))
             
-            secret_data = await automatic_card_reader(pil_image)
-            await update.message.reply_text(secret_data)
+            secret_data,errors = await automatic_card_reader(pil_image)
+
+            message = 'Team aggiornato:\n\n'
+            for x,y in zip(secret_data,errors):
+                message+=f'{x[0]}'
+                if y == 1:
+                    message += " (⚠️)"   
+                message +=  f' lvl: {x[1]}\n'       
+            await update.message.reply_text(message)
 
             with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
                  data = json.load(file)
