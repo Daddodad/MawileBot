@@ -78,10 +78,13 @@ def random_player():
 def calculate_bonus(pokea, pokeb, multiplier):
     p1 = poke.get(name=pokea)
     p2 = poke.get(name=pokeb)
+    return(calculate_bonus_via_types(p1.types, p2.types, multiplier))
+
+def calculate_bonus_via_types(types1, types2, multiplier):
     bonus = [0,0]
-    for t1 in p1.types:
+    for t1 in types1:
         res = 1
-        for t2 in p2.types:
+        for t2 in types2:
             res = res * type_interaction(t1,t2)
         if res == 4:
             bonus[1]-=multiplier*4
@@ -93,9 +96,9 @@ def calculate_bonus(pokea, pokeb, multiplier):
             bonus[1]+=multiplier*2
         if res == 0:
             bonus[1]+=multiplier*2
-    for t2 in p2.types:
+    for t2 in types2:
         res = 1
-        for t1 in p1.types:
+        for t1 in types1:
             res = res * type_interaction(t2,t1)
         if res == 4:
             bonus[0]-=multiplier*4
@@ -108,6 +111,7 @@ def calculate_bonus(pokea, pokeb, multiplier):
         if res == 0:
             bonus[0]+=multiplier*2
     return(bonus)
+
 
 def type_interaction(type_att,type_def):
     type_att = pokemon_types.index(type_att)
@@ -391,8 +395,12 @@ def poke_gym(chat_id, gym):
     team = [[pokemon[0], get_power(pokemon[0], pokemon[1])] for pokemon in priv_data[chat_id]["team"] if pokemon[0]]
     with open(ENV_PATH+'/gym_data.json', 'r') as file:
         gym_data = json.load(file)
+
     if gym_data[gym]["actual_team"] == []:
-        enemy = gym_data[gym]["team"]
+            if gym_data[gym]["team"] == ["every type combo"]:
+                enemy = ["every type combo", gym] # enemy potrebbe essere ["every type combo"] e questo fa cose in match_prevision->match_table
+            else:
+                enemy = gym_data[gym]["team"]   
     else:
         enemy = gym_data[gym]["actual_team"]
     enemy_powers = gym_data[gym]["power"]
@@ -428,37 +436,62 @@ def match_prevision(team, enemy, enemy_powers, multiplier):
 
     return tab, limits
 
-
 def match_table(team,enemy,multiplier,limits = None):
-    bonus_netti = []
-    tabellone = []
-    for p in team:
-        bonus_p =[]
-        tabella = [p[0],p[1]]
-        for t in enemy:
-            bonus = calculate_bonus(t, p[0],multiplier)
-            bonus_p.append(-bonus[0]+bonus[1])
-            tabella.append(str(p[1]-bonus[0]+bonus[1])+' ('+str(-bonus[0]+bonus[1])+')')
-        bonus_netti.append(bonus_p)
-        tabellone.append(tabella)
+    if "every type combo" in enemy:
+        bonus_netti = []
+        tabellone = []
+        all_types_combo = generate_all_types_combo(enemy[1])
+        for p in team:
+            bonus_p =[]
+            tabella = [p[0],p[1]]
+            for t in all_types_combo:
+                types2 = poke.get(name=p[0]).types
+                bonus = calculate_bonus_via_types(t, types2 ,multiplier)
+                bonus_p.append(-bonus[0]+bonus[1])
+                tabella.append(str(p[1]-bonus[0]+bonus[1])+' ('+str(-bonus[0]+bonus[1])+')')
+            bonus_netti.append(bonus_p)
+            tabellone.append(tabella)
 
-    tab = pd.DataFrame(tabellone)
-    cols = ['Pokemon', 'Potenza Base']
-    for e in enemy:
-        if e not in cols:
-            cols.append(e)
-        else:
-            i = 2
-            name = e +' '+ str(i)
-            while name in cols:
-                i+=1
+        tab = pd.DataFrame(tabellone)
+        cols = ['Pokemon', 'Potenza Base']
+        all_types_collapsed = ['Type' + '_' + '_'.join(sublist) for sublist in all_types_combo]
+        for e in all_types_collapsed:
+            if e not in cols:
+                cols.append(e)
+            else:
+                i = 2
                 name = e +' '+ str(i)
-            cols.append(name)
-    tab.columns = cols
+                while name in cols:
+                    i+=1
+                    name = e +' '+ str(i)
+                cols.append(name)
+        tab.columns = cols
+    else:
+        bonus_netti = []
+        tabellone = []
+        for p in team:
+            bonus_p =[]
+            tabella = [p[0],p[1]]
+            for t in enemy:
+                bonus = calculate_bonus(t, p[0],multiplier)
+                bonus_p.append(-bonus[0]+bonus[1])
+                tabella.append(str(p[1]-bonus[0]+bonus[1])+' ('+str(-bonus[0]+bonus[1])+')')
+            bonus_netti.append(bonus_p)
+            tabellone.append(tabella)
 
-    #if limits != None:   # OLD IMAGE METHOD
-        #tab = tab.style.apply(highlight_max, subset=cols[2:],args=limits)
-
+        tab = pd.DataFrame(tabellone)
+        cols = ['Pokemon', 'Potenza Base']
+        for e in enemy:
+            if e not in cols:
+                cols.append(e)
+            else:
+                i = 2
+                name = e +' '+ str(i)
+                while name in cols:
+                    i+=1
+                    name = e +' '+ str(i)
+                cols.append(name)
+        tab.columns = cols
     return(bonus_netti,tab)
 
 
@@ -488,7 +521,22 @@ def poke_cell(cell):
     else:
         return None
 
-
+def generate_all_types_combo(type):
+    all_types = [[type]]
+    not_type = [['normal','ice'],   ['ice','normal'],
+                ['normal','bug'],   ['bug','normal'],
+                ['normal','rock'],  ['rock','normal'],
+                ['normal','steel'], ['steel','normal'],
+                ['fire','fairy'],   ['fairy','fire'],
+                ['ice','poison'],   ['poison','ice'],
+                ['ground','fairy'], ['fairy','ground'],
+                ['bug','dragon'],   ['dragon','bug'],
+                ['ghost','rock'],   ['rock','ghost'],
+                ]
+    for t in pokemon_types:
+        if [type,t] not in not_type and t!=type:
+            all_types.append([type,t])
+    return all_types
 
 
 async def poke_check_if_evo(chat_id,pokemon,lvl):
@@ -642,7 +690,7 @@ async def poke_encounter(chat_id,encounter):
     enemy_powers, multiplier = poke_cell_specific(route,offset,encounter)
 
     tab = encounter_prevision(team, encounter, enemy_powers, multiplier)
-    print('ooo',enemy_powers)
+    #print('ooo',enemy_powers)
 
     # If tab is a DataFrame and has a 'style' attribute, it means style.apply was used
     #if isinstance(tab, pd.DataFrame) and hasattr(tab, 'style'):  # OLD IMAGE METHOD
@@ -896,20 +944,44 @@ def create_pokemon_name_image(pokemon_name, front = True, shiny_or_default = 'de
     blank_image = Image.new('RGB', (250, 98), (255, 255, 255)) # Create a blank image (250x96) with white background
 
     sprite_image = Image.new('RGB', (96, 96), (0, 0, 0)).convert("RGBA")
-    try:
-        pokemon = poke.get(name=pokemon_name.lower())
-        if not front:
-            try:
-                sprite_url = pokemon.sprites.back[shiny_or_default]
-                response = requests.get(sprite_url)
-            except:
+    try: # Import the Sprite
+        if 'Type_' not in pokemon_name:
+            pokemon = poke.get(name=pokemon_name.lower())
+            if not front:
+                try:
+                    sprite_url = pokemon.sprites.back[shiny_or_default]
+                    response = requests.get(sprite_url)
+                except:
+                    sprite_url = pokemon.sprites.front[shiny_or_default]
+                    response = requests.get(sprite_url)
+            else:
                 sprite_url = pokemon.sprites.front[shiny_or_default]
                 response = requests.get(sprite_url)
+            sprite_image = Image.open(BytesIO(response.content)).convert("RGBA")  # Fetch the sprite imag
         else:
-            sprite_url = pokemon.sprites.front[shiny_or_default]
-            response = requests.get(sprite_url)
-        sprite_image = Image.open(BytesIO(response.content)).convert("RGBA") # Fetch the sprite imag
+            type_parts = pokemon_name.lower().split('_')[1:]  # Remove 'Type' prefix
+            images = []
+
+            for type_name in type_parts:
+                img_path = ENV_PATH+f"/images/{type_name}.png"
+                img = Image.open(img_path).convert("RGBA")
+                images.append(img)
+
+            max_size = max(max(im.size) for im in images)
+            square_images = [
+                ImageOps.pad(im, (max_size, max_size), color="white") for im in images
+            ]
+
+            if len(square_images) == 1:
+                sprite_image = square_images[0]
+            elif len(square_images) == 2:
+                w, h = square_images[0].size
+                combined = Image.new("RGBA", (w, h * 2), "white")
+                combined.paste(square_images[0], (0, 0))
+                combined.paste(square_images[1], (0, h))
+                sprite_image = combined
     except:
+        print('ooooooooooooooooooooooooooooooo')
         pass
 
     sprite_image = sprite_image.resize((96, 96)) # Resize sprite if needed to fit the blank image (optional)
@@ -946,18 +1018,41 @@ def create_pokemon_image(pokemon_name, power, front = False, shiny_or_default = 
 
     sprite_image = Image.new('RGB', (96, 96), (0, 0, 0)).convert("RGBA") # Default Sprite
     try: # Import the Sprite
-        pokemon = poke.get(name=pokemon_name.lower())
-        if not front:
-            try:
-                sprite_url = pokemon.sprites.back[shiny_or_default]
-                response = requests.get(sprite_url)
-            except:
+        if 'Type_' not in pokemon_name:
+            pokemon = poke.get(name=pokemon_name.lower())
+            if not front:
+                try:
+                    sprite_url = pokemon.sprites.back[shiny_or_default]
+                    response = requests.get(sprite_url)
+                except:
+                    sprite_url = pokemon.sprites.front[shiny_or_default]
+                    response = requests.get(sprite_url)
+            else:
                 sprite_url = pokemon.sprites.front[shiny_or_default]
                 response = requests.get(sprite_url)
+            sprite_image = Image.open(BytesIO(response.content)).convert("RGBA")  # Fetch the sprite imag
         else:
-            sprite_url = pokemon.sprites.front[shiny_or_default]
-            response = requests.get(sprite_url)
-        sprite_image = Image.open(BytesIO(response.content)).convert("RGBA")  # Fetch the sprite imag
+            type_parts = pokemon_name.lower().split('_')[1:]  # Remove 'Type' prefix
+            images = []
+
+            for type_name in type_parts:
+                img_path = ENV_PATH+f"/images/{type_name}.png"
+                img = Image.open(img_path).convert("RGBA")
+                images.append(img)
+
+            max_size = max(max(im.size) for im in images)
+            square_images = [
+                ImageOps.pad(im, (max_size, max_size), color="white") for im in images
+            ]
+
+            if len(square_images) == 1:
+                sprite_image = square_images[0]
+            elif len(square_images) == 2:
+                w, h = square_images[0].size
+                combined = Image.new("RGBA", (w, h * 2), "white")
+                combined.paste(square_images[0], (0, 0))
+                combined.paste(square_images[1], (0, h))
+                sprite_image = combined
     except:
         pass
 
@@ -1021,6 +1116,7 @@ def create_pokemon_collage(df, type = 'gym', path=None, enemy_powers=None):
     for col in range(2, num_cols):
         position = ((col-1) * image_width, 0)
         column_name = df.columns[col]  # Get column name (e.g., "Yanma (195)")
+        print(column_name)
         if type == 'lega':
             pokemon_name, power = column_name.split(' ')
             power = int(power.replace('(','').replace(')',''))
@@ -1335,6 +1431,8 @@ def most_similar(query, choices):
 async def automatic_card_reader(image):
     # Estrai i nomi e i livelli:
     secret_data =[]
+    errors = []
+
     for row in range(3):
         for col in range(3):
             box_width = 300
@@ -1362,19 +1460,20 @@ async def automatic_card_reader(image):
             splits = process_image_to_remove_black(binary_img)
 
             pokemon_probable_level = compare_with_saved_data_json(splits)
-
             if pokemon_probable_name != '':
                 if poke_exist(pokemon_probable_name):
                     secret_data.append([pokemon_probable_name,int(pokemon_probable_level)])
+                    errors.append(0)
                 else:
                     with open(ENV_PATH+'/pokemon_list.json', 'r', encoding="utf-8") as f:
                         choices = json.load(f)
 
                     pokemon_name = most_similar(pokemon_probable_name, choices)
-                    print('Not reconized : ',pokemon_probable_name,'. Sub with',pokemon_name)
-
+                    #print('Not recognized : ',pokemon_probable_name,'. Sub with',pokemon_name)
+                    errors.append(1)
                     secret_data.append([pokemon_name,int(pokemon_probable_level)])
             else:
                 secret_data.append([None,1])
-                             
-    return secret_data
+                errors.append(0)
+
+    return secret_data,errors
