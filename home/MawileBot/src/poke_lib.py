@@ -944,8 +944,7 @@ def create_pokemon_name_image(pokemon_name, front = True, shiny_or_default = 'de
     blank_image = Image.new('RGB', (250, 98), (255, 255, 255)) # Create a blank image (250x96) with white background
 
     sprite_image = Image.new('RGB', (96, 96), (0, 0, 0)).convert("RGBA")
-    try: # Import the Sprite
-        if 'Type_' not in pokemon_name:
+    try:
             pokemon = poke.get(name=pokemon_name.lower())
             if not front:
                 try:
@@ -958,30 +957,7 @@ def create_pokemon_name_image(pokemon_name, front = True, shiny_or_default = 'de
                 sprite_url = pokemon.sprites.front[shiny_or_default]
                 response = requests.get(sprite_url)
             sprite_image = Image.open(BytesIO(response.content)).convert("RGBA")  # Fetch the sprite imag
-        else:
-            type_parts = pokemon_name.lower().split('_')[1:]  # Remove 'Type' prefix
-            images = []
-
-            for type_name in type_parts:
-                img_path = ENV_PATH+f"/images/{type_name}.png"
-                img = Image.open(img_path).convert("RGBA")
-                images.append(img)
-
-            max_size = max(max(im.size) for im in images)
-            square_images = [
-                ImageOps.pad(im, (max_size, max_size), color="white") for im in images
-            ]
-
-            if len(square_images) == 1:
-                sprite_image = square_images[0]
-            elif len(square_images) == 2:
-                w, h = square_images[0].size
-                combined = Image.new("RGBA", (w, h * 2), "white")
-                combined.paste(square_images[0], (0, 0))
-                combined.paste(square_images[1], (0, h))
-                sprite_image = combined
     except:
-        print('ooooooooooooooooooooooooooooooo')
         pass
 
     sprite_image = sprite_image.resize((96, 96)) # Resize sprite if needed to fit the blank image (optional)
@@ -1013,46 +989,69 @@ def create_pokemon_name_image(pokemon_name, front = True, shiny_or_default = 'de
 
     return blank_image
 
+def create_type_name_image(pokemon_name, front = True, shiny_or_default = 'default', lines_left_top_right_bottom = (True,True,True,True)):
+    # Create base blank image
+    blank_image = Image.new('RGB', (250, 98), (255, 255, 255))  # White background
+
+    # Parse types
+    type_parts = pokemon_name.lower().split('_')[1:]  # e.g., ['fire'] or ['fire', 'flying']
+    type_images = []
+
+    # Load and resize each type image to 96x32
+    for type_name in type_parts:
+        img_path = ENV_PATH + f"/images/types/{type_name}.png"
+        img = Image.open(img_path).convert("RGBA")
+        resized = img.resize((96, 32), Image.Resampling.LANCZOS)
+        type_images.append(resized)
+
+    # Create container for the type icons (96x96, white background)
+    type_icon_image = Image.new("RGBA", (96, 96), "white")
+
+    # Paste type images centered vertically
+    if len(type_images) == 1:
+        type_icon_image.paste(type_images[0], (0, (96 - 32) // 2), type_images[0])
+    elif len(type_images) == 2:
+        type_icon_image.paste(type_images[0], (0, (96 - 64) // 2), type_images[0])
+        type_icon_image.paste(type_images[1], (0, (96 - 64) // 2 + 32), type_images[1])
+    else:
+        raise ValueError("Only one or two types are supported.")
+
+    # Paste the type icon image onto the left side of the blank image
+    blank_image.paste(type_icon_image, (1, 1), type_icon_image)
+
+
+    draw = ImageDraw.Draw(blank_image)  # Prepare to add text
+
+    border_width = 1
+    image_width, image_height = blank_image.size
+    if lines_left_top_right_bottom[1]:
+        draw.line([(0, 0), (image_width, 0)], fill="black", width=border_width) #Draw top line
+    if lines_left_top_right_bottom[3]:
+        draw.line([(0, image_height - 1), (image_width, image_height - 1)], fill="black", width=border_width) # Draw bottom line
+    if lines_left_top_right_bottom[0]:
+        draw.line([(0, 0), (0, image_height)], fill="black", width=border_width) # Draw left line
+    if lines_left_top_right_bottom[2]:
+        draw.line([(image_width - 1, 0), (image_width - 1, image_height)], fill="black", width=border_width) # Draw right line
+
+    return blank_image
+
 def create_pokemon_image(pokemon_name, power, front = False, shiny_or_default = 'default', lines_left_top_right_bottom = (True,True,True,True)):
     blank_image = Image.new('RGB', (250, 98), (255, 255, 255))  # Create a blank image (250x98) with white background
 
     sprite_image = Image.new('RGB', (96, 96), (0, 0, 0)).convert("RGBA") # Default Sprite
     try: # Import the Sprite
-        if 'Type_' not in pokemon_name:
-            pokemon = poke.get(name=pokemon_name.lower())
-            if not front:
-                try:
-                    sprite_url = pokemon.sprites.back[shiny_or_default]
-                    response = requests.get(sprite_url)
-                except:
-                    sprite_url = pokemon.sprites.front[shiny_or_default]
-                    response = requests.get(sprite_url)
-            else:
+        pokemon = poke.get(name=pokemon_name.lower())
+        if not front:
+            try:
+                sprite_url = pokemon.sprites.back[shiny_or_default]
+                response = requests.get(sprite_url)
+            except:
                 sprite_url = pokemon.sprites.front[shiny_or_default]
                 response = requests.get(sprite_url)
-            sprite_image = Image.open(BytesIO(response.content)).convert("RGBA")  # Fetch the sprite imag
         else:
-            type_parts = pokemon_name.lower().split('_')[1:]  # Remove 'Type' prefix
-            images = []
-
-            for type_name in type_parts:
-                img_path = ENV_PATH+f"/images/{type_name}.png"
-                img = Image.open(img_path).convert("RGBA")
-                images.append(img)
-
-            max_size = max(max(im.size) for im in images)
-            square_images = [
-                ImageOps.pad(im, (max_size, max_size), color="white") for im in images
-            ]
-
-            if len(square_images) == 1:
-                sprite_image = square_images[0]
-            elif len(square_images) == 2:
-                w, h = square_images[0].size
-                combined = Image.new("RGBA", (w, h * 2), "white")
-                combined.paste(square_images[0], (0, 0))
-                combined.paste(square_images[1], (0, h))
-                sprite_image = combined
+            sprite_url = pokemon.sprites.front[shiny_or_default]
+            response = requests.get(sprite_url)
+        sprite_image = Image.open(BytesIO(response.content)).convert("RGBA")  # Fetch the sprite imag
     except:
         pass
 
@@ -1126,7 +1125,10 @@ def create_pokemon_collage(df, type = 'gym', path=None, enemy_powers=None):
                 pokemon_name = column_name.split(' ')[0]
             except:
                 pokemon_name = column_name
-            individual_image = create_pokemon_name_image(pokemon_name,True,randomly_shiny(),lines_left_top_right_bottom = (False,False,False,True))  # Create the Pokémon image
+            if 'Type_' not in pokemon_name:
+                individual_image = create_pokemon_name_image(pokemon_name,True,randomly_shiny(),lines_left_top_right_bottom = (False,False,False,True))  # Create the Pokémon image
+            else:
+                individual_image = create_type_name_image(pokemon_name,True,lines_left_top_right_bottom = (False,False,False,True))  # Create the Pokémon image
         collage_image.paste(individual_image, position)
         for index in range(num_rows):
             scaled_power = int(df[column_name][index].split(' ')[0].replace('(','').replace(')',''))
