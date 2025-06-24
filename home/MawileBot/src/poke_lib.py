@@ -1001,7 +1001,7 @@ def create_type_name_image(pokemon_name, front = True, shiny_or_default = 'defau
     for type_name in type_parts:
         img_path = ENV_PATH + f"/images/types/{type_name}.png"
         img = Image.open(img_path).convert("RGBA")
-        resized = img.resize((96, 32), Image.Resampling.LANCZOS)
+        resized = img.resize((48*3, 16*3), Image.Resampling.LANCZOS)
         type_images.append(resized)
 
     # Create container for the type icons (96x96, white background)
