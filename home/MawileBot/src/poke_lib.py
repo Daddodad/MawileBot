@@ -535,8 +535,21 @@ def generate_all_types_combo(type):
                 ]
     for t in pokemon_types:
         if [type,t] not in not_type and t!=type:
+            #all_types.append(sorted([type,t]))
             all_types.append([type,t])
+
+    # with open(ENV_PATH+'/type_list_frequency.json') as f:
+    #     type_list_frequency = json.load(f)
+    #     # Define a function to get the frequency
+    # def get_frequency(type_combo):
+    #     key = str(type_combo)  # Match the format used in the JSON
+    #     return type_list_frequency.get(key, 0)
+    # # Sort by frequency (descending)
+    # all_types = sorted(all_types, key=get_frequency, reverse=True)
+
     return all_types
+
+
 
 
 async def poke_check_if_evo(chat_id,pokemon,lvl):
@@ -989,7 +1002,7 @@ def create_pokemon_name_image(pokemon_name, front = True, shiny_or_default = 'de
 
     return blank_image
 
-def create_type_name_image(pokemon_name, front = True, shiny_or_default = 'default', lines_left_top_right_bottom = (True,True,True,True)):
+def create_type_name_image(pokemon_name, lines_left_top_right_bottom = (True,True,True,True)):
     # Create base blank image
     blank_image = Image.new('RGB', (250, 98), (255, 255, 255))  # White background
 
@@ -1010,7 +1023,7 @@ def create_type_name_image(pokemon_name, front = True, shiny_or_default = 'defau
     img_width = type_images[0].width if type_images else 0
 
     # Calculate top-left corner to center the stack in the blank image
-    x_offset = (250 - img_width) // 2
+    x_offset = (200 - img_width) // 2
     y_offset = (98 - total_height) // 2
 
     # Paste images stacked vertically, centered
@@ -1019,6 +1032,15 @@ def create_type_name_image(pokemon_name, front = True, shiny_or_default = 'defau
         y_offset += img.height
 
     draw = ImageDraw.Draw(blank_image)  # Prepare to add text
+
+    # TENTATIVO DI SCRIVERE LE FREQUENZE. FALLISCE DATO CHE CI STANNO ALCUNE FORME CHE NON SO COME CONTARE...
+    # try:
+    #     font_bold = ImageFont.truetype(os.path.join(ENV_PATH, 'arialbd.ttf'), 44)  # Regular bold font for shorter names
+    # except IOError:
+    #     font_bold = ImageFont.load_default()  # Fallback to default font if custom font isn't available
+    # with open(ENV_PATH+'/type_list_frequency.json') as f:
+    #     type_list_frequency = json.load(f)
+    # draw.text((190, 40), '('+str(type_list_frequency[str(type_parts)])+')', fill="black", font=font_bold)  # Center the name vertically
 
     border_width = 1
     image_width, image_height = blank_image.size
@@ -1113,7 +1135,6 @@ def create_pokemon_collage(df, type = 'gym', path=None, enemy_powers=None):
     for col in range(2, num_cols):
         position = ((col-1) * image_width, 0)
         column_name = df.columns[col]  # Get column name (e.g., "Yanma (195)")
-        print(column_name)
         if type == 'lega':
             pokemon_name, power = column_name.split(' ')
             power = int(power.replace('(','').replace(')',''))
@@ -1126,7 +1147,7 @@ def create_pokemon_collage(df, type = 'gym', path=None, enemy_powers=None):
             if 'Type_' not in pokemon_name:
                 individual_image = create_pokemon_name_image(pokemon_name,True,randomly_shiny(),lines_left_top_right_bottom = (False,False,False,True))  # Create the Pokémon image
             else:
-                individual_image = create_type_name_image(pokemon_name,True,lines_left_top_right_bottom = (False,False,False,True))  # Create the Pokémon image
+                individual_image = create_type_name_image(pokemon_name,lines_left_top_right_bottom = (False,False,False,True))  # Create the Pokémon image
         collage_image.paste(individual_image, position)
         for index in range(num_rows):
             scaled_power = int(df[column_name][index].split(' ')[0].replace('(','').replace(')',''))

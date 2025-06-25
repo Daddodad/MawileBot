@@ -13,9 +13,12 @@
  │       │       └── 📁 pokemons/            # Contiene le immagini meme dei Pokémon. Stanno tutte su PythonAnywhere tranne Missingno per evitare bug.
  │       ├── MawileBot.py                    # Main file. Su PythonAnywhere ci sono SableyeBot.py e ./mysite/SableyeBotApp.py.
  │       ├── 📁 old/                         # Roba vecchia per fare ordine.
- │       ├── 📁 output_splits/               # Cartella (locale) per gestire la lettura automatica della squadra.
+ │       ├── 📁 utils/                       # Roba utile per creare files quando escono nuove gen / nuovi stili del bot.
+ │       │   └── 📁 output_splits/           # Cartella (locale) per gestire la lettura automatica della squadra.
  │       │                                   # Usarla solo se ci sono bug nella lettura; è tutto dentro la cartella.
  │       │                                   # L'unica cosa che aggiorna e che va messa anche su SableyeBot è alphabet.json.
+ │       │   └── 📁 pokemon_list_creator/    # Crea il file con tutti i pokemon
+ │       │   └── 📁 pokemon_type_list_creator/# Crea vari file sui tipi di pokemon esistenti
  │       └── test.ipynb e simili             # Stanno qui per i test. Quando li finisci, o li butti o vanno in /old.
  ├── 📁 images/                              # Il bot crea delle figure. Quelle figure finiscono qui (se usato in locale. Su Sableyebot non esiste, sanno dentro src/images. È un bug?)
  │                                           # Su SableyeBot finiscono in /home/SableyeBot/images/. È un bug ma non ci interessa molto, Sableye funziona e questo funziona.
