@@ -7,7 +7,7 @@
     },
 
     "fighting": {
-        "team": ["Magcargo","Sweepa"],
+        "team": ["every type combo"],
         "actual_team": [],
         "power": [33, 33, 39, 39, 45, 45],
         "multiplier": 5
@@ -92,7 +92,7 @@
 
     "poison": {
         "team": ["every type combo"],
-        "actual_team": ["Eevee", "Charizard"],
+        "actual_team": [],
         "power": [270, 270, 290, 290, 310, 310],
         "multiplier": 17
     },

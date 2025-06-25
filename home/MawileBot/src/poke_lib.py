@@ -997,28 +997,26 @@ def create_type_name_image(pokemon_name, front = True, shiny_or_default = 'defau
     type_parts = pokemon_name.lower().split('_')[1:]  # e.g., ['fire'] or ['fire', 'flying']
     type_images = []
 
-    # Load and resize each type image to 96x32
+    # Load and resize each type image to 144x48
     for type_name in type_parts:
         img_path = ENV_PATH + f"/images/types/{type_name}.png"
         img = Image.open(img_path).convert("RGBA")
-        resized = img.resize((48*3, 16*3), Image.Resampling.LANCZOS)
+        resized = img.resize((144, 48), Image.Resampling.LANCZOS)
         type_images.append(resized)
 
-    # Create container for the type icons (96x96, white background)
-    type_icon_image = Image.new("RGBA", (96, 96), "white")
+    # Total height of stacked images (either 48 or 96)
+    total_height = sum(img.height for img in type_images)
+    # Assume all type_images have same width (144)
+    img_width = type_images[0].width if type_images else 0
 
-    # Paste type images centered vertically
-    if len(type_images) == 1:
-        type_icon_image.paste(type_images[0], (0, (96 - 32) // 2), type_images[0])
-    elif len(type_images) == 2:
-        type_icon_image.paste(type_images[0], (0, (96 - 64) // 2), type_images[0])
-        type_icon_image.paste(type_images[1], (0, (96 - 64) // 2 + 32), type_images[1])
-    else:
-        raise ValueError("Only one or two types are supported.")
+    # Calculate top-left corner to center the stack in the blank image
+    x_offset = (250 - img_width) // 2
+    y_offset = (98 - total_height) // 2
 
-    # Paste the type icon image onto the left side of the blank image
-    blank_image.paste(type_icon_image, (1, 1), type_icon_image)
-
+    # Paste images stacked vertically, centered
+    for img in type_images:
+        blank_image.paste(img, (x_offset, y_offset), img)
+        y_offset += img.height
 
     draw = ImageDraw.Draw(blank_image)  # Prepare to add text
 
