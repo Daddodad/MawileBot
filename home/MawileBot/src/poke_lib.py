@@ -1015,7 +1015,7 @@ def create_type_name_image(pokemon_name, lines_left_top_right_bottom = (True,Tru
         for type_name in type_parts:
             img_path = ENV_PATH + f"/images/types/{type_name}.png"
             img = Image.open(img_path).convert("RGBA")
-            resized = img.resize((144, 48), Image.Resampling.LANCZOS)
+            resized = img.resize((144, 48), Image.LANCZOS)
             type_images.append(resized)
 
         # Total height of stacked images (either 48 or 96)
