@@ -1023,7 +1023,7 @@ def create_type_name_image(pokemon_name, lines_left_top_right_bottom = (True,Tru
     img_width = type_images[0].width if type_images else 0
 
     # Calculate top-left corner to center the stack in the blank image
-    x_offset = (200 - img_width) // 2
+    x_offset = (250 - img_width) // 2
     y_offset = (98 - total_height) // 2
 
     # Paste images stacked vertically, centered
