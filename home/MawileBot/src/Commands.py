@@ -51,6 +51,15 @@ def whitelist(chat_id):
 # Werry = 762058738
 
 async def id_check(update: Update) ->None:
+
+    #####################################################################   ██████╗  ██████╗ ████████╗████████╗ ██████╗ ███╗   ██╗███████╗    ██████╗  ██████╗ ███████╗███████╗ ██████╗ 
+    #####################################################################   ██╔══██╗██╔═══██╗╚══██╔══╝╚══██╔══╝██╔═══██╗████╗  ██║██╔════╝    ██╔══██╗██╔═══██╗██╔════╝██╔════╝██╔═══██╗
+    deactivate_the_bot = False # True to disable the bot for testing        ██████╔╝██║   ██║   ██║      ██║   ██║   ██║██╔██╗ ██║█████╗      ██████╔╝██║   ██║█████╗  █████╗  ██║   ██║
+    #####################################################################   ██╔═══╝ ██║   ██║   ██║      ██║   ██║   ██║██║╚██╗██║██╔══╝      ██╔═══╝ ██║   ██║██╔══╝  ██╔══╝  ██║   ██║
+    #####################################################################   ██║     ╚██████╔╝   ██║      ██║   ╚██████╔╝██║ ╚████║███████╗    ██║     ╚██████╔╝██║     ██║     ╚██████╔╝
+    #####################################################################   ╚═╝      ╚═════╝    ╚═╝      ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚══════╝    ╚═╝      ╚═════╝ ╚═╝     ╚═╝      ╚═════╝
+    # Ringraziamo chatgpt per la scritta "Bottone Rosso"
+
     chat_id = update.effective_chat.id
     #print(chat_id)
     if chat_id in []:
@@ -62,10 +71,21 @@ async def id_check(update: Update) ->None:
             "… uh guarda, un bel sacrificio Vassago si è palesato"
             ]
         await update.message.reply_text(random.choice(answers))
-    if not whitelist(chat_id):
-        await update.message.reply_text('█▀█ ███ █▀█   ▞▚ █▀█ C ███ ▛▄ ▞▚ . . . \n █▀█ ███ █▀█   ☰   ▞▚ █▀█ C ███ ▛▄ ▞▚   █ █▄▄   █▀█▀█ ███ █▀█▀█ ☰ █▀█ ▀█▀ ███ . . .')
-        raise UnauthorizedAccess("You are not authorized to use this bot.") # Soluzione terribile, but it works...
+    if deactivate_the_bot:
+        if not whitelist(chat_id):
+            await update.message.reply_text('█▀█ ███ █▀█   ▞▚ █▀█ C ███ ▛▄ ▞▚ . . . \n █▀█ ███ █▀█   ☰   ▞▚ █▀█ C ███ ▛▄ ▞▚   █ █▄▄   █▀█▀█ ███ █▀█▀█ ☰ █▀█ ▀█▀ ███ . . .')
+            raise UnauthorizedAccess("You are not authorized to use this bot.") # Soluzione terribile, but it works...
 
+async def manutenzione(update: Update) ->None:
+    # infila await manutenzione(update)
+    if update.callback_query:
+        await update.callback_query.message.reply_text("⚠️🔧 Questa funzione è in manutenzione 🔧⚠️")
+    elif update.message:
+        await update.message.reply_text("⚠️🔧 Questa funzione è in manutenzione 🔧⚠️")
+    else:
+        print("No message or callback_query in update")
+
+    raise UnauthorizedAccess("This function is being fixed.")
 
 # ----------------------------------------------------------------- START COMMAND -----------------------------------------------------------------------------------
 ROUTE_SELECTION, ADDING_TEAM = range(2)
@@ -505,6 +525,7 @@ async def gym_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     await query.answer()
 
     if query.data == "gym_test":
+        await manutenzione(update)  # fixa con nuove palestre per tipo
         await query.edit_message_text("Dimmi un Pokémon e il suo livello...\n\nScrivi \"Pokémon Livello\".\n\nPuoi inserire livello 0 per ottenre una valutazione dei soli bonus.")
         return CHOOSING_POKEMON_GYM
     else:
@@ -1081,6 +1102,7 @@ async def lega_button_callback(update: Update, context: ContextTypes.DEFAULT_TYP
     await query.answer()
     context.user_data.clear()
     if query.data == BEST_POKEMON:
+        await manutenzione(update)
         await query.edit_message_text("Attendi il prossimo messaggio...")
         text = poke_lega_all(20)
         #await query.edit_message_text(text)
@@ -1093,6 +1115,7 @@ async def lega_button_callback(update: Update, context: ContextTypes.DEFAULT_TYP
         context.user_data['first time'] = True
         return READ_TRAINER
     elif query.data == LEGA_COUNTERS:
+        await manutenzione(update)
         await query.edit_message_text("Di quale Pokémon vuoi conoscere i counter?")
         context.user_data.clear()
         return COUNTER_READ_POKEMON
@@ -1296,6 +1319,7 @@ TRAINER = 'trainer'
 
 async def fight_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await id_check(update)
+    await manutenzione(update)
     await curse_player(update, context)
     try:
         print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /fight')
