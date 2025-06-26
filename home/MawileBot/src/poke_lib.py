@@ -1028,6 +1028,8 @@ def create_type_name_image(pokemon_name, lines_left_top_right_bottom = (True,Tru
         y_offset = (98 - total_height) // 2
     except:
         type_images = [Image.new('RGB', (5, 5), (255, 0, 0)).convert("RGBA")] # Default
+        x_offset = 1
+        y_offset = 1
 
     # Paste images stacked vertically, centered
     for img in type_images:
