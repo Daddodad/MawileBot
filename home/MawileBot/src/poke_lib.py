@@ -1006,25 +1006,28 @@ def create_type_name_image(pokemon_name, lines_left_top_right_bottom = (True,Tru
     # Create base blank image
     blank_image = Image.new('RGB', (250, 98), (255, 255, 255))  # White background
 
-    # Parse types
-    type_parts = pokemon_name.lower().split('_')[1:]  # e.g., ['fire'] or ['fire', 'flying']
-    type_images = []
+    try:
+        # Parse types
+        type_parts = pokemon_name.lower().split('_')[1:]  # e.g., ['fire'] or ['fire', 'flying']
+        type_images = []
 
-    # Load and resize each type image to 144x48
-    for type_name in type_parts:
-        img_path = ENV_PATH + f"/images/types/{type_name}.png"
-        img = Image.open(img_path).convert("RGBA")
-        resized = img.resize((144, 48), Image.Resampling.LANCZOS)
-        type_images.append(resized)
+        # Load and resize each type image to 144x48
+        for type_name in type_parts:
+            img_path = ENV_PATH + f"/images/types/{type_name}.png"
+            img = Image.open(img_path).convert("RGBA")
+            resized = img.resize((144, 48), Image.Resampling.LANCZOS)
+            type_images.append(resized)
 
-    # Total height of stacked images (either 48 or 96)
-    total_height = sum(img.height for img in type_images)
-    # Assume all type_images have same width (144)
-    img_width = type_images[0].width if type_images else 0
+        # Total height of stacked images (either 48 or 96)
+        total_height = sum(img.height for img in type_images)
+        # Assume all type_images have same width (144)
+        img_width = type_images[0].width if type_images else 0
 
-    # Calculate top-left corner to center the stack in the blank image
-    x_offset = (250 - img_width) // 2
-    y_offset = (98 - total_height) // 2
+        # Calculate top-left corner to center the stack in the blank image
+        x_offset = (250 - img_width) // 2
+        y_offset = (98 - total_height) // 2
+    except:
+        type_images = [Image.new('RGB', (5, 5), (255, 0, 0)).convert("RGBA")] # Default
 
     # Paste images stacked vertically, centered
     for img in type_images:
