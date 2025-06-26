@@ -1026,7 +1026,10 @@ def create_type_name_image(pokemon_name, lines_left_top_right_bottom = (True,Tru
         # Calculate top-left corner to center the stack in the blank image
         x_offset = (250 - img_width) // 2
         y_offset = (98 - total_height) // 2
-    except:
+    except Exception as e:
+        print('\n\n\n\n\n\n\n\n\n\n')
+        print(f"Error loading type images for {pokemon_name}: {e}")
+        print('\n\n\n\n\n\n\n\n\n\n')
         type_images = [Image.new('RGB', (5, 5), (255, 0, 0)).convert("RGBA")] # Default
         x_offset = 1
         y_offset = 1
