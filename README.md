@@ -31,7 +31,7 @@
  ## Note operative
 
  1. **SEMPRE PUSHARE SU GITHUB** per evitare branching e casini.  
- 2. Ogni modifica a `./src` può **e DEVE** essere spostata su SableyeBot.  
+ 2. Ogni modifica a `./src` può **e DEVE** essere spostata su SableyeBot (copia incolla dei files).  
     ➤ **FARE ATTENZIONE ALL'USO DI PATH A FOLDER**: usate sempre *ENV_PATH*.  
  3. Ogni modifica a `MawileBot.py` deve essere trasportata **manualmente** su `SableyeBot.py` **e** `SableyeBotApp.py`.  
     ➤ **NON SONO GLI STESSI FILES. ALCUNE COSE SONO DIVERSE APPOSTA, NON COPIATE E BASTA.**  
