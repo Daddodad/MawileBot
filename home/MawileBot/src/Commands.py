@@ -1549,8 +1549,12 @@ async def team_update(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
                 for x,y in zip(secret_data,errors):
                     if x[0] != None:
                         message+=f'{x[0]}'
-                        if y == 1:
+                        if y == '10':
                             message += " (⚠️)"   
+                        if y == '11':
+                            message += " (⚠️🔞)" 
+                        if y == '01':
+                            message += " (🔞)" 
                         message +=  f' lvl: {x[1]}\n'       
                 await update.message.reply_text(message)
 

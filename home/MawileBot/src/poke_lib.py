@@ -192,7 +192,7 @@ def add_new_player(update: Update):
 
 def get_poke_bst(pokemon):
     bst = sum(poke.get(name=pokemon).base_stats)
-    if bst == 680:
+    if bst >= 680:
         return 620
     if bst == 600:
         return 580
@@ -200,7 +200,7 @@ def get_poke_bst(pokemon):
         return 570
     if bst == 570:
         return 555
-    non_leg_w_550_bst = ["florges", "arcanine", "arcanine-hisui","ursaluna-bloodmoon","silvally", ]
+    non_leg_w_550_bst = ["florges", "arcanine", "arcanine-hisui","ursaluna-bloodmoon","silvally","palafin","palafin-hero","Slaking", ]
     if pokemon.lower() in non_leg_w_550_bst:
         return 550
     if pokemon.lower() == 'archeops':
@@ -1514,20 +1514,39 @@ async def automatic_card_reader(image):
             splits = process_image_to_remove_black(binary_img)
 
             pokemon_probable_level = compare_with_saved_data_json(splits)
+
+            box_width = 120
+            box_height = 47
+            left = 760 + col * 345
+            upper = 510 + row * 613
+            right = left + box_width
+            lower = upper + box_height
+            name_crop = image.crop((left, upper, right, lower))
+            binary_img = crop_to_binary(name_crop)
+            
+            splits = process_image_to_remove_black(binary_img)
+
+            pokemon_probable_power = compare_with_saved_data_json(splits)
+
             if pokemon_probable_name != '':
                 if poke_exist(pokemon_probable_name):
                     secret_data.append([pokemon_probable_name,int(pokemon_probable_level)])
-                    errors.append(0)
+                    if round(get_poke_bst(pokemon_name)*pokemon_probable_level/100) != pokemon_probable_power:
+                        errors.append('01')
+                    else:
+                        errors.append('00')
                 else:
                     with open(ENV_PATH+'/pokemon_list.json', 'r', encoding="utf-8") as f:
                         choices = json.load(f)
 
                     pokemon_name = most_similar(pokemon_probable_name, choices)
-                    #print('Not recognized : ',pokemon_probable_name,'. Sub with',pokemon_name)
-                    errors.append(1)
+                    if round(get_poke_bst(pokemon_name)*pokemon_probable_level/100) != pokemon_probable_power:
+                        errors.append('11')
+                    else:
+                        errors.append('10')
                     secret_data.append([pokemon_name,int(pokemon_probable_level)])
             else:
                 secret_data.append([None,1])
-                errors.append(0)
+                errors.append('00')
 
     return secret_data,errors
