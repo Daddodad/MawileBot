@@ -192,6 +192,8 @@ def add_new_player(update: Update):
 
 def get_poke_bst(pokemon):
     bst = sum(poke.get(name=pokemon).base_stats)
+    if pokemon.lower() == "archeops":
+        return 495
     if bst >= 680:
         return 620
     if bst == 600:
