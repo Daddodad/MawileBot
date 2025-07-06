@@ -1532,7 +1532,7 @@ async def team_update(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
     photo = message.photo  # list of PhotoSize objects, from smallest to largest
 
     if photo:
-        try:
+        if True:
             print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') sent a photo')
             photo_file = photo[-1] # Get the last photo.
             file = await context.bot.get_file(photo_file.file_id)
@@ -1565,8 +1565,8 @@ async def team_update(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
                 jsonFile = open(ENV_PATH+"/secret_player_data.json", "w+")
                 jsonFile.write(json.dumps(data))
                 jsonFile.close()
-        except: 
-            await update.message.reply_text("Non mi sembra una card... Che fai, mi mandi i meme?")
+        # except: 
+        #     await update.message.reply_text("Non mi sembra una card... Che fai, mi mandi i meme?")
     return ConversationHandler.END  # Fallback
 
 

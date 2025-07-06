@@ -1531,16 +1531,17 @@ async def automatic_card_reader(image):
             if pokemon_probable_name != '':
                 if poke_exist(pokemon_probable_name):
                     secret_data.append([pokemon_probable_name,int(pokemon_probable_level)])
-                    if round(get_poke_bst(pokemon_name)*pokemon_probable_level/100) != pokemon_probable_power:
+                    if round(get_poke_bst(pokemon_probable_name)*int(pokemon_probable_level)/100) != int(pokemon_probable_power):
                         errors.append('01')
                     else:
                         errors.append('00')
                 else:
+
                     with open(ENV_PATH+'/pokemon_list.json', 'r', encoding="utf-8") as f:
                         choices = json.load(f)
 
                     pokemon_name = most_similar(pokemon_probable_name, choices)
-                    if round(get_poke_bst(pokemon_name)*pokemon_probable_level/100) != pokemon_probable_power:
+                    if round(get_poke_bst(pokemon_name)*int(pokemon_probable_level)/100) != int(pokemon_probable_power):
                         errors.append('11')
                     else:
                         errors.append('10')
