@@ -191,12 +191,22 @@ def add_new_player(update: Update):
     return False
 
 def get_poke_bst(pokemon):
-    if pokemon.lower() == "groudon" or pokemon.lower() == "kyogre":
-        bst = 680
-    elif pokemon.lower() == "slaking":
-        bst = 555
+    bst = sum(poke.get(name=pokemon).base_stats)
+    if bst == 680:
+        return 620
+    if bst == 600:
+        return 580
+    if bst == 580:
+        return 570
+    if bst == 570:
+        return 555
+    non_leg_w_550_bst = ["florges", "arcanine", "arcanine-hisui","ursaluna-bloodmoon","silvally", ]
+    if pokemon.lower() in non_leg_w_550_bst:
+        return 550
+    if pokemon.lower() == 'archeops':
+        return 495
     else:
-        bst = sum(poke.get(name=pokemon).base_stats)
+        return bst
     return bst
 
 def poke_lega_single(poke_liv, name,molt):
