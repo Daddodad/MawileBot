@@ -26,16 +26,28 @@ else:
 from datetime import datetime, date
 LvL = [5,6,7,8,10,11,13,13,15,16,17,19,20,22,22,23,25,26,27,29,30,31,33,36,38,41,43,45,46,48,51,54,57,59,62,62,65,67,69,71,73,76]
 coeff = [3, 3.5, 4, 4.5, 5, 5.5]
-gym_cell = [4,6,8,11,13,16,19,21,23,25,28,30,31,32,34,36,41,42]
+
+##############################################################################################
+#################################   VARIABILI GLOBALI DA CAMBIARE OGNI LEGA ##################
+##############################################################################################
+
+STARTING_DATE = date(2025,7,6)  # Data di inizio della lega, da cambiare ogni lega
+
+EVENTUALE_PAUSA = 0  # Giorni di pausa in una lega
+
+gym_cell = [4,5,7,13,14,18,19,21,23,25,28,29,31,34,35,38,40,42]
+
+gym_types = ["rock", "fighting", "grass", "fairy", "flying", "ice",
+             "dark", "fire", "steel", "electric", "dark", "ground", "bug",
+             "normal", "poison", "psychic", "dragon", "water"]
+
+###############################################################################################
+###############################################################################################
+###############################################################################################
 
 pokemon_types = ["normal", "fire", "water", "electric", "grass", "ice",
                  "fighting", "poison", "ground", "flying", "psychic",
                  "bug", "rock", "ghost", "dragon", "dark", "steel", "fairy"]
-
-
-gym_types = ["rock", "fighting", "dark", "electric", "fairy", "grass",
-             "normal", "fire", "bug", "flying", "ghost", "ice", "ground",
-             "poison", "psychic", "water", "steel", "dragon"]
 
 # A 2 Dimenstional Numpy Array Of Damage Multipliers For Attacking Pokemon:
 
@@ -498,10 +510,11 @@ def match_table(team,enemy,multiplier,limits = None):
 
 
 def poke_cell(cell):
-    start = date(2024,10,10)
+    start = STARTING_DATE
     today = datetime.now().date()
+    print(today, start)
     offset = cell
-    pausa = 5
+    pausa = EVENTUALE_PAUSA
     casella = int(((today-start).days-pausa)/2) + offset
     multiplier = 5 + 3*int(casella/7)
     if casella < 42:
@@ -618,10 +631,10 @@ def poke_evo_level(chat_id,pokemon):
     return lvl
 
 def poke_cell_specific(route,cell,encounters):
-    start = date(2024,10,10)
+    start = STARTING_DATE
     today = datetime.now().date()
     offset = cell
-    pausa = 5
+    pausa = EVENTUALE_PAUSA
     casella = int(((today-start).days-pausa)/2) + offset
     multiplier = 5 + 3*int(casella/7)
 
@@ -658,9 +671,9 @@ async def poke_trainer(chat_id,pokemons):
     team = [[pokemon[0], get_power(pokemon[0], pokemon[1])] for pokemon in priv_data[chat_id]["team"] if pokemon[0]]
 
 
-    start = date(2024,10,10)
+    start = STARTING_DATE
     today = datetime.now().date()
-    pausa = 5
+    pausa = EVENTUALE_PAUSA
     casella = int(((today-start).days-pausa)/2)
 
     offset = 0
@@ -690,9 +703,9 @@ async def poke_encounter(chat_id,encounter):
     team = [[pokemon[0], get_power(pokemon[0], pokemon[1])] for pokemon in priv_data[chat_id]["team"] if pokemon[0]]
     route = priv_data[chat_id]["route"]
 
-    start = date(2024,10,10)
+    start = STARTING_DATE
     today = datetime.now().date()
-    pausa = 5
+    pausa = EVENTUALE_PAUSA
     casella = int(((today-start).days-pausa)/2)
 
     offset = 0
@@ -796,9 +809,9 @@ def poke_counter(pokemon, level=100):
 
 def poke_gym_test(chat_id, pokemon, livello=0, next=4):
 
-    start = date(2024,10,10)
+    start = STARTING_DATE
     today = datetime.now().date()
-    pausa = 5
+    pausa = EVENTUALE_PAUSA
     casella = int(((today-start).days-pausa)/2)
 
     offset = 0
@@ -935,6 +948,8 @@ def create_text_image(text, background_color,lines_left_top_right_bottom = (True
             font = ImageFont.truetype(os.path.join(ENV_PATH, 'arialbd.ttf'), 24)  # Smaller font if text is longer than 8 characters
         else:
             font = ImageFont.truetype(os.path.join(ENV_PATH, 'arialbd.ttf'), 45)  # Regular font for short text
+        if 'Encounter' in text:
+            font = ImageFont.truetype(os.path.join(ENV_PATH, 'arialbd.ttf'), 32)  # Regular font for short text
     except IOError:
         font = ImageFont.load_default()  # Fallback to default font if custom font isn't available
     position = (30, 25)  # Add the text at a fixed position

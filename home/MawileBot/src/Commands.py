@@ -1319,7 +1319,6 @@ TRAINER = 'trainer'
 
 async def fight_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await id_check(update)
-    await manutenzione(update)
     await curse_player(update, context)
     try:
         print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /fight')
@@ -1541,6 +1540,8 @@ async def team_update(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
                 print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') sent a card')
             except:
                 pass
+            await update.message.reply_text("Attendi il prossimo messaggio...")
+
             photo_file = photo[-1] # Get the last photo.
             file = await context.bot.get_file(photo_file.file_id)
             photo_bytes = await file.download_as_bytearray()
@@ -1550,10 +1551,11 @@ async def team_update(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
 
             message = 'Team aggiornato:\n\n'
             for x,y in zip(secret_data,errors):
-                message+=f'{x[0]}'
-                if y == 1:
-                    message += " (⚠️)"   
-                message +=  f' lvl: {x[1]}\n'       
+                if x[0] != None:
+                    message+=f'{x[0]}'
+                    if y == 1:
+                        message += " (⚠️)"   
+                    message +=  f' lvl: {x[1]}\n'       
             await update.message.reply_text(message)
 
             with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
