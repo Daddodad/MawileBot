@@ -195,7 +195,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         text = "Come ripetuto prima, il bot è indipendente dalla lega e le sue informazioni sono limitate. Controlla sempre quanto Sableye ti dice, non fidarti alla cieca. E se commette errori, o ci sono bug, puoi farlo presente sul gruppo ufficiale, ma se sbagli la colpa sarà tua..."
         await update.message.reply_text(text)
         await asyncio.sleep(5)
-        text = "🎉🎉NOVITÀ🎉🎉 \n\n Sto imparando a leggere, quindi adesso, invece di usare il comando /team, puoi inviarmi direttamente il messaggio contentente la tua card... \n\nControlla sempre che quel che leggo ia corretto! Un ⚠️ accanto al nome significa che non ho capito bene qualcosa, ma non è detto che abbia sbagliato..."
+        text = "🎉🎉NOVITÀ🎉🎉 \n\n Sto imparando a leggere, quindi adesso, invece di usare il comando /team, puoi inviarmi direttamente la foto contentente la tua card... \n\nControlla sempre che quel che leggo ia corretto! Un ⚠️ accanto al nome significa che non ho capito bene qualcosa, ma non è detto che abbia sbagliato..."
         await update.message.reply_text(text)
         await asyncio.sleep(5)
         await add_route(str(update.effective_user.id), "Non_detta")
@@ -1531,17 +1531,9 @@ async def team_update(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
     caption = message.caption  # for media messages (photo, video, etc.)
     photo = message.photo  # list of PhotoSize objects, from smallest to largest
 
-    if photo and not caption:
-        await update.message.reply_text("Stai provando ad inviarmi la tua card? Devi girarmi l'intero messaggio...\n\nAltrimenti che fai, mi mandi i meme?")
-
-    elif photo and caption:
-        if caption.strip() == "Ecco la tua card aggiornata!":
-            try:
-                print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') sent a card')
-            except:
-                pass
-            await update.message.reply_text("Attendi il prossimo messaggio...")
-
+    if photo:
+        try:
+            print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') sent a photo')
             photo_file = photo[-1] # Get the last photo.
             file = await context.bot.get_file(photo_file.file_id)
             photo_bytes = await file.download_as_bytearray()
@@ -1549,25 +1541,28 @@ async def team_update(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
             
             secret_data,errors = await automatic_card_reader(pil_image)
 
-            message = 'Team aggiornato:\n\n'
-            for x,y in zip(secret_data,errors):
-                if x[0] != None:
-                    message+=f'{x[0]}'
-                    if y == 1:
-                        message += " (⚠️)"   
-                    message +=  f' lvl: {x[1]}\n'       
-            await update.message.reply_text(message)
+            if secret_data == [None, None, None, None, None, None, None, None, None]: 
+                await update.message.reply_text("Non mi sembra una card... Che fai, mi mandi i meme?")
+                return ConversationHandler.END  
+            else:
+                message = 'Team aggiornato:\n\n'
+                for x,y in zip(secret_data,errors):
+                    if x[0] != None:
+                        message+=f'{x[0]}'
+                        if y == 1:
+                            message += " (⚠️)"   
+                        message +=  f' lvl: {x[1]}\n'       
+                await update.message.reply_text(message)
 
-            with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
-                 data = json.load(file)
-            data[str(update.effective_user.id)]["team"] = secret_data
-            ## Save our changes to JSON file
-            jsonFile = open(ENV_PATH+"/secret_player_data.json", "w+")
-            jsonFile.write(json.dumps(data))
-            jsonFile.close()
-
-        return ConversationHandler.END
-
+                with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
+                    data = json.load(file)
+                data[str(update.effective_user.id)]["team"] = secret_data
+                ## Save our changes to JSON file
+                jsonFile = open(ENV_PATH+"/secret_player_data.json", "w+")
+                jsonFile.write(json.dumps(data))
+                jsonFile.close()
+        except: 
+            await update.message.reply_text("Non mi sembra una card... Che fai, mi mandi i meme?")
     return ConversationHandler.END  # Fallback
 
 
