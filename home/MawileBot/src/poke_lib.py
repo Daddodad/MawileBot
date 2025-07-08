@@ -24,14 +24,14 @@ else:
     sys.path.insert(0,ENV_PATH) # MawileBot
 
 from datetime import datetime, date
-LvL = [5,6,7,8,10,11,13,13,15,16,17,19,20,22,22,23,25,26,27,29,30,31,33,36,38,41,43,45,46,48,51,54,57,59,62,62,65,67,69,71,73,76]
+LvL = [5, 6, 7, 8, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 27, 29, 30, 31, 33, 36, 38, 41, 43, 45, 46, 49, 51, 54, 56, 58, 61, 62, 64, 66, 69, 71, 74, 76]
 coeff = [3, 3.5, 4, 4.5, 5, 5.5]
 
 ##############################################################################################
 #################################   VARIABILI GLOBALI DA CAMBIARE OGNI LEGA ##################
 ##############################################################################################
 
-STARTING_DATE = date(2025,7,6)  # Data di inizio della lega, da cambiare ogni lega
+STARTING_DATE = date(2025,7,8)  # Data di inizio della lega, da cambiare ogni lega
 
 EVENTUALE_PAUSA = 0  # Giorni di pausa in una lega
 
