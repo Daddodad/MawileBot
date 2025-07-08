@@ -432,7 +432,15 @@ def poke_gym(chat_id, gym):
         enemy = gym_data[gym]["actual_team"]
     enemy_powers = gym_data[gym]["power"]
     multiplier = gym_data[gym]["multiplier"]
-    tab, limits = match_prevision(team, enemy, enemy_powers, multiplier)
+
+    team_with_level = [[pokemon[0], pokemon[1]] for pokemon in priv_data[chat_id]["team"] if pokemon[0]]
+    necessary_lvls = {}
+    for p in team_with_level:
+        necessary_lvls[p[0]] = get_gym_results(gym, gym_data, p[0], p[1], chat_id)[-1]
+    
+    print(f"Team: {team_with_level}\nEnemy: {enemy}\nEnemy Powers: {enemy_powers}\nMultiplier: {multiplier}\nNecessary Levels: {necessary_lvls}")
+
+    tab, limits = match_prevision(team, enemy, enemy_powers, multiplier, necessary_lvls)
 
     # If tab is a DataFrame and has a 'style' attribute, it means style.apply was used  # OLD IMAGE METHOD
     #if isinstance(tab, pd.DataFrame) and hasattr(tab, 'style'):
@@ -446,7 +454,7 @@ def poke_gym(chat_id, gym):
     return path
 
 
-def match_prevision(team, enemy, enemy_powers, multiplier):
+def match_prevision(team, enemy, enemy_powers, multiplier, necessary_lvls=None):
 
     limits = None
     if   len(enemy_powers) == 3:
@@ -459,11 +467,11 @@ def match_prevision(team, enemy, enemy_powers, multiplier):
         #print('1v1')
         limits = [enemy_powers[0],enemy_powers[0],enemy_powers[0]]
 
-    bonus_netti,tab = match_table(team,enemy,multiplier,limits = limits)
+    bonus_netti,tab = match_table(team,enemy,multiplier,limits = limits, necessary_lvls=necessary_lvls)
 
     return tab, limits
 
-def match_table(team,enemy,multiplier,limits = None):
+def match_table(team,enemy,multiplier,limits = None, necessary_lvls=None):
     if "every type combo" in enemy:
         bonus_netti = []
         tabellone = []
@@ -476,6 +484,8 @@ def match_table(team,enemy,multiplier,limits = None):
                 bonus = calculate_bonus_via_types(t, types2 ,multiplier)
                 bonus_p.append(-bonus[0]+bonus[1])
                 tabella.append(str(p[1]-bonus[0]+bonus[1])+' ('+str(-bonus[0]+bonus[1])+')')
+            if necessary_lvls:
+                tabella.append('+'+str(necessary_lvls.get(p[0], 0))+ ' lvl.')
             bonus_netti.append(bonus_p)
             tabellone.append(tabella)
 
@@ -492,6 +502,7 @@ def match_table(team,enemy,multiplier,limits = None):
                     i+=1
                     name = e +' '+ str(i)
                 cols.append(name)
+        cols.append("Necessary Levels")
         tab.columns = cols
     else:
         bonus_netti = []
@@ -1196,55 +1207,70 @@ def create_pokemon_collage(df, type = 'gym', path=None, enemy_powers=None):
     for col in range(2, num_cols):
         position = ((col-1) * image_width, 0)
         column_name = df.columns[col]  # Get column name (e.g., "Yanma (195)")
-        if type == 'lega':
-            pokemon_name, power = column_name.split(' ')
-            power = int(power.replace('(','').replace(')',''))
-            individual_image = create_pokemon_image(pokemon_name,power,True,randomly_shiny(),(False,False,False,True))  # Create the Pokémon image
-        else:
-            try: # Fixa i pokemon delle palestre tipo (Geodude, Geodude 2, Geodude 3)
-                pokemon_name = column_name.split(' ')[0]
-            except:
-                pokemon_name = column_name
-            if 'Type_' not in pokemon_name:
-                individual_image = create_pokemon_name_image(pokemon_name,True,randomly_shiny(),lines_left_top_right_bottom = (False,False,False,True))  # Create the Pokémon image
-            else:
-                individual_image = create_type_name_image(pokemon_name,lines_left_top_right_bottom = (False,False,False,True))  # Create the Pokémon image
-        collage_image.paste(individual_image, position)
-        for index in range(num_rows):
-            scaled_power = int(df[column_name][index].split(' ')[0].replace('(','').replace(')',''))
-            position = ((col-1) * image_width, (index+1) * image_height)
-            if type == 'lega':
-                if scaled_power > power:
-                    bg = (99, 238, 99)
-                else:
-                    bg = (255,255,255)
-            elif type == 'encounter':
-                try: #Se enemy_power = None o corto almeno non si blocca
-                    if scaled_power > enemy_powers[0]:
-                        bg = (255, 111, 111) # Red
-                        if scaled_power > enemy_powers[1]:
-                            bg = (255, 255, 111) # Yellow
-                            if scaled_power > enemy_powers[col]: # nel caso encounter, enemy_powers è [bassa,media,boss1,boss2,boss3 ...],l'indice col ci fa un grand favore partendo da 2
-                                bg = (99, 238, 99) # Green
-                    else:
-                        bg = (255,255,255)
-                except:
-                    bg = (0,0,0)
-            else:
-                try: #Se enemy_power = None o corto almeno non si blocca
-                    if scaled_power > enemy_powers[0]:
-                        bg = (255, 111, 111) # Red
-                        if scaled_power > enemy_powers[1]:
-                            bg = (255, 255, 111) # Yellow
-                            if scaled_power > enemy_powers[2]:
-                                bg = (99, 238, 99) # Green
-                    else:
-                        bg = (255,255,255)
-                except:
-                    bg = (0,0,0)
+        if column_name == "Necessary Levels":
+            header_img = create_text_image("LvLs",
+                                   background_color=(255,255,255),
+                                   lines_left_top_right_bottom=(False,False,False,True))
+            collage_image.paste(header_img, position)
 
-            text_image = create_text_image(df[column_name][index], bg,(False,False,False,False))  # White text on blue
-            collage_image.paste(text_image, position)
+            # 2) draw each row from df["Necessary Levels"]
+            for row_idx in range(num_rows):
+                val = str(df.loc[row_idx, "Necessary Levels"])
+                pos = ((col-1)*image_width, (row_idx+1)*image_height)
+                txt_img = create_text_image(val,
+                                            background_color=(255,255,255),
+                                            lines_left_top_right_bottom=(False,False,False,False))
+                collage_image.paste(txt_img, pos)
+        else:
+            if type == 'lega':
+                pokemon_name, power = column_name.split(' ')
+                power = int(power.replace('(','').replace(')',''))
+                individual_image = create_pokemon_image(pokemon_name,power,True,randomly_shiny(),(False,False,False,True))  # Create the Pokémon image
+            else:
+                try: # Fixa i pokemon delle palestre tipo (Geodude, Geodude 2, Geodude 3)
+                    pokemon_name = column_name.split(' ')[0]
+                except:
+                    pokemon_name = column_name
+                if 'Type_' not in pokemon_name:
+                    individual_image = create_pokemon_name_image(pokemon_name,True,randomly_shiny(),lines_left_top_right_bottom = (False,False,False,True))  # Create the Pokémon image
+                else:
+                    individual_image = create_type_name_image(pokemon_name,lines_left_top_right_bottom = (False,False,False,True))  # Create the Pokémon image
+            collage_image.paste(individual_image, position)
+            for index in range(num_rows):
+                scaled_power = int(df[column_name][index].split(' ')[0].replace('(','').replace(')',''))
+                position = ((col-1) * image_width, (index+1) * image_height)
+                if type == 'lega':
+                    if scaled_power > power:
+                        bg = (99, 238, 99)
+                    else:
+                        bg = (255,255,255)
+                elif type == 'encounter':
+                    try: #Se enemy_power = None o corto almeno non si blocca
+                        if scaled_power > enemy_powers[0]:
+                            bg = (255, 111, 111) # Red
+                            if scaled_power > enemy_powers[1]:
+                                bg = (255, 255, 111) # Yellow
+                                if scaled_power > enemy_powers[col]: # nel caso encounter, enemy_powers è [bassa,media,boss1,boss2,boss3 ...],l'indice col ci fa un grand favore partendo da 2
+                                    bg = (99, 238, 99) # Green
+                        else:
+                            bg = (255,255,255)
+                    except:
+                        bg = (0,0,0)
+                else:
+                    try: #Se enemy_power = None o corto almeno non si blocca
+                        if scaled_power > enemy_powers[0]:
+                            bg = (255, 111, 111) # Red
+                            if scaled_power > enemy_powers[1]:
+                                bg = (255, 255, 111) # Yellow
+                                if scaled_power > enemy_powers[2]:
+                                    bg = (99, 238, 99) # Green
+                        else:
+                            bg = (255,255,255)
+                    except:
+                        bg = (0,0,0)
+
+                text_image = create_text_image(df[column_name][index], bg,(False,False,False,False))  # White text on blue
+                collage_image.paste(text_image, position)
         
     # Save or return the final collage image
     if path:
