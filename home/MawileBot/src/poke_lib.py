@@ -610,7 +610,8 @@ def poke_check_if_evo_not_async(chat_id,pokemon,lvl):
 
     with open(ENV_PATH+f"/{route}_evo_file.json", 'r') as ef:
         evo_dict = json.load(ef)
-
+        
+    pokemon = pokemon.lower()
     if pokemon in evo_dict:
         if evo_dict[pokemon][0]=="base":
             if lvl >= evo_dict[pokemon][1][0]:
@@ -625,6 +626,28 @@ def poke_check_if_evo_not_async(chat_id,pokemon,lvl):
                 pokemon = evo_dict[pokemon][-1][1]
 
     return pokemon
+
+def poke_evolve_async(chat_id,pokemon,lvl):
+    with open(ENV_PATH+"/secret_player_data.json", 'r') as f:
+        secret = json.load(f)
+    route = secret[chat_id]["route"]
+
+    with open(ENV_PATH+f"/{route}_evo_file.json", 'r') as ef:
+        evo_dict = json.load(ef)
+
+    pokemon = pokemon.lower()
+    evo_lvl = 0
+    if pokemon in evo_dict:
+        if evo_dict[pokemon][0]=="base":
+            if lvl >= evo_dict[pokemon][1][0]:
+                evo_lvl = evo_dict[pokemon][1][0]
+                pokemon = evo_dict[pokemon][1][1]
+        elif evo_dict[pokemon][0]=="mid":
+            if lvl >= evo_dict[pokemon][2][0]:
+                evo_lvl = evo_dict[pokemon][2][0]
+                pokemon = evo_dict[pokemon][2][1]
+
+    return pokemon, evo_lvl
 
 def poke_evo_level(chat_id,pokemon):
     with open(ENV_PATH+"/secret_player_data.json", 'r') as f:
@@ -822,6 +845,56 @@ def poke_counter(pokemon, level=100):
 
     return sorted_counters
 
+def get_wins(pokemon, livello, all_types_combo, multiplier, limits):
+
+    grey_wins = 0
+    red_wins = 0
+    yellow_wins = 0
+    green_wins = 0
+
+    average = 0
+    num = 0
+    min_bonus = 1000
+    max_bonus = 0
+    if livello != 0:
+        pokemon_bst = get_poke_bst(pokemon)
+        pokemon_stats = round(livello*pokemon_bst/100)
+        for t in all_types_combo:
+            types2 = poke.get(name=pokemon).types
+            bonuses = calculate_bonus_via_types(t, types2 ,multiplier)
+            bonus = bonuses[1] - bonuses[0]
+            average += bonus
+            num += 1
+            if bonus < min_bonus:
+                min_bonus = bonus
+            if bonus > max_bonus:
+                max_bonus = bonus
+
+            if pokemon_stats + bonus >= limits[2]:
+                green_wins += 1
+            elif pokemon_stats + bonus >= limits[1]:
+                yellow_wins += 1
+            elif pokemon_stats + bonus >= limits[0]:
+                red_wins += 1
+            else:
+                grey_wins += 1
+    else:
+        for t in all_types_combo:
+            types2 = poke.get(name=pokemon).types
+            bonuses = calculate_bonus_via_types(t, types2, multiplier)
+            bonus = bonuses[1] - bonuses[0]
+            average += bonus
+            num += 1
+            if bonus < min_bonus:
+                min_bonus = bonus
+            if bonus > max_bonus:
+                max_bonus = bonus
+
+    average /= num
+    average = round(average, 2)
+
+    return average, min_bonus, max_bonus, grey_wins, red_wins, yellow_wins, green_wins
+
 def poke_gym_test(chat_id, pokemon, livello=0, next=4):
 
     start = STARTING_DATE
@@ -849,90 +922,38 @@ def poke_gym_test(chat_id, pokemon, livello=0, next=4):
 
     for gym in gym_types[offset:end]:
         if gym_data[gym]["actual_team"] == []:
-            enemies = gym_data[gym]["team"]
+            if gym_data[gym]["team"] == ["every type combo"]:
+                enemy = ["every type combo", gym] # enemy potrebbe essere ["every type combo"] e questo fa cose in match_prevision->match_table
+            else:
+                enemy = gym_data[gym]["team"]   
         else:
-            enemies = gym_data[gym]["actual_team"]
-
+            enemy = gym_data[gym]["actual_team"]
         enemy_powers = gym_data[gym]["power"]
         limits = [enemy_powers[0],enemy_powers[2],enemy_powers[4]]
         multiplier = gym_data[gym]["multiplier"]
 
-        grey_wins = 0
-        red_wins = 0
-        yellow_wins = 0
-        green_wins = 0
+        all_types_combo = generate_all_types_combo(enemy[1])
 
-        average = 0
-        num = 0
-        min_bonus = 1000
-        max_bonus = 0
-        if livello != 0:
-            pokemon_bst = get_poke_bst(pokemon)
-            pokemon_stats = round(livello*pokemon_bst/100)
-            for enemy in enemies:
-                bonuses = calculate_bonus(pokemon, enemy, multiplier)
-                bonus = bonuses[0] - bonuses[1]
-                average += bonus
-                num += 1
-                if bonus < min_bonus:
-                    min_bonus = bonus
-                if bonus > max_bonus:
-                    max_bonus = bonus
-
-                if pokemon_stats + bonus >= limits[2]:
-                    green_wins += 1
-                elif pokemon_stats + bonus >= limits[1]:
-                    yellow_wins += 1
-                elif pokemon_stats + bonus >= limits[0]:
-                    red_wins += 1
-                else:
-                    grey_wins += 1
-        else:
-            for enemy in enemies:
-                bonuses = calculate_bonus(pokemon, enemy, multiplier)
-                bonus = bonuses[0] - bonuses[1]
-                average += bonus
-                num += 1
-                if bonus < min_bonus:
-                    min_bonus = bonus
-                if bonus > max_bonus:
-                    max_bonus = bonus
-
-        average /= num
-        average = round(average, 2)
+        average, min_bonus, max_bonus, grey_wins, red_wins, yellow_wins, green_wins = get_wins(pokemon, livello, all_types_combo, multiplier, limits)
 
         if livello != 0:
             if grey_wins > 0:
-                #print(gym)
-                tested_pokemon = []
-                k=0
-                #print(pokemon)
+                bonus = min_bonus
+                pokemon_bst = get_poke_bst(pokemon)
                 necessary_lvl = round((limits[0]-bonus)*100/pokemon_bst)
-                while limits[0] - min_bonus > round(necessary_lvl*pokemon_bst/100):
+                while limits[0] - bonus > round(necessary_lvl*pokemon_bst/100):
                     necessary_lvl += 1
-                #print(necessary_lvl,livello,k)
-                new_pokemon = poke_check_if_evo_not_async(chat_id, pokemon, necessary_lvl)
-                tested_pokemon.append(pokemon)
-                while new_pokemon not in tested_pokemon and necessary_lvl > livello + k:
-                    #print(new_pokemon)
-                    tested_pokemon.append(new_pokemon)
+                new_pokemon, evo_lvl = poke_evolve_async(chat_id, pokemon, necessary_lvl)
+                while new_pokemon != pokemon.lower():
+                    _, bonus, _, _, _, _, _ = get_wins(new_pokemon, livello, all_types_combo, multiplier, limits)
                     pokemon_bst = get_poke_bst(new_pokemon)
                     necessary_lvl = round((limits[0]-bonus)*100/pokemon_bst)
-                    while limits[0] - min_bonus > round(necessary_lvl*pokemon_bst/100):
+                    while limits[0] - bonus > round(necessary_lvl*pokemon_bst/100):
                         necessary_lvl += 1
-                    #print(necessary_lvl,livello,k)
-                    evo_lvl = 0
-                    if pokemon in evo_dict.keys():
-                        for evo in evo_dict[pokemon][1:]:
-                            if evo[1] == new_pokemon:
-                                evo_lvl = evo[0]
-                                break
-                    #print(evo_lvl)
                     necessary_lvl = max(necessary_lvl,evo_lvl)
-                    new_pokemon = poke_check_if_evo_not_async(chat_id, new_pokemon, necessary_lvl)
-                    k+=1
-                #print(k)
-                results.append([gym, average, min_bonus, max_bonus, grey_wins, red_wins, yellow_wins, green_wins, max(k,necessary_lvl-livello)])
+                    pokemon = new_pokemon
+                    new_pokemon, evo_lvl = poke_evolve_async(chat_id, pokemon, necessary_lvl)
+                results.append([gym, average, min_bonus, max_bonus, grey_wins, red_wins, yellow_wins, green_wins, max(0,necessary_lvl-livello)])
             else:
                 results.append([gym, average, min_bonus, max_bonus, grey_wins, red_wins, yellow_wins, green_wins, 0])
         else:
