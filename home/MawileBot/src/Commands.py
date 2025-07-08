@@ -560,10 +560,18 @@ async def gym_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
                 )
         except:
             with open(image_path, 'rb') as image_file:
-                await context.bot.send_message(
-                    chat_id=chat_id,
-                    text=image_file.size()
-                )
+                image = Image.open(image_file)
+                width, height = image.size
+                if (width,height) == (4250,196):
+                    await context.bot.send_message(
+                        chat_id=chat_id,
+                        text=f"Hai un solo pokémon in squadra... L'immagine è troppo piccola per essere visualizzata correttamente."
+                    )
+                else:
+                    await context.bot.send_message(
+                        chat_id=chat_id,
+                        text=f"Qualcosa è andato storto con l'invio dell'immagine..."
+                    )
         return ConversationHandler.END
 
 async def choose_pokemon_gym(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
