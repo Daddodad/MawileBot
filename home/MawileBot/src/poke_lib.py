@@ -909,55 +909,56 @@ def poke_gym_test(chat_id, pokemon, livello=0, next=4):
     with open(ENV_PATH+'/gym_data.json', 'r') as file:
         gym_data = json.load(file)
 
-    with open(ENV_PATH+"/secret_player_data.json", 'r') as f:
-        secret = json.load(f)
-    route = secret[chat_id]["route"]
-
-    with open(ENV_PATH+f"/{route}_evo_file.json", 'r') as ef:
-        evo_dict = json.load(ef)
-
     results = []
 
     end = min(offset + next, len(gym_types))
 
     for gym in gym_types[offset:end]:
-        if gym_data[gym]["actual_team"] == []:
-            if gym_data[gym]["team"] == ["every type combo"]:
-                enemy = ["every type combo", gym] # enemy potrebbe essere ["every type combo"] e questo fa cose in match_prevision->match_table
-            else:
-                enemy = gym_data[gym]["team"]   
+        results.append(get_gym_results(gym, gym_data, pokemon, livello, chat_id))
+    
+    return results
+
+def get_gym_results(gym, gym_data, pokemon, livello, chat_id):
+
+    results = []
+
+    if gym_data[gym]["actual_team"] == []:
+        if gym_data[gym]["team"] == ["every type combo"]:
+            enemy = ["every type combo", gym] # enemy potrebbe essere ["every type combo"] e questo fa cose in match_prevision->match_table
         else:
-            enemy = gym_data[gym]["actual_team"]
-        enemy_powers = gym_data[gym]["power"]
-        limits = [enemy_powers[0],enemy_powers[2],enemy_powers[4]]
-        multiplier = gym_data[gym]["multiplier"]
+            enemy = gym_data[gym]["team"]   
+    else:
+        enemy = gym_data[gym]["actual_team"]
+    enemy_powers = gym_data[gym]["power"]
+    limits = [enemy_powers[0],enemy_powers[2],enemy_powers[4]]
+    multiplier = gym_data[gym]["multiplier"]
 
-        all_types_combo = generate_all_types_combo(enemy[1])
+    all_types_combo = generate_all_types_combo(enemy[1])
 
-        average, min_bonus, max_bonus, grey_wins, red_wins, yellow_wins, green_wins = get_wins(pokemon, livello, all_types_combo, multiplier, limits)
+    average, min_bonus, max_bonus, grey_wins, red_wins, yellow_wins, green_wins = get_wins(pokemon, livello, all_types_combo, multiplier, limits)
 
-        if livello != 0:
-            if grey_wins > 0:
-                bonus = min_bonus
-                pokemon_bst = get_poke_bst(pokemon)
+    if livello != 0:
+        if grey_wins > 0:
+            bonus = min_bonus
+            pokemon_bst = get_poke_bst(pokemon)
+            necessary_lvl = round((limits[0]-bonus)*100/pokemon_bst)
+            while limits[0] - bonus > round(necessary_lvl*pokemon_bst/100):
+                necessary_lvl += 1
+            new_pokemon, evo_lvl = poke_evolve_async(chat_id, pokemon, necessary_lvl)
+            while new_pokemon != pokemon.lower():
+                _, bonus, _, _, _, _, _ = get_wins(new_pokemon, livello, all_types_combo, multiplier, limits)
+                pokemon_bst = get_poke_bst(new_pokemon)
                 necessary_lvl = round((limits[0]-bonus)*100/pokemon_bst)
                 while limits[0] - bonus > round(necessary_lvl*pokemon_bst/100):
                     necessary_lvl += 1
+                necessary_lvl = max(necessary_lvl,evo_lvl)
+                pokemon = new_pokemon
                 new_pokemon, evo_lvl = poke_evolve_async(chat_id, pokemon, necessary_lvl)
-                while new_pokemon != pokemon.lower():
-                    _, bonus, _, _, _, _, _ = get_wins(new_pokemon, livello, all_types_combo, multiplier, limits)
-                    pokemon_bst = get_poke_bst(new_pokemon)
-                    necessary_lvl = round((limits[0]-bonus)*100/pokemon_bst)
-                    while limits[0] - bonus > round(necessary_lvl*pokemon_bst/100):
-                        necessary_lvl += 1
-                    necessary_lvl = max(necessary_lvl,evo_lvl)
-                    pokemon = new_pokemon
-                    new_pokemon, evo_lvl = poke_evolve_async(chat_id, pokemon, necessary_lvl)
-                results.append([gym, average, min_bonus, max_bonus, grey_wins, red_wins, yellow_wins, green_wins, max(0,necessary_lvl-livello)])
-            else:
-                results.append([gym, average, min_bonus, max_bonus, grey_wins, red_wins, yellow_wins, green_wins, 0])
+            results = [gym, average, min_bonus, max_bonus, grey_wins, red_wins, yellow_wins, green_wins, max(0,necessary_lvl-livello)]
         else:
-            results.append([gym, average, min_bonus, max_bonus])
+            results = [gym, average, min_bonus, max_bonus, grey_wins, red_wins, yellow_wins, green_wins, 0]
+    else:
+        results = [gym, average, min_bonus, max_bonus]
 
     return results
 
