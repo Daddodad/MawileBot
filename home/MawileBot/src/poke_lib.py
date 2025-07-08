@@ -588,6 +588,7 @@ async def poke_check_if_evo(chat_id,pokemon,lvl):
     with open(ENV_PATH+f"/{route}_evo_file.json", 'r') as ef:
         evo_dict = json.load(ef)
 
+    pokemon = pokemon.lower()
     if pokemon in evo_dict:
         if evo_dict[pokemon][0]=="base":
             if lvl >= evo_dict[pokemon][1][0]:
@@ -627,7 +628,7 @@ def poke_check_if_evo_not_async(chat_id,pokemon,lvl):
 
     return pokemon
 
-def poke_evolve_async(chat_id,pokemon,lvl):
+def poke_evolve_not_async(chat_id,pokemon,lvl):
     with open(ENV_PATH+"/secret_player_data.json", 'r') as f:
         secret = json.load(f)
     route = secret[chat_id]["route"]
@@ -944,7 +945,7 @@ def get_gym_results(gym, gym_data, pokemon, livello, chat_id):
             necessary_lvl = round((limits[0]-bonus)*100/pokemon_bst)
             while limits[0] - bonus > round(necessary_lvl*pokemon_bst/100):
                 necessary_lvl += 1
-            new_pokemon, evo_lvl = poke_evolve_async(chat_id, pokemon, necessary_lvl)
+            new_pokemon, evo_lvl = poke_evolve_not_async(chat_id, pokemon, necessary_lvl)
             while new_pokemon != pokemon.lower():
                 _, bonus, _, _, _, _, _ = get_wins(new_pokemon, livello, all_types_combo, multiplier, limits)
                 pokemon_bst = get_poke_bst(new_pokemon)
@@ -953,7 +954,7 @@ def get_gym_results(gym, gym_data, pokemon, livello, chat_id):
                     necessary_lvl += 1
                 necessary_lvl = max(necessary_lvl,evo_lvl)
                 pokemon = new_pokemon
-                new_pokemon, evo_lvl = poke_evolve_async(chat_id, pokemon, necessary_lvl)
+                new_pokemon, evo_lvl = poke_evolve_not_async(chat_id, pokemon, necessary_lvl)
             results = [gym, average, min_bonus, max_bonus, grey_wins, red_wins, yellow_wins, green_wins, max(0,necessary_lvl-livello)]
         else:
             results = [gym, average, min_bonus, max_bonus, grey_wins, red_wins, yellow_wins, green_wins, 0]
