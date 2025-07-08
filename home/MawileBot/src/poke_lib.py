@@ -197,7 +197,10 @@ def get_poke_bst(pokemon):
     if bst >= 680:
         return 620
     if bst == 600:
-        return 580
+        if 'regi' in pokemon.lower():
+            return 570
+        else:
+            return 580
     if bst == 580:
         return 570
     if bst == 570:
