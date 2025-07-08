@@ -31,7 +31,7 @@ coeff = [3, 3.5, 4, 4.5, 5, 5.5]
 #################################   VARIABILI GLOBALI DA CAMBIARE OGNI LEGA ##################
 ##############################################################################################
 
-STARTING_DATE = date(2025,7,8)  # Data di inizio della lega, da cambiare ogni lega
+STARTING_DATE = date(2025,7,7)  # Data di inizio della lega, da cambiare ogni lega
 
 EVENTUALE_PAUSA = 0  # Giorni di pausa in una lega
 

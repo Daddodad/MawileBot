@@ -217,7 +217,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
             await update.message.reply_text(
                 "Quindi, bando alle ciance e iniziamo!"
             )
-            await add_route(str(update.effective_user.id), 'pari')
+            await add_route(str(update.effective_user.id), 'even')
     
     elif route == "Non_detta":
         keyboard = [
@@ -236,7 +236,7 @@ async def route_selection(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     query = update.callback_query
     await query.answer()
 
-    route = query.data  # 'pari' or 'dispari'
+    route = query.data  # 'even' or 'odd'
     await add_route(str(update.effective_user.id), route)
 
     keyboard = [
@@ -1414,7 +1414,8 @@ async def enter_pokemons(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 photo=image_file,
                 caption=cap
             )
-    except:
+    except Exception as e:
+        print(f"Errore durante la lotta: {e}")
         await update.message.reply_text("Qualcosa è andato storto... ti chiedo di ricominciare chiamando /fight.")
     return ConversationHandler.END
 
