@@ -1,175 +1,8018 @@
 {
-    "Treecko": ["base", [25, "Grovyle"], [51, "Sceptile"]],
-    "Grovyle": ["mid", [24, "Treecko"], [51, "Sceptile"]],
-    "Sceptile": ["last", [24, "Treecko"], [50, "Grovyle"]],
-    "Torchic": ["base", [25, "Combusken"], [51, "Blaziken"]],
-    "Combusken": ["mid", [24, "Torchic"], [51, "Blaziken"]],
-    "Blaziken": ["last", [24, "Torchic"], [50, "Combusken"]],
-    "Mudkip": ["base", [25, "Marshtomp"], [51, "Swampert"]],
-    "Marshtomp": ["mid", [24, "Mudkip"], [51, "Swampert"]],
-    "Swampert": ["last", [24, "Mudkip"], [50, "Marshtomp"]],
-    "Poochyena": ["base", [27, "Mightyena"]],
-    "Mightyena": ["last", [26, "Poochyena"]],
-    "Zigzagoon": ["base", [28, "Linoone"]],
-    "Linoone": ["last", [27, "Zigzagoon"]],
-    "Wurmple": ["base", [9, "Silcoon"], [23, "Beautifly"]],
-    "Silcoon": ["mid", [8, "Wurmple"], [23, "Beautifly"]],
-    "Beautifly": ["last", [8, "Wurmple"], [22, "Silcoon"]],
-    "Lotad": ["base", [13, "Lombre"], [41, "Ludicolo"]],
-    "Lombre": ["mid", [12, "Lotad"], [41, "Ludicolo"]],
-    "Ludicolo": ["last", [12, "Lotad"], [40, "Lombre"]],
-    "Seedot": ["base", [13, "Nuzleaf"], [41, "Shiftry"]],
-    "Nuzleaf": ["mid", [12, "Seedot"], [41, "Shiftry"]],
-    "Shiftry": ["last", [12, "Seedot"], [40, "Nuzleaf"]],
-    "Wingull": ["base", [30, "Pelipper"]],
-    "Pelipper": ["last", [29, "Wingull"]],
-    "Ralts": ["base", [13, "Kirlia"], [34, "Gardevoir"]],
-    "Kirlia": ["mid", [12, "Ralts"], [34, "Gardevoir"]],
-    "Gardevoir": ["last", [12, "Ralts"], [33, "Kirlia"]],
-    "Surskit": ["base", [30, "Masquerain"]],
-    "Masquerain": ["last", [29, "Surskit"]],
-    "Shroomish": ["base", [32, "Breloom"]],
-    "Breloom": ["last", [31, "Shroomish"]],
-    "Slakoth": ["base", [26, "Vigoroth"], [54, "Slaking"]],
-    "Vigoroth": ["mid", [25, "Slakoth"], [54, "Slaking"]],
-    "Slaking": ["last", [25, "Slakoth"], [53, "Vigoroth"]],
-    "Abra": ["base", [25, "Kadabra"], [50, "Alakazam"]],
-    "Kadabra": ["mid", [24, "Abra"], [50, "Alakazam"]],
-    "Alakazam": ["last", [24, "Abra"], [49, "Kadabra"]],
-    "Nincada": ["base", [29, "Ninjask"]],
-    "Ninjask": ["last", [28, "Nincada"]],
-    "Whismur": ["base", [15, "Loudred"], [41, "Exploud"]],
-    "Loudred": ["mid", [14, "Whismur"], [41, "Exploud"]],
-    "Exploud": ["last", [14, "Whismur"], [40, "Loudred"]],
-    "Makuhita": ["base", [29, "Hariyama"]],
-    "Hariyama": ["last", [28, "Makuhita"]],
-    "Goldeen": ["base", [38, "Seaking"]],
-    "Seaking": ["last", [37, "Goldeen"]],
-    "Magikarp": ["base", [32, "Gyarados"]],
-    "Gyarados": ["last", [31, "Magikarp"]],
-    "Azurill": ["base", [7, "Marill"], [28, "Azumarill"]],
-    "Marill": ["last", [6, "Azurill"], [28, "Azumarill"]],
-    "Azumarill": ["last", [6, "Azurill"], [27, "Marill"]],
-    "Geodude": ["base", [24, "Graveler"], [44, "Golem"]],
-    "Graveler": ["mid", [23, "Geodude"], [44, "Golem"]],
-    "Golem": ["last", [23, "Geodude"], [43, "Graveler"]],
-    "Skitty": ["base", [28, "Delcatty"]],
-    "Delcatty": ["last", [27, "Skitty"]],
-    "Zubat": ["base", [19, "Golbat"], [54, "Crobat"]],
-    "Golbat": ["mid", [18, "Zubat"], [54, "Crobat"]],
-    "Crobat": ["last", [18, "Zubat"], [53, "Golbat"]],
-    "Tentacool": ["base", [42, "Tentacruel"]],
-    "Tentacruel": ["last", [41, "Tentacool"]],
-    "Aron": ["base", [28, "Lairon"], [53, "Aggron"]],
-    "Lairon": ["mid", [27, "Aron"], [53, "Aggron"]],
-    "Aggron": ["last", [27, "Aron"], [52, "Lairon"]],
-    "Machop": ["base", [25, "Machoke"], [50, "Machamp"]],
-    "Machoke": ["mid", [24, "Machop"], [50, "Machamp"]],
-    "Machamp": ["last", [24, "Machop"], [49, "Machoke"]],
-    "Meditite": ["base", [29, "Medicham"]],
-    "Medicham": ["last", [28, "Meditite"]],
-    "Electrike": ["base", [33, "Manectric"]],
-    "Manectric": ["last", [32, "Electrike"]],
-    "Magnemite": ["base", [39, "Magneton"]],
-    "Magneton": ["last", [38, "Magnemite"]],
-    "Voltorb": ["base", [41, "Electrode"]],
-    "Electrode": ["last", [40, "Voltorb"]],
-    "Oddish": ["base", [25, "Gloom"], [44, "Bellossom"]],
-    "Gloom": ["mid", [24, "Oddish"], [44, "Bellossom"]],
-    "Bellossom": ["last", [24, "Oddish"], [43, "Gloom"]],
-    "Doduo": ["base", [39, "Dodrio"]],
-    "Dodrio": ["last", [38, "Doduo"]],
-    "Gulpin": ["base", [38, "Swalot"]],
-    "Swalot": ["last", [37, "Gulpin"]],
-    "Carvanha": ["base", [37, "Sharpedo"]],
-    "Sharpedo": ["last", [36, "Carvanha"]],
-    "Wailmer": ["base", [50, "Wailord"]],
-    "Wailord": ["last", [49, "Wailmer"]],
-    "Numel": ["base", [37, "Camerupt"]],
-    "Camerupt": ["last", [36, "Numel"]],
-    "Slugma": ["base", [29, "Magcargo"]],
-    "Magcargo": ["last", [28, "Slugma"]],
-    "Grimer": ["base", [41, "Muk"]],
-    "Muk": ["last", [40, "Grimer"]],
-    "Koffing": ["base", [41, "Weezing"]],
-    "Weezing": ["last", [40, "Koffing"]],
-    "Spoink": ["base", [40, "Grumpig"]],
-    "Grumpig": ["last", [39, "Spoink"]],
-    "Sandshrew": ["base", [37, "Sandslash"]],
-    "Sandslash": ["last", [36, "Sandshrew"]],
-    "Trapinch": ["base", [21, "Vibrava"], [43, "Flygon"]],
-    "Vibrava": ["mid", [20, "Trapinch"], [43, "Flygon"]],
-    "Flygon": ["last", [20, "Trapinch"], [42, "Vibrava"]],
-    "Swablu": ["base", [40, "Altaria"]],
-    "Altaria": ["last", [39, "Swablu"]],
-    "Barboach": ["base", [37, "Whiscash"]],
-    "Whiscash": ["last", [36, "Barboach"]],
-    "Corphish": ["base", [38, "Crawdaunt"]],
-    "Crawdaunt": ["last", [37, "Corphish"]],
-    "Baltoy": ["base", [40, "Claydol"]],
-    "Claydol": ["last", [39, "Baltoy"]],
-    "Lileep": ["base", [42, "Cradily"]],
-    "Cradily": ["last", [41, "Lileep"]],
-    "Anorith": ["base", [42, "Armaldo"]],
-    "Armaldo": ["last", [41, "Anorith"]],
-    "Igglybuff": ["base", [9, "Jigglypuff"], [30, "Wigglytuff"]],
-    "Jigglypuff": ["mid", [8, "Igglybuff"], [30, "Wigglytuff"]],
-    "Wigglytuff": ["last", [8, "Igglybuff"], [29, "Jigglypuff"]],
-    "Feebas": ["base", [32, "Milotic"]],
-    "Milotic": ["last", [31, "Feebas"]],
-    "Staryu": ["base", [43, "Starmie"]],
-    "Starmie": ["last", [42, "Staryu"]],
-    "Shuppet": ["base", [32, "Banette"]],
-    "Banette": ["last", [31, "Shuppet"]],
-    "Duskull": ["base", [32, "Dusclops"]],
-    "Dusclops": ["last", [31, "Duskull"]],
-    "Vulpix": ["base", [34, "Ninetales"]],
-    "Ninetales": ["last", [33, "Vulpix"]],
-    "Pichu": ["base", [11, "Pikachu"], [40, "Raichu"]],
-    "Pikachu": ["mid", [10, "Pichu"], [40, "Raichu"]],
-    "Raichu": ["last", [10, "Pichu"], [39, "Pikachu"]],
-    "Psyduck": ["base", [41, "Golduck"]],
-    "Golduck": ["last", [40, "Psyduck"]],
-    "Wynaut": ["base", [26, "Wobbuffet"]],
-    "Wobbuffet": ["last", [25, "Wynaut"]],
-    "Natu": ["base", [39, "Xatu"]],
-    "Xatu": ["last", [38, "Natu"]],
-    "Phanpy": ["base", [41, "Donphan"]],
-    "Donphan": ["last", [40, "Phanpy"]],
-    "Teddiursa": ["base", [41, "Ursaring"]],
-    "Ursaring": ["last", [40, "Teddiursa"]],
-    "Rhyhorn": ["base", [41, "Rhydon"]],
-    "Rhydon": ["last", [40, "Rhyhorn"]],
-    "Snorunt": ["base", [38, "Glalie"]],
-    "Glalie": ["last", [37, "Snorunt"]],
-    "Spheal": ["base", [25, "Sealeo"], [52, "Walrein"]],
-    "Sealeo": ["last", [24, "Spheal"], [52, "Walrein"]],
-    "Walrein": ["last", [24, "Spheal"], [51, "Sealeo"]],
-    "Clamperl": ["base", [41, "Huntail"]],
-    "Huntail": ["last", [40, "Clamperl"]],
-    "Chinchou": ["base", [39, "Lanturn"]],
-    "Lanturn": ["last", [38, "Chinchou"]],
-    "Horsea": ["base", [21, "Seadra"], [54, "Kingdra"]],
-    "Seadra": ["mid", [20, "Horsea"], [54, "Kingdra"]],
-    "Kingdra": ["last", [20, "Horsea"], [53, "Seadra"]],
-    "Bagon": ["base", [26, "Shelgon"], [61, "Salamence"]],
-    "Shelgon": ["mid", [25, "Bagon"], [61, "Salamence"]],
-    "Salamence": ["last", [25, "Bagon"], [60, "Shelgon"]],
-    "Beldum": ["base", [26, "Metang"], [61, "Metagross"]],
-    "Metang": ["mid", [25, "Beldum"], [61, "Metagross"]],
-    "Metagross": ["last", [25, "Beldum"], [60, "Metang"]],
-    "Sunkern": ["base", [25, "Sunflora"]],
-    "Sunflora": ["last", [24, "Sunkern"]],
-    "Ledyba": ["base", [27, "Ledian"]],
-    "Ledian": ["last", [26, "Ledyba"]],
-    "Spinarak": ["base", [27, "Ariados"]],
-    "Ariados": ["last", [26, "Spinarak"]],
-    "Houndour": ["base", [41, "Houndoom"]],
-    "Houndoom": ["last", [40, "Houndour"]],
-    "Hoothoot": ["base", [30, "Noctowl"]],
-    "Noctowl": ["last", [29, "Hoothoot"]],
-    "Snubbul": ["base", [37, "Granbull"]],
-    "Granbull": ["last", [36, "Snubbul"]],
-    "Remoraid": ["base", [39, "Octillery"]],
-    "Octillery": ["last", [38, "Remoraid"]]
+    "bulbasaur": [
+        "base",
+        [
+            26,
+            "ivysaur"
+        ],
+        [
+            46,
+            "venusaur"
+        ]
+    ],
+    "ivysaur": [
+        "mid",
+        [
+            26,
+            "bulbasaur"
+        ],
+        [
+            46,
+            "venusaur"
+        ]
+    ],
+    "venusaur": [
+        "last",
+        [
+            26,
+            "bulbasaur"
+        ],
+        [
+            46,
+            "ivysaur"
+        ]
+    ],
+    "charmander": [
+        "base",
+        [
+            25,
+            "charmeleon"
+        ],
+        [
+            47,
+            "charizard"
+        ]
+    ],
+    "charmeleon": [
+        "mid",
+        [
+            25,
+            "charmander"
+        ],
+        [
+            47,
+            "charizard"
+        ]
+    ],
+    "charizard": [
+        "last",
+        [
+            25,
+            "charmander"
+        ],
+        [
+            47,
+            "charmeleon"
+        ]
+    ],
+    "squirtle": [
+        "base",
+        [
+            26,
+            "wartortle"
+        ],
+        [
+            47,
+            "blastoise"
+        ]
+    ],
+    "wartortle": [
+        "mid",
+        [
+            26,
+            "squirtle"
+        ],
+        [
+            47,
+            "blastoise"
+        ]
+    ],
+    "blastoise": [
+        "last",
+        [
+            26,
+            "squirtle"
+        ],
+        [
+            47,
+            "wartortle"
+        ]
+    ],
+    "caterpie": [
+        "base",
+        [
+            10,
+            "metapod"
+        ],
+        [
+            25,
+            "butterfree"
+        ]
+    ],
+    "metapod": [
+        "mid",
+        [
+            10,
+            "caterpie"
+        ],
+        [
+            25,
+            "butterfree"
+        ]
+    ],
+    "butterfree": [
+        "last",
+        [
+            10,
+            "caterpie"
+        ],
+        [
+            25,
+            "metapod"
+        ]
+    ],
+    "weedle": [
+        "base",
+        [
+            10,
+            "kakuna"
+        ],
+        [
+            25,
+            "beedrill"
+        ]
+    ],
+    "kakuna": [
+        "mid",
+        [
+            10,
+            "weedle"
+        ],
+        [
+            25,
+            "beedrill"
+        ]
+    ],
+    "beedrill": [
+        "last",
+        [
+            10,
+            "weedle"
+        ],
+        [
+            25,
+            "kakuna"
+        ]
+    ],
+    "pidgey": [
+        "base",
+        [
+            20,
+            "pidgeotto"
+        ],
+        [
+            41,
+            "pidgeot"
+        ]
+    ],
+    "pidgeotto": [
+        "mid",
+        [
+            20,
+            "pidgey"
+        ],
+        [
+            41,
+            "pidgeot"
+        ]
+    ],
+    "pidgeot": [
+        "last",
+        [
+            20,
+            "pidgey"
+        ],
+        [
+            41,
+            "pidgeotto"
+        ]
+    ],
+    "rattata": [
+        "base",
+        [
+            28,
+            "raticate"
+        ]
+    ],
+    "raticate": [
+        "last",
+        [
+            28,
+            "rattata"
+        ]
+    ],
+    "rattataalola": [
+        "base",
+        [
+            28,
+            "raticatealola"
+        ]
+    ],
+    "raticatealola": [
+        "last",
+        [
+            28,
+            "rattataalola"
+        ]
+    ],
+    "spearow": [
+        "base",
+        [
+            30,
+            "fearow"
+        ]
+    ],
+    "fearow": [
+        "last",
+        [
+            30,
+            "spearow"
+        ]
+    ],
+    "ekans": [
+        "base",
+        [
+            31,
+            "arbok"
+        ]
+    ],
+    "arbok": [
+        "last",
+        [
+            31,
+            "ekans"
+        ]
+    ],
+    "pichu": [
+        "base",
+        [
+            11,
+            "pikachu"
+        ],
+        [
+            40,
+            "raichu"
+        ]
+    ],
+    "pikachu": [
+        "mid",
+        [
+            11,
+            "pichu"
+        ],
+        [
+            40,
+            "raichu"
+        ]
+    ],
+    "raichu": [
+        "last",
+        [
+            11,
+            "pichu"
+        ],
+        [
+            40,
+            "pikachu"
+        ]
+    ],
+    "pichu_1": [
+        "base",
+        [
+            11,
+            "pikachu_1"
+        ],
+        [
+            40,
+            "raichualola"
+        ]
+    ],
+    "pikachu_1": [
+        "mid",
+        [
+            11,
+            "pichu_1"
+        ],
+        [
+            40,
+            "raichualola"
+        ]
+    ],
+    "raichualola": [
+        "last",
+        [
+            11,
+            "pichu_1"
+        ],
+        [
+            40,
+            "pikachu_1"
+        ]
+    ],
+    "sandshrew": [
+        "base",
+        [
+            33,
+            "sandslash"
+        ]
+    ],
+    "sandslash": [
+        "last",
+        [
+            33,
+            "sandshrew"
+        ]
+    ],
+    "sandshrewalola": [
+        "base",
+        [
+            33,
+            "sandslashalola"
+        ]
+    ],
+    "sandslashalola": [
+        "last",
+        [
+            33,
+            "sandshrewalola"
+        ]
+    ],
+    "nidoranfemmina": [
+        "base",
+        [
+            22,
+            "nidorina"
+        ],
+        [
+            43,
+            "nidoqueen"
+        ]
+    ],
+    "nidorina": [
+        "mid",
+        [
+            22,
+            "nidoranfemmina"
+        ],
+        [
+            43,
+            "nidoqueen"
+        ]
+    ],
+    "nidoqueen": [
+        "last",
+        [
+            22,
+            "nidoranfemmina"
+        ],
+        [
+            43,
+            "nidorina"
+        ]
+    ],
+    "nidoranmaschio": [
+        "base",
+        [
+            22,
+            "nidorino"
+        ],
+        [
+            43,
+            "nidoking"
+        ]
+    ],
+    "nidorino": [
+        "mid",
+        [
+            22,
+            "nidoranmaschio"
+        ],
+        [
+            43,
+            "nidoking"
+        ]
+    ],
+    "nidoking": [
+        "last",
+        [
+            22,
+            "nidoranmaschio"
+        ],
+        [
+            43,
+            "nidorino"
+        ]
+    ],
+    "cleffa": [
+        "base",
+        [
+            16,
+            "clefairy"
+        ],
+        [
+            35,
+            "clefable"
+        ]
+    ],
+    "clefairy": [
+        "mid",
+        [
+            16,
+            "cleffa"
+        ],
+        [
+            35,
+            "clefable"
+        ]
+    ],
+    "clefable": [
+        "last",
+        [
+            16,
+            "cleffa"
+        ],
+        [
+            35,
+            "clefairy"
+        ]
+    ],
+    "vulpix": [
+        "base",
+        [
+            35,
+            "ninetales"
+        ]
+    ],
+    "ninetales": [
+        "last",
+        [
+            35,
+            "vulpix"
+        ]
+    ],
+    "vulpixalola": [
+        "base",
+        [
+            35,
+            "ninetalesalola"
+        ]
+    ],
+    "ninetalesalola": [
+        "last",
+        [
+            35,
+            "vulpixalola"
+        ]
+    ],
+    "igglypuff": [
+        "base",
+        [
+            14,
+            "jigglypuff"
+        ],
+        [
+            35,
+            "wigglytuff"
+        ]
+    ],
+    "jigglypuff": [
+        "mid",
+        [
+            14,
+            "igglypuff"
+        ],
+        [
+            35,
+            "wigglytuff"
+        ]
+    ],
+    "wigglytuff": [
+        "last",
+        [
+            14,
+            "igglypuff"
+        ],
+        [
+            35,
+            "jigglypuff"
+        ]
+    ],
+    "zubat": [
+        "base",
+        [
+            25,
+            "golbat"
+        ],
+        [
+            49,
+            "crobat"
+        ]
+    ],
+    "golbat": [
+        "mid",
+        [
+            25,
+            "zubat"
+        ],
+        [
+            49,
+            "crobat"
+        ]
+    ],
+    "crobat": [
+        "last",
+        [
+            25,
+            "zubat"
+        ],
+        [
+            49,
+            "golbat"
+        ]
+    ],
+    "oddish": [
+        "base",
+        [
+            26,
+            "gloom"
+        ],
+        [
+            44,
+            "vileplume"
+        ]
+    ],
+    "gloom": [
+        "mid",
+        [
+            26,
+            "oddish"
+        ],
+        [
+            44,
+            "vileplume"
+        ]
+    ],
+    "vileplume": [
+        "last",
+        [
+            26,
+            "oddish"
+        ],
+        [
+            44,
+            "gloom"
+        ]
+    ],
+    "oddish_1": [
+        "base",
+        [
+            26,
+            "gloom_1"
+        ],
+        [
+            44,
+            "bellossom"
+        ]
+    ],
+    "gloom_1": [
+        "mid",
+        [
+            26,
+            "oddish_1"
+        ],
+        [
+            44,
+            "bellossom"
+        ]
+    ],
+    "bellossom": [
+        "last",
+        [
+            26,
+            "oddish_1"
+        ],
+        [
+            44,
+            "gloom_1"
+        ]
+    ],
+    "paras": [
+        "base",
+        [
+            29,
+            "parasect"
+        ]
+    ],
+    "parasect": [
+        "last",
+        [
+            29,
+            "paras"
+        ]
+    ],
+    "diglett": [
+        "base",
+        [
+            29,
+            "dugtrio"
+        ]
+    ],
+    "dugtrio": [
+        "last",
+        [
+            29,
+            "diglett"
+        ]
+    ],
+    "diglettalola": [
+        "base",
+        [
+            29,
+            "dugtrioalola"
+        ]
+    ],
+    "dugtrioalola": [
+        "last",
+        [
+            29,
+            "diglettalola"
+        ]
+    ],
+    "meowht": [
+        "base",
+        [
+            32,
+            "persian"
+        ]
+    ],
+    "persian": [
+        "last",
+        [
+            32,
+            "meowht"
+        ]
+    ],
+    "meowhtalola": [
+        "base",
+        [
+            32,
+            "persianalola"
+        ]
+    ],
+    "persianalola": [
+        "last",
+        [
+            32,
+            "meowhtalola"
+        ]
+    ],
+    "meowhtgalar": [
+        "base",
+        [
+            32,
+            "perrserker"
+        ]
+    ],
+    "perrserker": [
+        "last",
+        [
+            32,
+            "meowhtgalar"
+        ]
+    ],
+    "psyduck": [
+        "base",
+        [
+            36,
+            "golduck"
+        ]
+    ],
+    "golduck": [
+        "last",
+        [
+            36,
+            "psyduck"
+        ]
+    ],
+    "mankey": [
+        "base",
+        [
+            28,
+            "primeape"
+        ],
+        [
+            49,
+            "annihilapt"
+        ]
+    ],
+    "primeape": [
+        "mid",
+        [
+            28,
+            "mankey"
+        ],
+        [
+            49,
+            "annihilapt"
+        ]
+    ],
+    "annihilapt": [
+        "last",
+        [
+            28,
+            "mankey"
+        ],
+        [
+            49,
+            "primeape"
+        ]
+    ],
+    "growlithe": [
+        "base",
+        [
+            40,
+            "arcanine"
+        ]
+    ],
+    "arcanine": [
+        "last",
+        [
+            40,
+            "growlithe"
+        ]
+    ],
+    "growlithehisui": [
+        "base",
+        [
+            40,
+            "arcaninehisui"
+        ]
+    ],
+    "arcaninehisui": [
+        "last",
+        [
+            40,
+            "growlithehisui"
+        ]
+    ],
+    "poliwag": [
+        "base",
+        [
+            24,
+            "poliwhirl"
+        ],
+        [
+            45,
+            "poliwrath"
+        ]
+    ],
+    "poliwhirl": [
+        "mid",
+        [
+            24,
+            "poliwag"
+        ],
+        [
+            45,
+            "poliwrath"
+        ]
+    ],
+    "poliwrath": [
+        "last",
+        [
+            24,
+            "poliwag"
+        ],
+        [
+            45,
+            "poliwhirl"
+        ]
+    ],
+    "poliwag_1": [
+        "base",
+        [
+            24,
+            "poliwhirl_1"
+        ],
+        [
+            45,
+            "politoed"
+        ]
+    ],
+    "poliwhirl_1": [
+        "mid",
+        [
+            24,
+            "poliwag_1"
+        ],
+        [
+            45,
+            "politoed"
+        ]
+    ],
+    "politoed": [
+        "last",
+        [
+            24,
+            "poliwag_1"
+        ],
+        [
+            45,
+            "poliwhirl_1"
+        ]
+    ],
+    "abra": [
+        "base",
+        [
+            26,
+            "kadabra"
+        ],
+        [
+            45,
+            "alakazam"
+        ]
+    ],
+    "kadabra": [
+        "mid",
+        [
+            26,
+            "abra"
+        ],
+        [
+            45,
+            "alakazam"
+        ]
+    ],
+    "alakazam": [
+        "last",
+        [
+            26,
+            "abra"
+        ],
+        [
+            45,
+            "kadabra"
+        ]
+    ],
+    "machop": [
+        "base",
+        [
+            25,
+            "machoke"
+        ],
+        [
+            45,
+            "machamp"
+        ]
+    ],
+    "machoke": [
+        "mid",
+        [
+            25,
+            "machop"
+        ],
+        [
+            45,
+            "machamp"
+        ]
+    ],
+    "machamp": [
+        "last",
+        [
+            25,
+            "machop"
+        ],
+        [
+            45,
+            "machoke"
+        ]
+    ],
+    "bellsprout": [
+        "base",
+        [
+            25,
+            "weepinbell"
+        ],
+        [
+            45,
+            "victrebell"
+        ]
+    ],
+    "weepinbell": [
+        "mid",
+        [
+            25,
+            "bellsprout"
+        ],
+        [
+            45,
+            "victrebell"
+        ]
+    ],
+    "victrebell": [
+        "last",
+        [
+            25,
+            "bellsprout"
+        ],
+        [
+            45,
+            "weepinbell"
+        ]
+    ],
+    "tentacool": [
+        "base",
+        [
+            37,
+            "tentacruel"
+        ]
+    ],
+    "tentacruel": [
+        "last",
+        [
+            37,
+            "tentacool"
+        ]
+    ],
+    "geodude": [
+        "base",
+        [
+            25,
+            "graveler"
+        ],
+        [
+            44,
+            "golem"
+        ]
+    ],
+    "graveler": [
+        "mid",
+        [
+            25,
+            "geodude"
+        ],
+        [
+            44,
+            "golem"
+        ]
+    ],
+    "golem": [
+        "last",
+        [
+            25,
+            "geodude"
+        ],
+        [
+            44,
+            "graveler"
+        ]
+    ],
+    "geodudealola": [
+        "base",
+        [
+            25,
+            "graveleralola"
+        ],
+        [
+            44,
+            "golemalola"
+        ]
+    ],
+    "graveleralola": [
+        "mid",
+        [
+            25,
+            "geodudealola"
+        ],
+        [
+            44,
+            "golemalola"
+        ]
+    ],
+    "golemalola": [
+        "last",
+        [
+            25,
+            "geodudealola"
+        ],
+        [
+            44,
+            "graveleralola"
+        ]
+    ],
+    "ponyta": [
+        "base",
+        [
+            46,
+            "rapidash"
+        ]
+    ],
+    "rapidash": [
+        "last",
+        [
+            46,
+            "ponyta"
+        ]
+    ],
+    "ponytagalar": [
+        "base",
+        [
+            46,
+            "rapidashgalar"
+        ]
+    ],
+    "rapidashgalar": [
+        "last",
+        [
+            46,
+            "ponytagalar"
+        ]
+    ],
+    "slowpoke": [
+        "base",
+        [
+            25,
+            "slowbro"
+        ]
+    ],
+    "slowbro": [
+        "last",
+        [
+            25,
+            "slowpoke"
+        ]
+    ],
+    "slowpoke_1": [
+        "base",
+        [
+            25,
+            "slowking"
+        ]
+    ],
+    "slowking": [
+        "last",
+        [
+            25,
+            "slowpoke_1"
+        ]
+    ],
+    "slowpokegalar": [
+        "base",
+        [
+            25,
+            "slowbrogalar"
+        ]
+    ],
+    "slowbrogalar": [
+        "last",
+        [
+            25,
+            "slowpokegalar"
+        ]
+    ],
+    "slowpokegalar_1": [
+        "base",
+        [
+            25,
+            "slowkinggalar"
+        ]
+    ],
+    "slowkinggalar": [
+        "last",
+        [
+            25,
+            "slowpokegalar_1"
+        ]
+    ],
+    "magnemite": [
+        "base",
+        [
+            29,
+            "magneton"
+        ],
+        [
+            50,
+            "magnezone"
+        ]
+    ],
+    "magneton": [
+        "mid",
+        [
+            29,
+            "magnemite"
+        ],
+        [
+            50,
+            "magnezone"
+        ]
+    ],
+    "magnezone": [
+        "last",
+        [
+            29,
+            "magnemite"
+        ],
+        [
+            50,
+            "magneton"
+        ]
+    ],
+    "farfetchdgalar": [
+        "base",
+        [
+            39,
+            "sirfetchd"
+        ]
+    ],
+    "sirfetchd": [
+        "last",
+        [
+            39,
+            "farfetchdgalar"
+        ]
+    ],
+    "doduo": [
+        "base",
+        [
+            34,
+            "dodrio"
+        ]
+    ],
+    "dodrio": [
+        "last",
+        [
+            34,
+            "doduo"
+        ]
+    ],
+    "seel": [
+        "base",
+        [
+            35,
+            "dewgong"
+        ]
+    ],
+    "dewgong": [
+        "last",
+        [
+            35,
+            "seel"
+        ]
+    ],
+    "grimer": [
+        "base",
+        [
+            36,
+            "muk"
+        ]
+    ],
+    "muk": [
+        "last",
+        [
+            36,
+            "grimer"
+        ]
+    ],
+    "grimealola": [
+        "base",
+        [
+            36,
+            "mukalola"
+        ]
+    ],
+    "mukalola": [
+        "last",
+        [
+            36,
+            "grimealola"
+        ]
+    ],
+    "shellder": [
+        "base",
+        [
+            36,
+            "cloyster"
+        ]
+    ],
+    "cloyster": [
+        "last",
+        [
+            36,
+            "shellder"
+        ]
+    ],
+    "gastly": [
+        "base",
+        [
+            26,
+            "haunter"
+        ],
+        [
+            45,
+            "gengar"
+        ]
+    ],
+    "haunter": [
+        "mid",
+        [
+            26,
+            "gastly"
+        ],
+        [
+            45,
+            "gengar"
+        ]
+    ],
+    "gengar": [
+        "last",
+        [
+            26,
+            "gastly"
+        ],
+        [
+            45,
+            "haunter"
+        ]
+    ],
+    "onix": [
+        "base",
+        [
+            40,
+            "steelix"
+        ]
+    ],
+    "steelix": [
+        "last",
+        [
+            40,
+            "onix"
+        ]
+    ],
+    "drowzee": [
+        "base",
+        [
+            35,
+            "hypno"
+        ]
+    ],
+    "hypno": [
+        "last",
+        [
+            35,
+            "drowzee"
+        ]
+    ],
+    "krabby": [
+        "base",
+        [
+            34,
+            "kingler"
+        ]
+    ],
+    "kingler": [
+        "last",
+        [
+            34,
+            "krabby"
+        ]
+    ],
+    "voltorb": [
+        "base",
+        [
+            36,
+            "electrode"
+        ]
+    ],
+    "electrode": [
+        "last",
+        [
+            36,
+            "voltorb"
+        ]
+    ],
+    "voltorbhisui": [
+        "base",
+        [
+            36,
+            "electrode_1"
+        ]
+    ],
+    "electrode_1": [
+        "last",
+        [
+            36,
+            "voltorbhisui"
+        ]
+    ],
+    "exeggcute": [
+        "base",
+        [
+            38,
+            "exeggutor"
+        ]
+    ],
+    "exeggutor": [
+        "last",
+        [
+            38,
+            "exeggcute"
+        ]
+    ],
+    "exeggcute_1": [
+        "base",
+        [
+            38,
+            "exeggutoralola"
+        ]
+    ],
+    "exeggutoralola": [
+        "last",
+        [
+            38,
+            "exeggcute_1"
+        ]
+    ],
+    "cubone": [
+        "base",
+        [
+            32,
+            "marowak"
+        ]
+    ],
+    "marowak": [
+        "last",
+        [
+            32,
+            "cubone"
+        ]
+    ],
+    "cubone_1": [
+        "base",
+        [
+            32,
+            "marowakalola"
+        ]
+    ],
+    "marowakalola": [
+        "last",
+        [
+            32,
+            "cubone_1"
+        ]
+    ],
+    "tyrogue": [
+        "base",
+        [
+            28,
+            "hitmonlee"
+        ]
+    ],
+    "hitmonlee": [
+        "last",
+        [
+            28,
+            "tyrogue"
+        ]
+    ],
+    "tyrogue_1": [
+        "base",
+        [
+            28,
+            "hitmonchan"
+        ]
+    ],
+    "hitmonchan": [
+        "last",
+        [
+            28,
+            "tyrogue_1"
+        ]
+    ],
+    "tyrogue_2": [
+        "base",
+        [
+            28,
+            "hitmontop"
+        ]
+    ],
+    "hitmontop": [
+        "last",
+        [
+            28,
+            "tyrogue_2"
+        ]
+    ],
+    "lickitung": [
+        "base",
+        [
+            40,
+            "lickiliky"
+        ]
+    ],
+    "lickiliky": [
+        "last",
+        [
+            40,
+            "lickitung"
+        ]
+    ],
+    "koffing": [
+        "base",
+        [
+            37,
+            "weezing"
+        ]
+    ],
+    "weezing": [
+        "last",
+        [
+            37,
+            "koffing"
+        ]
+    ],
+    "koffing_1": [
+        "base",
+        [
+            37,
+            "weezinggalar"
+        ]
+    ],
+    "weezinggalar": [
+        "last",
+        [
+            37,
+            "koffing_1"
+        ]
+    ],
+    "rhyhorn": [
+        "base",
+        [
+            31,
+            "rhydon"
+        ],
+        [
+            51,
+            "rhyperior"
+        ]
+    ],
+    "rhydon": [
+        "mid",
+        [
+            31,
+            "rhyhorn"
+        ],
+        [
+            51,
+            "rhyperior"
+        ]
+    ],
+    "rhyperior": [
+        "last",
+        [
+            31,
+            "rhyhorn"
+        ],
+        [
+            51,
+            "rhydon"
+        ]
+    ],
+    "happiny": [
+        "base",
+        [
+            24,
+            "chansey"
+        ],
+        [
+            50,
+            "blissey"
+        ]
+    ],
+    "chansey": [
+        "mid",
+        [
+            24,
+            "happiny"
+        ],
+        [
+            50,
+            "blissey"
+        ]
+    ],
+    "blissey": [
+        "last",
+        [
+            24,
+            "happiny"
+        ],
+        [
+            50,
+            "chansey"
+        ]
+    ],
+    "tangela": [
+        "base",
+        [
+            48,
+            "tangrowht"
+        ]
+    ],
+    "tangrowht": [
+        "last",
+        [
+            48,
+            "tangela"
+        ]
+    ],
+    "horsea": [
+        "base",
+        [
+            27,
+            "seadra"
+        ],
+        [
+            49,
+            "kingdra"
+        ]
+    ],
+    "seadra": [
+        "mid",
+        [
+            27,
+            "horsea"
+        ],
+        [
+            49,
+            "kingdra"
+        ]
+    ],
+    "kingdra": [
+        "last",
+        [
+            27,
+            "horsea"
+        ],
+        [
+            49,
+            "seadra"
+        ]
+    ],
+    "goldeen": [
+        "base",
+        [
+            34,
+            "seaking"
+        ]
+    ],
+    "seaking": [
+        "last",
+        [
+            34,
+            "goldeen"
+        ]
+    ],
+    "staryu": [
+        "base",
+        [
+            36,
+            "starmie"
+        ]
+    ],
+    "starmie": [
+        "last",
+        [
+            36,
+            "staryu"
+        ]
+    ],
+    "mimejr": [
+        "base",
+        [
+            34,
+            "mrrime"
+        ]
+    ],
+    "mrrime": [
+        "last",
+        [
+            34,
+            "mimejr"
+        ]
+    ],
+    "mrmimegalar": [
+        "base",
+        [
+            40,
+            "mrrime_1"
+        ]
+    ],
+    "mrrime_1": [
+        "last",
+        [
+            40,
+            "mrmimegalar"
+        ]
+    ],
+    "scyther": [
+        "base",
+        [
+            50,
+            "scizor"
+        ]
+    ],
+    "scizor": [
+        "last",
+        [
+            50,
+            "scyther"
+        ]
+    ],
+    "scyther_1": [
+        "base",
+        [
+            50,
+            "kleavor"
+        ]
+    ],
+    "kleavor": [
+        "last",
+        [
+            50,
+            "scyther_1"
+        ]
+    ],
+    "smoochum": [
+        "base",
+        [
+            33,
+            "jynx"
+        ]
+    ],
+    "jynx": [
+        "last",
+        [
+            33,
+            "smoochum"
+        ]
+    ],
+    "elekid": [
+        "base",
+        [
+            52,
+            "electabuzz"
+        ]
+    ],
+    "electabuzz": [
+        "last",
+        [
+            52,
+            "elekid"
+        ]
+    ],
+    "magby": [
+        "base",
+        [
+            34,
+            "magmar"
+        ],
+        [
+            52,
+            "magmortar"
+        ]
+    ],
+    "magmar": [
+        "mid",
+        [
+            34,
+            "magby"
+        ],
+        [
+            52,
+            "magmortar"
+        ]
+    ],
+    "magmortar": [
+        "last",
+        [
+            34,
+            "magby"
+        ],
+        [
+            52,
+            "magmar"
+        ]
+    ],
+    "magikarp": [
+        "base",
+        [
+            32,
+            "gyarados"
+        ]
+    ],
+    "gyarados": [
+        "last",
+        [
+            32,
+            "magikarp"
+        ]
+    ],
+    "eevee": [
+        "base",
+        [
+            37,
+            "vaporeon"
+        ]
+    ],
+    "vaporeon": [
+        "last",
+        [
+            37,
+            "eevee"
+        ]
+    ],
+    "eevee_1": [
+        "base",
+        [
+            37,
+            "jolteon"
+        ]
+    ],
+    "jolteon": [
+        "last",
+        [
+            37,
+            "eevee_1"
+        ]
+    ],
+    "eevee_2": [
+        "base",
+        [
+            37,
+            "flareon"
+        ]
+    ],
+    "flareon": [
+        "last",
+        [
+            37,
+            "eevee_2"
+        ]
+    ],
+    "eevee_3": [
+        "base",
+        [
+            37,
+            "espeon"
+        ]
+    ],
+    "espeon": [
+        "last",
+        [
+            37,
+            "eevee_3"
+        ]
+    ],
+    "eevee_4": [
+        "base",
+        [
+            37,
+            "umbreon"
+        ]
+    ],
+    "umbreon": [
+        "last",
+        [
+            37,
+            "eevee_4"
+        ]
+    ],
+    "eevee_5": [
+        "base",
+        [
+            37,
+            "leafeon"
+        ]
+    ],
+    "leafeon": [
+        "last",
+        [
+            37,
+            "eevee_5"
+        ]
+    ],
+    "eevee_6": [
+        "base",
+        [
+            37,
+            "glaceon"
+        ]
+    ],
+    "glaceon": [
+        "last",
+        [
+            37,
+            "eevee_6"
+        ]
+    ],
+    "eevee_7": [
+        "base",
+        [
+            37,
+            "sylveon"
+        ]
+    ],
+    "sylveon": [
+        "last",
+        [
+            37,
+            "eevee_7"
+        ]
+    ],
+    "porygon": [
+        "base",
+        [
+            35,
+            "porygon2"
+        ],
+        [
+            52,
+            "porygonz"
+        ]
+    ],
+    "porygon2": [
+        "mid",
+        [
+            35,
+            "porygon"
+        ],
+        [
+            52,
+            "porygonz"
+        ]
+    ],
+    "porygonz": [
+        "last",
+        [
+            35,
+            "porygon"
+        ],
+        [
+            52,
+            "porygon2"
+        ]
+    ],
+    "omanyte": [
+        "base",
+        [
+            37,
+            "omastar"
+        ]
+    ],
+    "omastar": [
+        "last",
+        [
+            37,
+            "omanyte"
+        ]
+    ],
+    "kabuto": [
+        "base",
+        [
+            37,
+            "kabutops"
+        ]
+    ],
+    "kabutops": [
+        "last",
+        [
+            37,
+            "kabuto"
+        ]
+    ],
+    "dratini": [
+        "base",
+        [
+            26,
+            "dragonair"
+        ],
+        [
+            60,
+            "dragonite"
+        ]
+    ],
+    "dragonair": [
+        "mid",
+        [
+            26,
+            "dratini"
+        ],
+        [
+            60,
+            "dragonite"
+        ]
+    ],
+    "dragonite": [
+        "last",
+        [
+            26,
+            "dratini"
+        ],
+        [
+            60,
+            "dragonair"
+        ]
+    ],
+    "chikorita": [
+        "base",
+        [
+            26,
+            "bayleef"
+        ],
+        [
+            46,
+            "meganium"
+        ]
+    ],
+    "bayleef": [
+        "mid",
+        [
+            26,
+            "chikorita"
+        ],
+        [
+            46,
+            "meganium"
+        ]
+    ],
+    "meganium": [
+        "last",
+        [
+            26,
+            "chikorita"
+        ],
+        [
+            46,
+            "bayleef"
+        ]
+    ],
+    "cyndaquill": [
+        "base",
+        [
+            25,
+            "quilava"
+        ],
+        [
+            47,
+            "typhlosion"
+        ]
+    ],
+    "quilava": [
+        "mid",
+        [
+            25,
+            "cyndaquill"
+        ],
+        [
+            47,
+            "typhlosion"
+        ]
+    ],
+    "typhlosion": [
+        "last",
+        [
+            25,
+            "cyndaquill"
+        ],
+        [
+            47,
+            "quilava"
+        ]
+    ],
+    "cyndaquill_1": [
+        "base",
+        [
+            25,
+            "quilava_1"
+        ],
+        [
+            47,
+            "typhlisionhisui"
+        ]
+    ],
+    "quilava_1": [
+        "mid",
+        [
+            25,
+            "cyndaquill_1"
+        ],
+        [
+            47,
+            "typhlisionhisui"
+        ]
+    ],
+    "typhlisionhisui": [
+        "last",
+        [
+            25,
+            "cyndaquill_1"
+        ],
+        [
+            47,
+            "quilava_1"
+        ]
+    ],
+    "totodil": [
+        "base",
+        [
+            26,
+            "croconaw"
+        ],
+        [
+            47,
+            "feraligatr"
+        ]
+    ],
+    "croconaw": [
+        "mid",
+        [
+            26,
+            "totodil"
+        ],
+        [
+            47,
+            "feraligatr"
+        ]
+    ],
+    "feraligatr": [
+        "last",
+        [
+            26,
+            "totodil"
+        ],
+        [
+            47,
+            "croconaw"
+        ]
+    ],
+    "sentret": [
+        "base",
+        [
+            26,
+            "furett"
+        ]
+    ],
+    "furett": [
+        "last",
+        [
+            26,
+            "sentret"
+        ]
+    ],
+    "hoothoot": [
+        "base",
+        [
+            31,
+            "noctowl"
+        ]
+    ],
+    "noctowl": [
+        "last",
+        [
+            31,
+            "hoothoot"
+        ]
+    ],
+    "ledyba": [
+        "base",
+        [
+            28,
+            "ledian"
+        ]
+    ],
+    "ledian": [
+        "last",
+        [
+            28,
+            "ledyba"
+        ]
+    ],
+    "spinarak": [
+        "base",
+        [
+            28,
+            "ariados"
+        ]
+    ],
+    "ariados": [
+        "last",
+        [
+            28,
+            "spinarak"
+        ]
+    ],
+    "chinchou": [
+        "base",
+        [
+            35,
+            "lanturn"
+        ]
+    ],
+    "lanturn": [
+        "last",
+        [
+            35,
+            "chinchou"
+        ]
+    ],
+    "togepi": [
+        "base",
+        [
+            22,
+            "togetic"
+        ],
+        [
+            47,
+            "togekiss"
+        ]
+    ],
+    "togetic": [
+        "mid",
+        [
+            22,
+            "togepi"
+        ],
+        [
+            47,
+            "togekiss"
+        ]
+    ],
+    "togekiss": [
+        "last",
+        [
+            22,
+            "togepi"
+        ],
+        [
+            47,
+            "togetic"
+        ]
+    ],
+    "mareep": [
+        "base",
+        [
+            22,
+            "flaaffy"
+        ],
+        [
+            44,
+            "ampharos"
+        ]
+    ],
+    "flaaffy": [
+        "mid",
+        [
+            22,
+            "mareep"
+        ],
+        [
+            44,
+            "ampharos"
+        ]
+    ],
+    "ampharos": [
+        "last",
+        [
+            22,
+            "mareep"
+        ],
+        [
+            44,
+            "flaaffy"
+        ]
+    ],
+    "azurill_1": [
+        "last",
+        [
+            12,
+            "azurill_1"
+        ],
+        [
+            34,
+            "marill"
+        ]
+    ],
+    "marill": [
+        "mid",
+        [
+            12,
+            "azurill_1"
+        ],
+        [
+            34,
+            "azurill_1"
+        ]
+    ],
+    "bonsly": [
+        "base",
+        [
+            30,
+            "sudowoodo"
+        ]
+    ],
+    "sudowoodo": [
+        "last",
+        [
+            30,
+            "bonsly"
+        ]
+    ],
+    "hoppip": [
+        "base",
+        [
+            20,
+            "skiploom"
+        ],
+        [
+            40,
+            "jumpluff"
+        ]
+    ],
+    "skiploom": [
+        "mid",
+        [
+            20,
+            "hoppip"
+        ],
+        [
+            40,
+            "jumpluff"
+        ]
+    ],
+    "jumpluff": [
+        "last",
+        [
+            20,
+            "hoppip"
+        ],
+        [
+            40,
+            "skiploom"
+        ]
+    ],
+    "aipom": [
+        "base",
+        [
+            42,
+            "ambipom"
+        ]
+    ],
+    "ambipom": [
+        "last",
+        [
+            42,
+            "aipom"
+        ]
+    ],
+    "sunkern": [
+        "base",
+        [
+            30,
+            "sunflora"
+        ]
+    ],
+    "sunflora": [
+        "last",
+        [
+            30,
+            "sunkern"
+        ]
+    ],
+    "wooper": [
+        "base",
+        [
+            27,
+            "quagsire"
+        ]
+    ],
+    "quagsire": [
+        "last",
+        [
+            27,
+            "wooper"
+        ]
+    ],
+    "woopergalar": [
+        "base",
+        [
+            27,
+            "clodsire"
+        ]
+    ],
+    "clodsire": [
+        "last",
+        [
+            27,
+            "woopergalar"
+        ]
+    ],
+    "murkrow": [
+        "base",
+        [
+            45,
+            "honchkrow"
+        ]
+    ],
+    "honchkrow": [
+        "last",
+        [
+            45,
+            "murkrow"
+        ]
+    ],
+    "misdreavus": [
+        "base",
+        [
+            46,
+            "mismagius"
+        ]
+    ],
+    "mismagius": [
+        "last",
+        [
+            46,
+            "misdreavus"
+        ]
+    ],
+    "wynaut": [
+        "base",
+        [
+            28,
+            "wobbuffett"
+        ]
+    ],
+    "wobbuffett": [
+        "last",
+        [
+            28,
+            "wynaut"
+        ]
+    ],
+    "girafarig": [
+        "base",
+        [
+            40,
+            "farigiraf"
+        ]
+    ],
+    "farigiraf": [
+        "last",
+        [
+            40,
+            "girafarig"
+        ]
+    ],
+    "pineco": [
+        "base",
+        [
+            33,
+            "forretress"
+        ]
+    ],
+    "forretress": [
+        "last",
+        [
+            33,
+            "pineco"
+        ]
+    ],
+    "dunsparce": [
+        "base",
+        [
+            48,
+            "dudunsparce"
+        ]
+    ],
+    "dudunsparce": [
+        "last",
+        [
+            48,
+            "dunsparce"
+        ]
+    ],
+    "gligar": [
+        "base",
+        [
+            47,
+            "gliscor"
+        ]
+    ],
+    "gliscor": [
+        "last",
+        [
+            47,
+            "gligar"
+        ]
+    ],
+    "snubbull": [
+        "base",
+        [
+            33,
+            "granbull"
+        ]
+    ],
+    "granbull": [
+        "last",
+        [
+            33,
+            "snubbull"
+        ]
+    ],
+    "qwilfishhisui": [
+        "base",
+        [
+            48,
+            "overquill"
+        ]
+    ],
+    "overquill": [
+        "last",
+        [
+            48,
+            "qwilfishhisui"
+        ]
+    ],
+    "sneasel": [
+        "base",
+        [
+            47,
+            "weavile"
+        ]
+    ],
+    "weavile": [
+        "last",
+        [
+            47,
+            "sneasel"
+        ]
+    ],
+    "sneaselhisui": [
+        "base",
+        [
+            48,
+            "sneasler"
+        ]
+    ],
+    "sneasler": [
+        "last",
+        [
+            48,
+            "sneaselhisui"
+        ]
+    ],
+    "teddiursa": [
+        "base",
+        [
+            22,
+            "ursaring"
+        ],
+        [
+            53,
+            "ursaluna"
+        ]
+    ],
+    "ursaring": [
+        "mid",
+        [
+            22,
+            "teddiursa"
+        ],
+        [
+            53,
+            "ursaluna"
+        ]
+    ],
+    "ursaluna": [
+        "last",
+        [
+            22,
+            "teddiursa"
+        ],
+        [
+            53,
+            "ursaring"
+        ]
+    ],
+    "slugma": [
+        "base",
+        [
+            29,
+            "magcargo"
+        ]
+    ],
+    "magcargo": [
+        "last",
+        [
+            29,
+            "slugma"
+        ]
+    ],
+    "swinub": [
+        "base",
+        [
+            25,
+            "piloswine"
+        ],
+        [
+            40,
+            "mamoswine"
+        ]
+    ],
+    "piloswine": [
+        "mid",
+        [
+            25,
+            "swinub"
+        ],
+        [
+            40,
+            "mamoswine"
+        ]
+    ],
+    "mamoswine": [
+        "last",
+        [
+            25,
+            "swinub"
+        ],
+        [
+            40,
+            "piloswine"
+        ]
+    ],
+    "corsolagalar": [
+        "base",
+        [
+            41,
+            "cursola"
+        ]
+    ],
+    "cursola": [
+        "last",
+        [
+            41,
+            "corsolagalar"
+        ]
+    ],
+    "remoraid": [
+        "base",
+        [
+            36,
+            "octillery"
+        ]
+    ],
+    "octillery": [
+        "last",
+        [
+            36,
+            "remoraid"
+        ]
+    ],
+    "mantyke": [
+        "base",
+        [
+            46,
+            "mantine"
+        ]
+    ],
+    "mantine": [
+        "last",
+        [
+            46,
+            "mantyke"
+        ]
+    ],
+    "houndour": [
+        "base",
+        [
+            37,
+            "houndoom"
+        ]
+    ],
+    "houndoom": [
+        "last",
+        [
+            37,
+            "houndour"
+        ]
+    ],
+    "phanphy": [
+        "base",
+        [
+            37,
+            "donphan"
+        ]
+    ],
+    "donphan": [
+        "last",
+        [
+            37,
+            "phanphy"
+        ]
+    ],
+    "stantler": [
+        "base",
+        [
+            49,
+            "wyrdeer"
+        ]
+    ],
+    "wyrdeer": [
+        "last",
+        [
+            49,
+            "stantler"
+        ]
+    ],
+    "larvitar": [
+        "base",
+        [
+            26,
+            "pupitar"
+        ],
+        [
+            60,
+            "tyranitar"
+        ]
+    ],
+    "pupitar": [
+        "mid",
+        [
+            26,
+            "larvitar"
+        ],
+        [
+            60,
+            "tyranitar"
+        ]
+    ],
+    "tyranitar": [
+        "last",
+        [
+            26,
+            "larvitar"
+        ],
+        [
+            60,
+            "pupitar"
+        ]
+    ],
+    "treecko": [
+        "base",
+        [
+            26,
+            "grovyle"
+        ],
+        [
+            47,
+            "sceptile"
+        ]
+    ],
+    "grovyle": [
+        "mid",
+        [
+            26,
+            "treecko"
+        ],
+        [
+            47,
+            "sceptile"
+        ]
+    ],
+    "sceptile": [
+        "last",
+        [
+            26,
+            "treecko"
+        ],
+        [
+            47,
+            "grovyle"
+        ]
+    ],
+    "torchi": [
+        "base",
+        [
+            26,
+            "combusken"
+        ],
+        [
+            47,
+            "blaziken"
+        ]
+    ],
+    "combusken": [
+        "mid",
+        [
+            26,
+            "torchi"
+        ],
+        [
+            47,
+            "blaziken"
+        ]
+    ],
+    "blaziken": [
+        "last",
+        [
+            26,
+            "torchi"
+        ],
+        [
+            47,
+            "combusken"
+        ]
+    ],
+    "mudkip": [
+        "base",
+        [
+            26,
+            "marshtomp"
+        ],
+        [
+            47,
+            "swampert"
+        ]
+    ],
+    "marshtomp": [
+        "mid",
+        [
+            26,
+            "mudkip"
+        ],
+        [
+            47,
+            "swampert"
+        ]
+    ],
+    "swampert": [
+        "last",
+        [
+            26,
+            "mudkip"
+        ],
+        [
+            47,
+            "marshtomp"
+        ]
+    ],
+    "poochyena": [
+        "base",
+        [
+            27,
+            "mightyena"
+        ]
+    ],
+    "mightyena": [
+        "last",
+        [
+            27,
+            "poochyena"
+        ]
+    ],
+    "zigzagoon": [
+        "base",
+        [
+            28,
+            "linoone"
+        ]
+    ],
+    "linoone": [
+        "last",
+        [
+            28,
+            "zigzagoon"
+        ]
+    ],
+    "zigzagoongalar": [
+        "base",
+        [
+            18,
+            "linoonegalar"
+        ],
+        [
+            47,
+            "obstagoon"
+        ]
+    ],
+    "linoonegalar": [
+        "mid",
+        [
+            18,
+            "zigzagoongalar"
+        ],
+        [
+            47,
+            "obstagoon"
+        ]
+    ],
+    "obstagoon": [
+        "last",
+        [
+            18,
+            "zigzagoongalar"
+        ],
+        [
+            47,
+            "linoonegalar"
+        ]
+    ],
+    "wurmple": [
+        "base",
+        [
+            10,
+            "silcoon"
+        ],
+        [
+            25,
+            "beautifly"
+        ]
+    ],
+    "silcoon": [
+        "mid",
+        [
+            10,
+            "wurmple"
+        ],
+        [
+            25,
+            "beautifly"
+        ]
+    ],
+    "beautifly": [
+        "last",
+        [
+            10,
+            "wurmple"
+        ],
+        [
+            25,
+            "silcoon"
+        ]
+    ],
+    "wurmple_1": [
+        "base",
+        [
+            10,
+            "cascoon"
+        ],
+        [
+            25,
+            "dustox"
+        ]
+    ],
+    "cascoon": [
+        "mid",
+        [
+            10,
+            "wurmple_1"
+        ],
+        [
+            25,
+            "dustox"
+        ]
+    ],
+    "dustox": [
+        "last",
+        [
+            10,
+            "wurmple_1"
+        ],
+        [
+            25,
+            "cascoon"
+        ]
+    ],
+    "lotad": [
+        "base",
+        [
+            19,
+            "lobre"
+        ],
+        [
+            41,
+            "ludicolo"
+        ]
+    ],
+    "lobre": [
+        "mid",
+        [
+            19,
+            "lotad"
+        ],
+        [
+            41,
+            "ludicolo"
+        ]
+    ],
+    "ludicolo": [
+        "last",
+        [
+            19,
+            "lotad"
+        ],
+        [
+            41,
+            "lobre"
+        ]
+    ],
+    "seedot": [
+        "base",
+        [
+            19,
+            "nuzleaf"
+        ],
+        [
+            41,
+            "shiftry"
+        ]
+    ],
+    "nuzleaf": [
+        "mid",
+        [
+            19,
+            "seedot"
+        ],
+        [
+            41,
+            "shiftry"
+        ]
+    ],
+    "shiftry": [
+        "last",
+        [
+            19,
+            "seedot"
+        ],
+        [
+            41,
+            "nuzleaf"
+        ]
+    ],
+    "taillow": [
+        "base",
+        [
+            31,
+            "swellow"
+        ]
+    ],
+    "swellow": [
+        "last",
+        [
+            31,
+            "taillow"
+        ]
+    ],
+    "wingull": [
+        "base",
+        [
+            31,
+            "pelipper"
+        ]
+    ],
+    "pelipper": [
+        "last",
+        [
+            31,
+            "wingull"
+        ]
+    ],
+    "ralts": [
+        "base",
+        [
+            18,
+            "kirlia"
+        ],
+        [
+            39,
+            "gardevoir"
+        ]
+    ],
+    "kirlia": [
+        "mid",
+        [
+            18,
+            "ralts"
+        ],
+        [
+            39,
+            "gardevoir"
+        ]
+    ],
+    "gardevoir": [
+        "last",
+        [
+            18,
+            "ralts"
+        ],
+        [
+            39,
+            "kirlia"
+        ]
+    ],
+    "ralts_1": [
+        "base",
+        [
+            19,
+            "kirlia_1"
+        ],
+        [
+            39,
+            "gallade"
+        ]
+    ],
+    "kirlia_1": [
+        "mid",
+        [
+            19,
+            "ralts_1"
+        ],
+        [
+            39,
+            "gallade"
+        ]
+    ],
+    "gallade": [
+        "last",
+        [
+            19,
+            "ralts_1"
+        ],
+        [
+            39,
+            "kirlia_1"
+        ]
+    ],
+    "surskit": [
+        "base",
+        [
+            31,
+            "masquerain"
+        ]
+    ],
+    "masquerain": [
+        "last",
+        [
+            31,
+            "surskit"
+        ]
+    ],
+    "shroomish": [
+        "base",
+        [
+            33,
+            "breloom"
+        ]
+    ],
+    "breloom": [
+        "last",
+        [
+            33,
+            "shroomish"
+        ]
+    ],
+    "slakoth": [
+        "base",
+        [
+            26,
+            "vigoroth"
+        ],
+        [
+            55,
+            "slaking"
+        ]
+    ],
+    "vigoroth": [
+        "mid",
+        [
+            26,
+            "slakoth"
+        ],
+        [
+            55,
+            "slaking"
+        ]
+    ],
+    "slaking": [
+        "last",
+        [
+            26,
+            "slakoth"
+        ],
+        [
+            55,
+            "vigoroth"
+        ]
+    ],
+    "nincada": [
+        "base",
+        [
+            31,
+            "ninjask"
+        ]
+    ],
+    "ninjask": [
+        "last",
+        [
+            31,
+            "nincada"
+        ]
+    ],
+    "whismur": [
+        "base",
+        [
+            20,
+            "loudred"
+        ],
+        [
+            38,
+            "exploud"
+        ]
+    ],
+    "loudred": [
+        "mid",
+        [
+            20,
+            "whismur"
+        ],
+        [
+            38,
+            "exploud"
+        ]
+    ],
+    "exploud": [
+        "last",
+        [
+            20,
+            "whismur"
+        ],
+        [
+            38,
+            "loudred"
+        ]
+    ],
+    "makuhita": [
+        "base",
+        [
+            30,
+            "hariyama"
+        ]
+    ],
+    "hariyama": [
+        "last",
+        [
+            30,
+            "makuhita"
+        ]
+    ],
+    "nosepass": [
+        "base",
+        [
+            45,
+            "probopass"
+        ]
+    ],
+    "probopass": [
+        "last",
+        [
+            45,
+            "nosepass"
+        ]
+    ],
+    "skitty": [
+        "base",
+        [
+            28,
+            "delcatty"
+        ]
+    ],
+    "delcatty": [
+        "last",
+        [
+            28,
+            "skitty"
+        ]
+    ],
+    "aron": [
+        "base",
+        [
+            28,
+            "lairon"
+        ],
+        [
+            48,
+            "aggron"
+        ]
+    ],
+    "lairon": [
+        "mid",
+        [
+            28,
+            "aron"
+        ],
+        [
+            48,
+            "aggron"
+        ]
+    ],
+    "aggron": [
+        "last",
+        [
+            28,
+            "aron"
+        ],
+        [
+            48,
+            "lairon"
+        ]
+    ],
+    "meditite": [
+        "base",
+        [
+            30,
+            "medicham"
+        ]
+    ],
+    "medicham": [
+        "last",
+        [
+            30,
+            "meditite"
+        ]
+    ],
+    "electrike": [
+        "base",
+        [
+            31,
+            "manectric"
+        ]
+    ],
+    "manectric": [
+        "last",
+        [
+            31,
+            "electrike"
+        ]
+    ],
+    "budew": [
+        "base",
+        [
+            24,
+            "roselia"
+        ],
+        [
+            46,
+            "roserade"
+        ]
+    ],
+    "roselia": [
+        "mid",
+        [
+            24,
+            "budew"
+        ],
+        [
+            46,
+            "roserade"
+        ]
+    ],
+    "roserade": [
+        "last",
+        [
+            24,
+            "budew"
+        ],
+        [
+            46,
+            "roselia"
+        ]
+    ],
+    "gulpix": [
+        "base",
+        [
+            33,
+            "swalot"
+        ]
+    ],
+    "swalot": [
+        "last",
+        [
+            33,
+            "gulpix"
+        ]
+    ],
+    "carvanha": [
+        "base",
+        [
+            33,
+            "sharpedo"
+        ]
+    ],
+    "sharpedo": [
+        "last",
+        [
+            33,
+            "carvanha"
+        ]
+    ],
+    "wailmer": [
+        "base",
+        [
+            45,
+            "wailord"
+        ]
+    ],
+    "wailord": [
+        "last",
+        [
+            45,
+            "wailmer"
+        ]
+    ],
+    "numel": [
+        "base",
+        [
+            33,
+            "camerupt"
+        ]
+    ],
+    "camerupt": [
+        "last",
+        [
+            33,
+            "numel"
+        ]
+    ],
+    "spoink": [
+        "base",
+        [
+            35,
+            "grumpig"
+        ]
+    ],
+    "grumpig": [
+        "last",
+        [
+            35,
+            "spoink"
+        ]
+    ],
+    "trapinch": [
+        "base",
+        [
+            17,
+            "vibrava"
+        ],
+        [
+            43,
+            "flygon"
+        ]
+    ],
+    "vibrava": [
+        "mid",
+        [
+            17,
+            "trapinch"
+        ],
+        [
+            43,
+            "flygon"
+        ]
+    ],
+    "flygon": [
+        "last",
+        [
+            17,
+            "trapinch"
+        ],
+        [
+            43,
+            "vibrava"
+        ]
+    ],
+    "cacnea": [
+        "base",
+        [
+            35,
+            "cacturne"
+        ]
+    ],
+    "cacturne": [
+        "last",
+        [
+            35,
+            "cacnea"
+        ]
+    ],
+    "swablu": [
+        "base",
+        [
+            35,
+            "altaria"
+        ]
+    ],
+    "altaria": [
+        "last",
+        [
+            35,
+            "swablu"
+        ]
+    ],
+    "barboach": [
+        "base",
+        [
+            32,
+            "whiscash"
+        ]
+    ],
+    "whiscash": [
+        "last",
+        [
+            32,
+            "barboach"
+        ]
+    ],
+    "corphish": [
+        "base",
+        [
+            32,
+            "crawdaunt"
+        ]
+    ],
+    "crawdaunt": [
+        "last",
+        [
+            32,
+            "corphish"
+        ]
+    ],
+    "baltoy": [
+        "base",
+        [
+            35,
+            "claydol"
+        ]
+    ],
+    "claydol": [
+        "last",
+        [
+            35,
+            "baltoy"
+        ]
+    ],
+    "lileep": [
+        "base",
+        [
+            37,
+            "cradily"
+        ]
+    ],
+    "cradily": [
+        "last",
+        [
+            37,
+            "lileep"
+        ]
+    ],
+    "anorith": [
+        "base",
+        [
+            37,
+            "armaldo"
+        ]
+    ],
+    "armaldo": [
+        "last",
+        [
+            37,
+            "anorith"
+        ]
+    ],
+    "feebas": [
+        "base",
+        [
+            32,
+            "milotic"
+        ]
+    ],
+    "milotic": [
+        "last",
+        [
+            32,
+            "feebas"
+        ]
+    ],
+    "shuppet": [
+        "base",
+        [
+            32,
+            "banette"
+        ]
+    ],
+    "banette": [
+        "last",
+        [
+            32,
+            "shuppet"
+        ]
+    ],
+    "duskull": [
+        "base",
+        [
+            27,
+            "dusclops"
+        ],
+        [
+            49,
+            "dusknoir"
+        ]
+    ],
+    "dusclops": [
+        "mid",
+        [
+            27,
+            "duskull"
+        ],
+        [
+            49,
+            "dusknoir"
+        ]
+    ],
+    "dusknoir": [
+        "last",
+        [
+            27,
+            "duskull"
+        ],
+        [
+            49,
+            "dusclops"
+        ]
+    ],
+    "chingling": [
+        "base",
+        [
+            32,
+            "chimecho"
+        ]
+    ],
+    "chimecho": [
+        "last",
+        [
+            32,
+            "chingling"
+        ]
+    ],
+    "snorunt": [
+        "base",
+        [
+            34,
+            "glalie"
+        ]
+    ],
+    "glalie": [
+        "last",
+        [
+            34,
+            "snorunt"
+        ]
+    ],
+    "snorunt_1": [
+        "base",
+        [
+            34,
+            "froslass"
+        ]
+    ],
+    "froslass": [
+        "last",
+        [
+            34,
+            "snorunt_1"
+        ]
+    ],
+    "spheal": [
+        "base",
+        [
+            25,
+            "sealeo"
+        ],
+        [
+            47,
+            "walrein"
+        ]
+    ],
+    "sealeo": [
+        "mid",
+        [
+            25,
+            "spheal"
+        ],
+        [
+            47,
+            "walrein"
+        ]
+    ],
+    "walrein": [
+        "last",
+        [
+            25,
+            "spheal"
+        ],
+        [
+            47,
+            "sealeo"
+        ]
+    ],
+    "clamperl": [
+        "base",
+        [
+            36,
+            "huntail"
+        ]
+    ],
+    "huntail": [
+        "last",
+        [
+            36,
+            "clamperl"
+        ]
+    ],
+    "clamperl_1": [
+        "base",
+        [
+            36,
+            "gorebyss"
+        ]
+    ],
+    "gorebyss": [
+        "last",
+        [
+            36,
+            "clamperl_1"
+        ]
+    ],
+    "bagon": [
+        "base",
+        [
+            26,
+            "shelgon"
+        ],
+        [
+            60,
+            "salamence"
+        ]
+    ],
+    "shelgon": [
+        "mid",
+        [
+            26,
+            "bagon"
+        ],
+        [
+            60,
+            "salamence"
+        ]
+    ],
+    "salamence": [
+        "last",
+        [
+            26,
+            "bagon"
+        ],
+        [
+            60,
+            "shelgon"
+        ]
+    ],
+    "beldum": [
+        "base",
+        [
+            26,
+            "metang"
+        ],
+        [
+            60,
+            "metagross"
+        ]
+    ],
+    "metang": [
+        "mid",
+        [
+            26,
+            "beldum"
+        ],
+        [
+            60,
+            "metagross"
+        ]
+    ],
+    "metagross": [
+        "last",
+        [
+            26,
+            "beldum"
+        ],
+        [
+            60,
+            "metang"
+        ]
+    ],
+    "turtwig": [
+        "base",
+        [
+            26,
+            "grotle"
+        ],
+        [
+            46,
+            "torterra"
+        ]
+    ],
+    "grotle": [
+        "mid",
+        [
+            26,
+            "turtwig"
+        ],
+        [
+            46,
+            "torterra"
+        ]
+    ],
+    "torterra": [
+        "last",
+        [
+            26,
+            "turtwig"
+        ],
+        [
+            46,
+            "grotle"
+        ]
+    ],
+    "chimchar": [
+        "base",
+        [
+            25,
+            "monferno"
+        ],
+        [
+            47,
+            "infernape"
+        ]
+    ],
+    "monferno": [
+        "mid",
+        [
+            25,
+            "chimchar"
+        ],
+        [
+            47,
+            "infernape"
+        ]
+    ],
+    "infernape": [
+        "last",
+        [
+            25,
+            "chimchar"
+        ],
+        [
+            47,
+            "monferno"
+        ]
+    ],
+    "pipilup": [
+        "base",
+        [
+            26,
+            "prinplup"
+        ],
+        [
+            47,
+            "empoleon"
+        ]
+    ],
+    "prinplup": [
+        "mid",
+        [
+            26,
+            "pipilup"
+        ],
+        [
+            47,
+            "empoleon"
+        ]
+    ],
+    "empoleon": [
+        "last",
+        [
+            26,
+            "pipilup"
+        ],
+        [
+            47,
+            "prinplup"
+        ]
+    ],
+    "starly": [
+        "base",
+        [
+            19,
+            "staravia"
+        ],
+        [
+            41,
+            "staraptor"
+        ]
+    ],
+    "staravia": [
+        "mid",
+        [
+            19,
+            "starly"
+        ],
+        [
+            41,
+            "staraptor"
+        ]
+    ],
+    "staraptor": [
+        "last",
+        [
+            19,
+            "starly"
+        ],
+        [
+            41,
+            "staravia"
+        ]
+    ],
+    "bidoof": [
+        "base",
+        [
+            28,
+            "bibarel"
+        ]
+    ],
+    "bibarel": [
+        "last",
+        [
+            28,
+            "bidoof"
+        ]
+    ],
+    "kricketon": [
+        "base",
+        [
+            24,
+            "kricketune"
+        ]
+    ],
+    "kricketune": [
+        "last",
+        [
+            24,
+            "kricketon"
+        ]
+    ],
+    "shinx": [
+        "base",
+        [
+            21,
+            "luxio"
+        ],
+        [
+            44,
+            "luxray"
+        ]
+    ],
+    "luxio": [
+        "mid",
+        [
+            21,
+            "shinx"
+        ],
+        [
+            44,
+            "luxray"
+        ]
+    ],
+    "luxray": [
+        "last",
+        [
+            21,
+            "shinx"
+        ],
+        [
+            44,
+            "luxio"
+        ]
+    ],
+    "cranidos": [
+        "base",
+        [
+            37,
+            "rampardos"
+        ]
+    ],
+    "rampardos": [
+        "last",
+        [
+            37,
+            "cranidos"
+        ]
+    ],
+    "shieldon": [
+        "base",
+        [
+            37,
+            "bastiodon"
+        ]
+    ],
+    "bastiodon": [
+        "last",
+        [
+            37,
+            "shieldon"
+        ]
+    ],
+    "burmy": [
+        "base",
+        [
+            27,
+            "wormadam"
+        ]
+    ],
+    "wormadam": [
+        "last",
+        [
+            27,
+            "burmy"
+        ]
+    ],
+    "burmy_1": [
+        "base",
+        [
+            27,
+            "mothim"
+        ]
+    ],
+    "mothim": [
+        "last",
+        [
+            27,
+            "burmy_1"
+        ]
+    ],
+    "combee": [
+        "base",
+        [
+            31,
+            "vespiquen"
+        ]
+    ],
+    "vespiquen": [
+        "last",
+        [
+            31,
+            "combee"
+        ]
+    ],
+    "buizel": [
+        "base",
+        [
+            36,
+            "floatzel"
+        ]
+    ],
+    "floatzel": [
+        "last",
+        [
+            36,
+            "buizel"
+        ]
+    ],
+    "cherubi": [
+        "base",
+        [
+            34,
+            "cherrim"
+        ]
+    ],
+    "cherrim": [
+        "last",
+        [
+            34,
+            "cherubi"
+        ]
+    ],
+    "shellos": [
+        "base",
+        [
+            35,
+            "gastrodon"
+        ]
+    ],
+    "gastrodon": [
+        "last",
+        [
+            35,
+            "shellos"
+        ]
+    ],
+    "drifloon": [
+        "base",
+        [
+            37,
+            "drifblim"
+        ]
+    ],
+    "drifblim": [
+        "last",
+        [
+            37,
+            "drifloon"
+        ]
+    ],
+    "buneary": [
+        "base",
+        [
+            37,
+            "lopunny"
+        ]
+    ],
+    "lopunny": [
+        "last",
+        [
+            37,
+            "buneary"
+        ]
+    ],
+    "glameow": [
+        "base",
+        [
+            33,
+            "purugly"
+        ]
+    ],
+    "purugly": [
+        "last",
+        [
+            33,
+            "glameow"
+        ]
+    ],
+    "stunky": [
+        "base",
+        [
+            35,
+            "skuntank"
+        ]
+    ],
+    "skuntank": [
+        "last",
+        [
+            35,
+            "stunky"
+        ]
+    ],
+    "bronzor": [
+        "base",
+        [
+            35,
+            "bronzong"
+        ]
+    ],
+    "bronzong": [
+        "last",
+        [
+            35,
+            "bronzor"
+        ]
+    ],
+    "gible": [
+        "base",
+        [
+            26,
+            "gabite"
+        ],
+        [
+            60,
+            "garchomp"
+        ]
+    ],
+    "gabite": [
+        "mid",
+        [
+            26,
+            "gible"
+        ],
+        [
+            60,
+            "garchomp"
+        ]
+    ],
+    "garchomp": [
+        "last",
+        [
+            26,
+            "gible"
+        ],
+        [
+            60,
+            "gabite"
+        ]
+    ],
+    "riolu": [
+        "base",
+        [
+            35,
+            "lucario"
+        ]
+    ],
+    "lucario": [
+        "last",
+        [
+            35,
+            "riolu"
+        ]
+    ],
+    "hippopotas": [
+        "base",
+        [
+            38,
+            "hippowdon"
+        ]
+    ],
+    "hippowdon": [
+        "last",
+        [
+            38,
+            "hippopotas"
+        ]
+    ],
+    "skorupi": [
+        "base",
+        [
+            37,
+            "drapion"
+        ]
+    ],
+    "drapion": [
+        "last",
+        [
+            37,
+            "skorupi"
+        ]
+    ],
+    "croagunk": [
+        "base",
+        [
+            35,
+            "toxicroak"
+        ]
+    ],
+    "toxicroak": [
+        "last",
+        [
+            35,
+            "croagunk"
+        ]
+    ],
+    "finneon": [
+        "base",
+        [
+            25,
+            "lumineon"
+        ]
+    ],
+    "lumineon": [
+        "last",
+        [
+            25,
+            "finneon"
+        ]
+    ],
+    "snover": [
+        "base",
+        [
+            36,
+            "abomasnow"
+        ]
+    ],
+    "abomasnow": [
+        "last",
+        [
+            36,
+            "snover"
+        ]
+    ],
+    "phione": [
+        "base",
+        [
+            58,
+            "manaphy"
+        ]
+    ],
+    "manaphy": [
+        "last",
+        [
+            58,
+            "phione"
+        ]
+    ],
+    "snivy": [
+        "base",
+        [
+            26,
+            "servine"
+        ],
+        [
+            47,
+            "serperior"
+        ]
+    ],
+    "servine": [
+        "mid",
+        [
+            26,
+            "snivy"
+        ],
+        [
+            47,
+            "serperior"
+        ]
+    ],
+    "serperior": [
+        "last",
+        [
+            26,
+            "snivy"
+        ],
+        [
+            47,
+            "servine"
+        ]
+    ],
+    "tepig": [
+        "base",
+        [
+            26,
+            "pignite"
+        ],
+        [
+            47,
+            "emboar"
+        ]
+    ],
+    "pignite": [
+        "mid",
+        [
+            26,
+            "tepig"
+        ],
+        [
+            47,
+            "emboar"
+        ]
+    ],
+    "emboar": [
+        "last",
+        [
+            26,
+            "tepig"
+        ],
+        [
+            47,
+            "pignite"
+        ]
+    ],
+    "oshawott": [
+        "base",
+        [
+            26,
+            "dewott"
+        ],
+        [
+            47,
+            "samurott"
+        ]
+    ],
+    "dewott": [
+        "mid",
+        [
+            26,
+            "oshawott"
+        ],
+        [
+            47,
+            "samurott"
+        ]
+    ],
+    "samurott": [
+        "last",
+        [
+            26,
+            "oshawott"
+        ],
+        [
+            47,
+            "dewott"
+        ]
+    ],
+    "oshawott_1": [
+        "base",
+        [
+            26,
+            "dewott_1"
+        ],
+        [
+            47,
+            "samurotthisui"
+        ]
+    ],
+    "dewott_1": [
+        "mid",
+        [
+            26,
+            "oshawott_1"
+        ],
+        [
+            47,
+            "samurotthisui"
+        ]
+    ],
+    "samurotthisui": [
+        "last",
+        [
+            26,
+            "oshawott_1"
+        ],
+        [
+            47,
+            "dewott_1"
+        ]
+    ],
+    "patrat": [
+        "base",
+        [
+            29,
+            "watchog"
+        ]
+    ],
+    "watchog": [
+        "last",
+        [
+            29,
+            "patrat"
+        ]
+    ],
+    "lillipup": [
+        "base",
+        [
+            22,
+            "herdier"
+        ],
+        [
+            44,
+            "stoutland"
+        ]
+    ],
+    "herdier": [
+        "mid",
+        [
+            22,
+            "lillipup"
+        ],
+        [
+            44,
+            "stoutland"
+        ]
+    ],
+    "stoutland": [
+        "last",
+        [
+            22,
+            "lillipup"
+        ],
+        [
+            44,
+            "herdier"
+        ]
+    ],
+    "purrloin": [
+        "base",
+        [
+            31,
+            "liepard"
+        ]
+    ],
+    "liepard": [
+        "last",
+        [
+            31,
+            "purrloin"
+        ]
+    ],
+    "pansage": [
+        "base",
+        [
+            35,
+            "simisage"
+        ]
+    ],
+    "simisage": [
+        "last",
+        [
+            35,
+            "pansage"
+        ]
+    ],
+    "pansear": [
+        "base",
+        [
+            35,
+            "simisear"
+        ]
+    ],
+    "simisear": [
+        "last",
+        [
+            35,
+            "pansear"
+        ]
+    ],
+    "panpour": [
+        "base",
+        [
+            35,
+            "simipour"
+        ]
+    ],
+    "simipour": [
+        "last",
+        [
+            35,
+            "panpour"
+        ]
+    ],
+    "munna": [
+        "base",
+        [
+            34,
+            "musharna"
+        ]
+    ],
+    "musharna": [
+        "last",
+        [
+            34,
+            "munna"
+        ]
+    ],
+    "pidove": [
+        "base",
+        [
+            21,
+            "tranquill"
+        ],
+        [
+            42,
+            "unfezant"
+        ]
+    ],
+    "tranquill": [
+        "mid",
+        [
+            21,
+            "pidove"
+        ],
+        [
+            42,
+            "unfezant"
+        ]
+    ],
+    "unfezant": [
+        "last",
+        [
+            21,
+            "pidove"
+        ],
+        [
+            42,
+            "tranquill"
+        ]
+    ],
+    "blitzee": [
+        "base",
+        [
+            34,
+            "zebstrika"
+        ]
+    ],
+    "zebstrika": [
+        "last",
+        [
+            34,
+            "blitzee"
+        ]
+    ],
+    "roggenrola": [
+        "base",
+        [
+            24,
+            "boldore"
+        ],
+        [
+            45,
+            "gigalith"
+        ]
+    ],
+    "boldore": [
+        "mid",
+        [
+            24,
+            "roggenrola"
+        ],
+        [
+            45,
+            "gigalith"
+        ]
+    ],
+    "gigalith": [
+        "last",
+        [
+            24,
+            "roggenrola"
+        ],
+        [
+            45,
+            "boldore"
+        ]
+    ],
+    "woobat": [
+        "base",
+        [
+            32,
+            "swoobat"
+        ]
+    ],
+    "swoobat": [
+        "last",
+        [
+            32,
+            "woobat"
+        ]
+    ],
+    "drillbur": [
+        "base",
+        [
+            36,
+            "excadrill"
+        ]
+    ],
+    "excadrill": [
+        "last",
+        [
+            36,
+            "drillbur"
+        ]
+    ],
+    "timburr": [
+        "base",
+        [
+            25,
+            "gurdurr"
+        ],
+        [
+            45,
+            "conkeldurr"
+        ]
+    ],
+    "gurdurr": [
+        "mid",
+        [
+            25,
+            "timburr"
+        ],
+        [
+            45,
+            "conkeldurr"
+        ]
+    ],
+    "conkeldurr": [
+        "last",
+        [
+            25,
+            "timburr"
+        ],
+        [
+            45,
+            "gurdurr"
+        ]
+    ],
+    "tympole": [
+        "base",
+        [
+            24,
+            "palpitoad"
+        ],
+        [
+            44,
+            "seismitoad"
+        ]
+    ],
+    "palpitoad": [
+        "mid",
+        [
+            24,
+            "tympole"
+        ],
+        [
+            44,
+            "seismitoad"
+        ]
+    ],
+    "seismitoad": [
+        "last",
+        [
+            24,
+            "tympole"
+        ],
+        [
+            44,
+            "palpitoad"
+        ]
+    ],
+    "sewaddle": [
+        "base",
+        [
+            25,
+            "swadloon"
+        ],
+        [
+            25,
+            "leavanny"
+        ]
+    ],
+    "swadloon": [
+        "mid",
+        [
+            25,
+            "sewaddle"
+        ],
+        [
+            25,
+            "leavanny"
+        ]
+    ],
+    "leavanny": [
+        "last",
+        [
+            25,
+            "sewaddle"
+        ],
+        [
+            25,
+            "swadloon"
+        ]
+    ],
+    "venipede": [
+        "base",
+        [
+            21,
+            "whirlipede"
+        ],
+        [
+            42,
+            "scolipede"
+        ]
+    ],
+    "whirlipede": [
+        "mid",
+        [
+            21,
+            "venipede"
+        ],
+        [
+            42,
+            "scolipede"
+        ]
+    ],
+    "scolipede": [
+        "last",
+        [
+            21,
+            "venipede"
+        ],
+        [
+            42,
+            "whirlipede"
+        ]
+    ],
+    "cotonee": [
+        "base",
+        [
+            33,
+            "whimsicott"
+        ]
+    ],
+    "whimsicott": [
+        "last",
+        [
+            33,
+            "cotonee"
+        ]
+    ],
+    "petilil": [
+        "base",
+        [
+            33,
+            "lilligant"
+        ]
+    ],
+    "lilligant": [
+        "last",
+        [
+            33,
+            "petilil"
+        ]
+    ],
+    "petilil_1": [
+        "base",
+        [
+            33,
+            "lilliganthisui"
+        ]
+    ],
+    "lilliganthisui": [
+        "last",
+        [
+            33,
+            "petilil_1"
+        ]
+    ],
+    "basculin": [
+        "base",
+        [
+            50,
+            "basculegion"
+        ]
+    ],
+    "basculegion": [
+        "last",
+        [
+            50,
+            "basculin"
+        ]
+    ],
+    "sandile": [
+        "base",
+        [
+            22,
+            "krokorok"
+        ],
+        [
+            43,
+            "krookodile"
+        ]
+    ],
+    "krokorok": [
+        "mid",
+        [
+            22,
+            "sandile"
+        ],
+        [
+            43,
+            "krookodile"
+        ]
+    ],
+    "krookodile": [
+        "last",
+        [
+            22,
+            "sandile"
+        ],
+        [
+            43,
+            "krokorok"
+        ]
+    ],
+    "darumaka": [
+        "base",
+        [
+            35,
+            "darmanitan"
+        ]
+    ],
+    "darmanitan": [
+        "last",
+        [
+            35,
+            "darumaka"
+        ]
+    ],
+    "darumakagalar": [
+        "base",
+        [
+            35,
+            "darmanita"
+        ]
+    ],
+    "darmanita": [
+        "last",
+        [
+            35,
+            "darumakagalar"
+        ]
+    ],
+    "dwebble": [
+        "base",
+        [
+            35,
+            "crustle"
+        ]
+    ],
+    "crustle": [
+        "last",
+        [
+            35,
+            "dwebble"
+        ]
+    ],
+    "scraggy": [
+        "base",
+        [
+            36,
+            "scrafty"
+        ]
+    ],
+    "scrafty": [
+        "last",
+        [
+            36,
+            "scraggy"
+        ]
+    ],
+    "yamask": [
+        "base",
+        [
+            34,
+            "caofagrigus"
+        ]
+    ],
+    "caofagrigus": [
+        "last",
+        [
+            34,
+            "yamask"
+        ]
+    ],
+    "yamaskgalar": [
+        "base",
+        [
+            34,
+            "runerigus"
+        ]
+    ],
+    "runerigus": [
+        "last",
+        [
+            34,
+            "yamaskgalar"
+        ]
+    ],
+    "tirtouga": [
+        "base",
+        [
+            37,
+            "carracosta"
+        ]
+    ],
+    "carracosta": [
+        "last",
+        [
+            37,
+            "tirtouga"
+        ]
+    ],
+    "archen": [
+        "base",
+        [
+            37,
+            "archeops"
+        ]
+    ],
+    "archeops": [
+        "last",
+        [
+            37,
+            "archen"
+        ]
+    ],
+    "trubbish": [
+        "base",
+        [
+            35,
+            "garbodor"
+        ]
+    ],
+    "garbodor": [
+        "last",
+        [
+            35,
+            "trubbish"
+        ]
+    ],
+    "zorua": [
+        "base",
+        [
+            37,
+            "zoroark"
+        ]
+    ],
+    "zoroark": [
+        "last",
+        [
+            37,
+            "zorua"
+        ]
+    ],
+    "zoruahisui": [
+        "base",
+        [
+            37,
+            "zoroarkhisui"
+        ]
+    ],
+    "zoroarkhisui": [
+        "last",
+        [
+            37,
+            "zoruahisui"
+        ]
+    ],
+    "minccino": [
+        "base",
+        [
+            34,
+            "cinccino"
+        ]
+    ],
+    "cinccino": [
+        "last",
+        [
+            34,
+            "minccino"
+        ]
+    ],
+    "gothita": [
+        "base",
+        [
+            24,
+            "gothorita"
+        ],
+        [
+            44,
+            "gothitelle"
+        ]
+    ],
+    "gothorita": [
+        "mid",
+        [
+            24,
+            "gothita"
+        ],
+        [
+            44,
+            "gothitelle"
+        ]
+    ],
+    "gothitelle": [
+        "last",
+        [
+            24,
+            "gothita"
+        ],
+        [
+            44,
+            "gothorita"
+        ]
+    ],
+    "solosis": [
+        "base",
+        [
+            24,
+            "duosion"
+        ],
+        [
+            44,
+            "reuniclus"
+        ]
+    ],
+    "duosion": [
+        "mid",
+        [
+            24,
+            "solosis"
+        ],
+        [
+            44,
+            "reuniclus"
+        ]
+    ],
+    "reuniclus": [
+        "last",
+        [
+            24,
+            "solosis"
+        ],
+        [
+            44,
+            "duosion"
+        ]
+    ],
+    "ducklett": [
+        "base",
+        [
+            34,
+            "swanna"
+        ]
+    ],
+    "swanna": [
+        "last",
+        [
+            34,
+            "ducklett"
+        ]
+    ],
+    "vanillite": [
+        "base",
+        [
+            25,
+            "vanillish"
+        ],
+        [
+            41,
+            "vanilluxe"
+        ]
+    ],
+    "vanillish": [
+        "mid",
+        [
+            25,
+            "vanillite"
+        ],
+        [
+            41,
+            "vanilluxe"
+        ]
+    ],
+    "vanilluxe": [
+        "last",
+        [
+            25,
+            "vanillite"
+        ],
+        [
+            41,
+            "vanillish"
+        ]
+    ],
+    "deerling": [
+        "base",
+        [
+            35,
+            "sawsbuck"
+        ]
+    ],
+    "sawsbuck": [
+        "last",
+        [
+            35,
+            "deerling"
+        ]
+    ],
+    "karrablast": [
+        "base",
+        [
+            35,
+            "escalier"
+        ]
+    ],
+    "escalier": [
+        "last",
+        [
+            35,
+            "karrablast"
+        ]
+    ],
+    "foongus": [
+        "base",
+        [
+            33,
+            "amoonguss"
+        ]
+    ],
+    "amoonguss": [
+        "last",
+        [
+            33,
+            "foongus"
+        ]
+    ],
+    "frillish": [
+        "base",
+        [
+            36,
+            "jellicent"
+        ]
+    ],
+    "jellicent": [
+        "last",
+        [
+            36,
+            "frillish"
+        ]
+    ],
+    "joltik": [
+        "base",
+        [
+            34,
+            "galvantula"
+        ]
+    ],
+    "galvantula": [
+        "last",
+        [
+            34,
+            "joltik"
+        ]
+    ],
+    "ferroseed": [
+        "base",
+        [
+            34,
+            "ferrothorn"
+        ]
+    ],
+    "ferrothorn": [
+        "last",
+        [
+            34,
+            "ferroseed"
+        ]
+    ],
+    "klink": [
+        "base",
+        [
+            22,
+            "klang"
+        ],
+        [
+            48,
+            "klinklang"
+        ]
+    ],
+    "klang": [
+        "mid",
+        [
+            22,
+            "klink"
+        ],
+        [
+            48,
+            "klinklang"
+        ]
+    ],
+    "klinklang": [
+        "last",
+        [
+            22,
+            "klink"
+        ],
+        [
+            48,
+            "klang"
+        ]
+    ],
+    "tynamo": [
+        "base",
+        [
+            24,
+            "eelektris"
+        ],
+        [
+            46,
+            "eelektross"
+        ]
+    ],
+    "eelektris": [
+        "mid",
+        [
+            24,
+            "tynamo"
+        ],
+        [
+            46,
+            "eelektross"
+        ]
+    ],
+    "eelektross": [
+        "last",
+        [
+            24,
+            "tynamo"
+        ],
+        [
+            46,
+            "eelektris"
+        ]
+    ],
+    "elgyem": [
+        "base",
+        [
+            36,
+            "beeheyem"
+        ]
+    ],
+    "beeheyem": [
+        "last",
+        [
+            36,
+            "elgyem"
+        ]
+    ],
+    "litwick": [
+        "base",
+        [
+            22,
+            "lampent"
+        ],
+        [
+            45,
+            "chandelure"
+        ]
+    ],
+    "lampent": [
+        "mid",
+        [
+            22,
+            "litwick"
+        ],
+        [
+            45,
+            "chandelure"
+        ]
+    ],
+    "chandelure": [
+        "last",
+        [
+            22,
+            "litwick"
+        ],
+        [
+            45,
+            "lampent"
+        ]
+    ],
+    "axew": [
+        "base",
+        [
+            27,
+            "fraxure"
+        ],
+        [
+            48,
+            "haxorus"
+        ]
+    ],
+    "fraxure": [
+        "mid",
+        [
+            27,
+            "axew"
+        ],
+        [
+            48,
+            "haxorus"
+        ]
+    ],
+    "haxorus": [
+        "last",
+        [
+            27,
+            "axew"
+        ],
+        [
+            48,
+            "fraxure"
+        ]
+    ],
+    "cubchoo": [
+        "base",
+        [
+            35,
+            "beartic"
+        ]
+    ],
+    "beartic": [
+        "last",
+        [
+            35,
+            "cubchoo"
+        ]
+    ],
+    "shelmet": [
+        "base",
+        [
+            35,
+            "accelgor"
+        ]
+    ],
+    "accelgor": [
+        "last",
+        [
+            35,
+            "shelmet"
+        ]
+    ],
+    "mienfoo": [
+        "base",
+        [
+            38,
+            "mienshao"
+        ]
+    ],
+    "mienshao": [
+        "last",
+        [
+            38,
+            "mienfoo"
+        ]
+    ],
+    "golett": [
+        "base",
+        [
+            34,
+            "golurk"
+        ]
+    ],
+    "golurk": [
+        "last",
+        [
+            34,
+            "golett"
+        ]
+    ],
+    "pawniard": [
+        "base",
+        [
+            32,
+            "bisharp"
+        ],
+        [
+            52,
+            "kingambit"
+        ]
+    ],
+    "bisharp": [
+        "mid",
+        [
+            32,
+            "pawniard"
+        ],
+        [
+            52,
+            "kingambit"
+        ]
+    ],
+    "kingambit": [
+        "last",
+        [
+            32,
+            "pawniard"
+        ],
+        [
+            52,
+            "bisharp"
+        ]
+    ],
+    "rufflet": [
+        "base",
+        [
+            38,
+            "braviary"
+        ]
+    ],
+    "braviary": [
+        "last",
+        [
+            38,
+            "rufflet"
+        ]
+    ],
+    "rufflet_1": [
+        "base",
+        [
+            38,
+            "braviaryhisui"
+        ]
+    ],
+    "braviaryhisui": [
+        "last",
+        [
+            38,
+            "rufflet_1"
+        ]
+    ],
+    "vullaby": [
+        "base",
+        [
+            38,
+            "mandibuzz"
+        ]
+    ],
+    "mandibuzz": [
+        "last",
+        [
+            38,
+            "vullaby"
+        ]
+    ],
+    "deino": [
+        "base",
+        [
+            26,
+            "zweilous"
+        ],
+        [
+            60,
+            "hydreigon"
+        ]
+    ],
+    "zweilous": [
+        "mid",
+        [
+            26,
+            "deino"
+        ],
+        [
+            60,
+            "hydreigon"
+        ]
+    ],
+    "hydreigon": [
+        "last",
+        [
+            26,
+            "deino"
+        ],
+        [
+            60,
+            "zweilous"
+        ]
+    ],
+    "kyurem": [
+        "base",
+        [
+            65,
+            "kyurembianco"
+        ]
+    ],
+    "kyurembianco": [
+        "last",
+        [
+            65,
+            "kyurem"
+        ]
+    ],
+    "kyurem_1": [
+        "base",
+        [
+            65,
+            "kyuremnero"
+        ]
+    ],
+    "kyuremnero": [
+        "last",
+        [
+            65,
+            "kyurem_1"
+        ]
+    ],
+    "chespin": [
+        "base",
+        [
+            26,
+            "quilladin"
+        ],
+        [
+            47,
+            "chesnaught"
+        ]
+    ],
+    "quilladin": [
+        "mid",
+        [
+            26,
+            "chespin"
+        ],
+        [
+            47,
+            "chesnaught"
+        ]
+    ],
+    "chesnaught": [
+        "last",
+        [
+            26,
+            "chespin"
+        ],
+        [
+            47,
+            "quilladin"
+        ]
+    ],
+    "fennekin": [
+        "base",
+        [
+            25,
+            "braixen"
+        ],
+        [
+            47,
+            "delphox"
+        ]
+    ],
+    "braixen": [
+        "mid",
+        [
+            25,
+            "fennekin"
+        ],
+        [
+            47,
+            "delphox"
+        ]
+    ],
+    "delphox": [
+        "last",
+        [
+            25,
+            "fennekin"
+        ],
+        [
+            47,
+            "braixen"
+        ]
+    ],
+    "froakie": [
+        "base",
+        [
+            26,
+            "frogadier"
+        ],
+        [
+            47,
+            "greninja"
+        ]
+    ],
+    "frogadier": [
+        "mid",
+        [
+            26,
+            "froakie"
+        ],
+        [
+            47,
+            "greninja"
+        ]
+    ],
+    "greninja": [
+        "last",
+        [
+            26,
+            "froakie"
+        ],
+        [
+            47,
+            "frogadier"
+        ]
+    ],
+    "bunnelby": [
+        "base",
+        [
+            28,
+            "diggersby"
+        ]
+    ],
+    "diggersby": [
+        "last",
+        [
+            28,
+            "bunnelby"
+        ]
+    ],
+    "fletchling": [
+        "base",
+        [
+            26,
+            "fletchinder"
+        ],
+        [
+            44,
+            "talonflame"
+        ]
+    ],
+    "fletchinder": [
+        "mid",
+        [
+            26,
+            "fletchling"
+        ],
+        [
+            44,
+            "talonflame"
+        ]
+    ],
+    "talonflame": [
+        "last",
+        [
+            26,
+            "fletchling"
+        ],
+        [
+            44,
+            "fletchinder"
+        ]
+    ],
+    "scatterbug": [
+        "base",
+        [
+            11,
+            "spewpa"
+        ],
+        [
+            26,
+            "vivillon"
+        ]
+    ],
+    "spewpa": [
+        "mid",
+        [
+            11,
+            "scatterbug"
+        ],
+        [
+            26,
+            "vivillon"
+        ]
+    ],
+    "vivillon": [
+        "last",
+        [
+            11,
+            "scatterbug"
+        ],
+        [
+            26,
+            "spewpa"
+        ]
+    ],
+    "litleto": [
+        "base",
+        [
+            38,
+            "pyroar"
+        ]
+    ],
+    "pyroar": [
+        "last",
+        [
+            38,
+            "litleto"
+        ]
+    ],
+    "flabebe": [
+        "base",
+        [
+            19,
+            "floette"
+        ],
+        [
+            46,
+            "florges"
+        ]
+    ],
+    "floette": [
+        "mid",
+        [
+            19,
+            "flabebe"
+        ],
+        [
+            46,
+            "florges"
+        ]
+    ],
+    "florges": [
+        "last",
+        [
+            19,
+            "flabebe"
+        ],
+        [
+            46,
+            "floette"
+        ]
+    ],
+    "skiddo": [
+        "base",
+        [
+            39,
+            "gogoar"
+        ]
+    ],
+    "gogoar": [
+        "last",
+        [
+            39,
+            "skiddo"
+        ]
+    ],
+    "pancham": [
+        "base",
+        [
+            37,
+            "pangoro"
+        ]
+    ],
+    "pangoro": [
+        "last",
+        [
+            37,
+            "pancham"
+        ]
+    ],
+    "espurr": [
+        "base",
+        [
+            36,
+            "meowstic"
+        ]
+    ],
+    "meowstic": [
+        "last",
+        [
+            36,
+            "espurr"
+        ]
+    ],
+    "honedge": [
+        "base",
+        [
+            26,
+            "doublade"
+        ],
+        [
+            47,
+            "aegislash"
+        ]
+    ],
+    "doublade": [
+        "mid",
+        [
+            26,
+            "honedge"
+        ],
+        [
+            47,
+            "aegislash"
+        ]
+    ],
+    "aegislash": [
+        "last",
+        [
+            26,
+            "honedge"
+        ],
+        [
+            47,
+            "doublade"
+        ]
+    ],
+    "spritzee": [
+        "base",
+        [
+            35,
+            "aromatisse"
+        ]
+    ],
+    "aromatisse": [
+        "last",
+        [
+            35,
+            "spritzee"
+        ]
+    ],
+    "swirlix": [
+        "base",
+        [
+            36,
+            "slurpuff"
+        ]
+    ],
+    "slurpuff": [
+        "last",
+        [
+            36,
+            "swirlix"
+        ]
+    ],
+    "inkay": [
+        "base",
+        [
+            33,
+            "malamar"
+        ]
+    ],
+    "malamar": [
+        "last",
+        [
+            33,
+            "inkay"
+        ]
+    ],
+    "binacle": [
+        "base",
+        [
+            35,
+            "barbaracle"
+        ]
+    ],
+    "barbaracle": [
+        "last",
+        [
+            35,
+            "binacle"
+        ]
+    ],
+    "skrelp": [
+        "base",
+        [
+            36,
+            "dragalge"
+        ]
+    ],
+    "dragalge": [
+        "last",
+        [
+            36,
+            "skrelp"
+        ]
+    ],
+    "clauncher": [
+        "base",
+        [
+            37,
+            "clawitze"
+        ]
+    ],
+    "clawitze": [
+        "last",
+        [
+            37,
+            "clauncher"
+        ]
+    ],
+    "helioptile": [
+        "base",
+        [
+            33,
+            "heliolisk"
+        ]
+    ],
+    "heliolisk": [
+        "last",
+        [
+            33,
+            "helioptile"
+        ]
+    ],
+    "tyrunt": [
+        "base",
+        [
+            39,
+            "tyrantrum"
+        ]
+    ],
+    "tyrantrum": [
+        "last",
+        [
+            39,
+            "tyrunt"
+        ]
+    ],
+    "amaura": [
+        "base",
+        [
+            39,
+            "aurorus"
+        ]
+    ],
+    "aurorus": [
+        "last",
+        [
+            39,
+            "amaura"
+        ]
+    ],
+    "goomy": [
+        "base",
+        [
+            28,
+            "sligoo"
+        ],
+        [
+            62,
+            "goodra"
+        ]
+    ],
+    "sligoo": [
+        "mid",
+        [
+            28,
+            "goomy"
+        ],
+        [
+            62,
+            "goodra"
+        ]
+    ],
+    "goodra": [
+        "last",
+        [
+            28,
+            "goomy"
+        ],
+        [
+            62,
+            "sligoo"
+        ]
+    ],
+    "goomy_1": [
+        "base",
+        [
+            28,
+            "sligoohisui"
+        ],
+        [
+            62,
+            "goodrahisui"
+        ]
+    ],
+    "sligoohisui": [
+        "mid",
+        [
+            28,
+            "goomy_1"
+        ],
+        [
+            62,
+            "goodrahisui"
+        ]
+    ],
+    "goodrahisui": [
+        "last",
+        [
+            28,
+            "goomy_1"
+        ],
+        [
+            62,
+            "sligoohisui"
+        ]
+    ],
+    "phantum": [
+        "base",
+        [
+            34,
+            "trevenant"
+        ]
+    ],
+    "trevenant": [
+        "last",
+        [
+            34,
+            "phantum"
+        ]
+    ],
+    "pumpkaboo": [
+        "base",
+        [
+            36,
+            "gourgeist"
+        ]
+    ],
+    "gourgeist": [
+        "last",
+        [
+            36,
+            "pumpkaboo"
+        ]
+    ],
+    "bergmite": [
+        "base",
+        [
+            36,
+            "avalugg"
+        ]
+    ],
+    "avalugg": [
+        "last",
+        [
+            36,
+            "bergmite"
+        ]
+    ],
+    "bermgite": [
+        "base",
+        [
+            36,
+            "avalugghisui"
+        ]
+    ],
+    "avalugghisui": [
+        "last",
+        [
+            36,
+            "bermgite"
+        ]
+    ],
+    "noibat": [
+        "base",
+        [
+            34,
+            "noivern"
+        ]
+    ],
+    "noivern": [
+        "last",
+        [
+            34,
+            "noibat"
+        ]
+    ],
+    "zygarde10": [
+        "base",
+        [
+            48,
+            "zygarde50"
+        ],
+        [
+            65,
+            "zygardeperfetta"
+        ]
+    ],
+    "zygarde50": [
+        "mid",
+        [
+            48,
+            "zygarde10"
+        ],
+        [
+            65,
+            "zygardeperfetta"
+        ]
+    ],
+    "zygardeperfetta": [
+        "last",
+        [
+            48,
+            "zygarde10"
+        ],
+        [
+            65,
+            "zygarde50"
+        ]
+    ],
+    "rowlett": [
+        "base",
+        [
+            27,
+            "dartrix"
+        ],
+        [
+            48,
+            "decidueye"
+        ]
+    ],
+    "dartrix": [
+        "mid",
+        [
+            27,
+            "rowlett"
+        ],
+        [
+            48,
+            "decidueye"
+        ]
+    ],
+    "decidueye": [
+        "last",
+        [
+            27,
+            "rowlett"
+        ],
+        [
+            48,
+            "dartrix"
+        ]
+    ],
+    "rowlett_1": [
+        "base",
+        [
+            27,
+            "dartrix_1"
+        ],
+        [
+            48,
+            "decidueyehisui"
+        ]
+    ],
+    "dartrix_1": [
+        "mid",
+        [
+            27,
+            "rowlett_1"
+        ],
+        [
+            48,
+            "decidueyehisui"
+        ]
+    ],
+    "decidueyehisui": [
+        "last",
+        [
+            27,
+            "rowlett_1"
+        ],
+        [
+            48,
+            "dartrix_1"
+        ]
+    ],
+    "litten": [
+        "base",
+        [
+            27,
+            "torract"
+        ],
+        [
+            49,
+            "incineraor"
+        ]
+    ],
+    "torract": [
+        "mid",
+        [
+            27,
+            "litten"
+        ],
+        [
+            49,
+            "incineraor"
+        ]
+    ],
+    "incineraor": [
+        "last",
+        [
+            27,
+            "litten"
+        ],
+        [
+            49,
+            "torract"
+        ]
+    ],
+    "popplio": [
+        "base",
+        [
+            27,
+            "brionne"
+        ],
+        [
+            48,
+            "primarina"
+        ]
+    ],
+    "brionne": [
+        "mid",
+        [
+            27,
+            "popplio"
+        ],
+        [
+            48,
+            "primarina"
+        ]
+    ],
+    "primarina": [
+        "last",
+        [
+            27,
+            "popplio"
+        ],
+        [
+            48,
+            "brionne"
+        ]
+    ],
+    "pikipek": [
+        "base",
+        [
+            21,
+            "trumbeak"
+        ],
+        [
+            42,
+            "toucannon"
+        ]
+    ],
+    "trumbeak": [
+        "mid",
+        [
+            21,
+            "pikipek"
+        ],
+        [
+            42,
+            "toucannon"
+        ]
+    ],
+    "toucannon": [
+        "last",
+        [
+            21,
+            "pikipek"
+        ],
+        [
+            42,
+            "trumbeak"
+        ]
+    ],
+    "yungoos": [
+        "base",
+        [
+            28,
+            "gumshoos"
+        ]
+    ],
+    "gumshoos": [
+        "last",
+        [
+            28,
+            "yungoos"
+        ]
+    ],
+    "grubbin": [
+        "base",
+        [
+            25,
+            "charjabug"
+        ],
+        [
+            45,
+            "vikavolt"
+        ]
+    ],
+    "charjabug": [
+        "mid",
+        [
+            25,
+            "grubbin"
+        ],
+        [
+            45,
+            "vikavolt"
+        ]
+    ],
+    "vikavolt": [
+        "last",
+        [
+            25,
+            "grubbin"
+        ],
+        [
+            45,
+            "charjabug"
+        ]
+    ],
+    "crabrawler": [
+        "base",
+        [
+            35,
+            "crabominable"
+        ]
+    ],
+    "crabominable": [
+        "last",
+        [
+            35,
+            "crabrawler"
+        ]
+    ],
+    "cutiefly": [
+        "base",
+        [
+            33,
+            "ribombee"
+        ]
+    ],
+    "ribombee": [
+        "last",
+        [
+            33,
+            "cutiefly"
+        ]
+    ],
+    "rockruff": [
+        "base",
+        [
+            33,
+            "lycanroc"
+        ]
+    ],
+    "lycanroc": [
+        "last",
+        [
+            33,
+            "rockruff"
+        ]
+    ],
+    "wishiwashiindiduale": [
+        "base",
+        [
+            31,
+            "wishiwashibanco"
+        ]
+    ],
+    "wishiwashibanco": [
+        "last",
+        [
+            31,
+            "wishiwashiindiduale"
+        ]
+    ],
+    "mareanie": [
+        "base",
+        [
+            35,
+            "toxapex"
+        ]
+    ],
+    "toxapex": [
+        "last",
+        [
+            35,
+            "mareanie"
+        ]
+    ],
+    "mudbray": [
+        "base",
+        [
+            39,
+            "mudsdale"
+        ]
+    ],
+    "mudsdale": [
+        "last",
+        [
+            39,
+            "mudbray"
+        ]
+    ],
+    "dewpider": [
+        "base",
+        [
+            31,
+            "araquanid"
+        ]
+    ],
+    "araquanid": [
+        "last",
+        [
+            31,
+            "dewpider"
+        ]
+    ],
+    "fomantis": [
+        "base",
+        [
+            32,
+            "lurantis"
+        ]
+    ],
+    "lurantis": [
+        "last",
+        [
+            32,
+            "fomantis"
+        ]
+    ],
+    "morelull": [
+        "base",
+        [
+            29,
+            "shiinotic"
+        ]
+    ],
+    "shiinotic": [
+        "last",
+        [
+            29,
+            "morelull"
+        ]
+    ],
+    "salandit": [
+        "base",
+        [
+            35,
+            "salazzle"
+        ]
+    ],
+    "salazzle": [
+        "last",
+        [
+            35,
+            "salandit"
+        ]
+    ],
+    "stufful": [
+        "base",
+        [
+            37,
+            "beweat"
+        ]
+    ],
+    "beweat": [
+        "last",
+        [
+            37,
+            "stufful"
+        ]
+    ],
+    "bounsweet": [
+        "base",
+        [
+            15,
+            "steenee"
+        ],
+        [
+            40,
+            "tsareena"
+        ]
+    ],
+    "steenee": [
+        "mid",
+        [
+            15,
+            "bounsweet"
+        ],
+        [
+            40,
+            "tsareena"
+        ]
+    ],
+    "tsareena": [
+        "last",
+        [
+            15,
+            "bounsweet"
+        ],
+        [
+            40,
+            "steenee"
+        ]
+    ],
+    "wimpid": [
+        "base",
+        [
+            33,
+            "golisopd"
+        ]
+    ],
+    "golisopd": [
+        "last",
+        [
+            33,
+            "wimpid"
+        ]
+    ],
+    "sandygast": [
+        "base",
+        [
+            25,
+            "palossand"
+        ]
+    ],
+    "palossand": [
+        "last",
+        [
+            25,
+            "sandygast"
+        ]
+    ],
+    "tipozero": [
+        "base",
+        [
+            49,
+            "silvally"
+        ]
+    ],
+    "silvally": [
+        "last",
+        [
+            49,
+            "tipozero"
+        ]
+    ],
+    "jangmoo": [
+        "base",
+        [
+            26,
+            "hakamoo"
+        ],
+        [
+            60,
+            "kommoo"
+        ]
+    ],
+    "hakamoo": [
+        "mid",
+        [
+            26,
+            "jangmoo"
+        ],
+        [
+            60,
+            "kommoo"
+        ]
+    ],
+    "kommoo": [
+        "last",
+        [
+            26,
+            "jangmoo"
+        ],
+        [
+            60,
+            "hakamoo"
+        ]
+    ],
+    "cosmog": [
+        "base",
+        [
+            20,
+            "cosmoen"
+        ],
+        [
+            56,
+            "solgaleo"
+        ]
+    ],
+    "cosmoen": [
+        "mid",
+        [
+            20,
+            "cosmog"
+        ],
+        [
+            56,
+            "solgaleo"
+        ]
+    ],
+    "solgaleo": [
+        "last",
+        [
+            20,
+            "cosmog"
+        ],
+        [
+            56,
+            "cosmoen"
+        ]
+    ],
+    "cosmog_1": [
+        "base",
+        [
+            20,
+            "cosmoen_1"
+        ],
+        [
+            56,
+            "lunala"
+        ]
+    ],
+    "cosmoen_1": [
+        "mid",
+        [
+            20,
+            "cosmog_1"
+        ],
+        [
+            56,
+            "lunala"
+        ]
+    ],
+    "lunala": [
+        "last",
+        [
+            20,
+            "cosmog_1"
+        ],
+        [
+            56,
+            "cosmoen_1"
+        ]
+    ],
+    "necrozma": [
+        "base",
+        [
+            65,
+            "necrozmavespro"
+        ]
+    ],
+    "necrozmavespro": [
+        "last",
+        [
+            65,
+            "necrozma"
+        ]
+    ],
+    "necrozma_1": [
+        "base",
+        [
+            65,
+            "necrozmaaurora"
+        ]
+    ],
+    "necrozmaaurora": [
+        "last",
+        [
+            65,
+            "necrozma_1"
+        ]
+    ],
+    "poipole": [
+        "base",
+        [
+            43,
+            "naganadel"
+        ]
+    ],
+    "naganadel": [
+        "last",
+        [
+            43,
+            "poipole"
+        ]
+    ],
+    "meltan": [
+        "base",
+        [
+            49,
+            "melmetal"
+        ]
+    ],
+    "melmetal": [
+        "last",
+        [
+            49,
+            "meltan"
+        ]
+    ],
+    "grookey": [
+        "base",
+        [
+            26,
+            "thwackey"
+        ],
+        [
+            48,
+            "rillaboom"
+        ]
+    ],
+    "thwackey": [
+        "mid",
+        [
+            26,
+            "grookey"
+        ],
+        [
+            48,
+            "rillaboom"
+        ]
+    ],
+    "rillaboom": [
+        "last",
+        [
+            26,
+            "grookey"
+        ],
+        [
+            48,
+            "thwackey"
+        ]
+    ],
+    "scorbunny": [
+        "base",
+        [
+            26,
+            "raboot"
+        ],
+        [
+            48,
+            "cinderace"
+        ]
+    ],
+    "raboot": [
+        "mid",
+        [
+            26,
+            "scorbunny"
+        ],
+        [
+            48,
+            "cinderace"
+        ]
+    ],
+    "cinderace": [
+        "last",
+        [
+            26,
+            "scorbunny"
+        ],
+        [
+            48,
+            "raboot"
+        ]
+    ],
+    "sobble": [
+        "base",
+        [
+            26,
+            "drizzile"
+        ],
+        [
+            48,
+            "inteleon"
+        ]
+    ],
+    "drizzile": [
+        "mid",
+        [
+            26,
+            "sobble"
+        ],
+        [
+            48,
+            "inteleon"
+        ]
+    ],
+    "inteleon": [
+        "last",
+        [
+            26,
+            "sobble"
+        ],
+        [
+            48,
+            "drizzile"
+        ]
+    ],
+    "skwovet": [
+        "base",
+        [
+            32,
+            "greedent"
+        ]
+    ],
+    "greedent": [
+        "last",
+        [
+            32,
+            "skwovet"
+        ]
+    ],
+    "rookidee": [
+        "base",
+        [
+            20,
+            "corvisquire"
+        ],
+        [
+            43,
+            "corviknight"
+        ]
+    ],
+    "corvisquire": [
+        "mid",
+        [
+            20,
+            "rookidee"
+        ],
+        [
+            43,
+            "corviknight"
+        ]
+    ],
+    "corviknight": [
+        "last",
+        [
+            20,
+            "rookidee"
+        ],
+        [
+            43,
+            "corvisquire"
+        ]
+    ],
+    "blipbug": [
+        "base",
+        [
+            16,
+            "dottler"
+        ],
+        [
+            42,
+            "orbeetle"
+        ]
+    ],
+    "dottler": [
+        "mid",
+        [
+            16,
+            "blipbug"
+        ],
+        [
+            42,
+            "orbeetle"
+        ]
+    ],
+    "orbeetle": [
+        "last",
+        [
+            16,
+            "blipbug"
+        ],
+        [
+            42,
+            "dottler"
+        ]
+    ],
+    "nickit": [
+        "base",
+        [
+            30,
+            "thievul"
+        ]
+    ],
+    "thievul": [
+        "last",
+        [
+            30,
+            "nickit"
+        ]
+    ],
+    "gossifleur": [
+        "base",
+        [
+            31,
+            "eldegoss"
+        ]
+    ],
+    "eldegoss": [
+        "last",
+        [
+            31,
+            "gossifleur"
+        ]
+    ],
+    "wooloo": [
+        "base",
+        [
+            33,
+            "dubwool"
+        ]
+    ],
+    "dubwool": [
+        "last",
+        [
+            33,
+            "wooloo"
+        ]
+    ],
+    "chewtle": [
+        "base",
+        [
+            33,
+            "drednaw"
+        ]
+    ],
+    "drednaw": [
+        "last",
+        [
+            33,
+            "chewtle"
+        ]
+    ],
+    "yamper": [
+        "base",
+        [
+            33,
+            "boltund"
+        ]
+    ],
+    "boltund": [
+        "last",
+        [
+            33,
+            "yamper"
+        ]
+    ],
+    "rolycoly": [
+        "base",
+        [
+            23,
+            "corkol"
+        ],
+        [
+            46,
+            "coalossal"
+        ]
+    ],
+    "corkol": [
+        "mid",
+        [
+            23,
+            "rolycoly"
+        ],
+        [
+            46,
+            "coalossal"
+        ]
+    ],
+    "coalossal": [
+        "last",
+        [
+            23,
+            "rolycoly"
+        ],
+        [
+            46,
+            "corkol"
+        ]
+    ],
+    "applin": [
+        "base",
+        [
+            32,
+            "flapple"
+        ]
+    ],
+    "flapple": [
+        "last",
+        [
+            32,
+            "applin"
+        ]
+    ],
+    "applin_1": [
+        "base",
+        [
+            32,
+            "appeltun"
+        ]
+    ],
+    "appeltun": [
+        "last",
+        [
+            32,
+            "applin_1"
+        ]
+    ],
+    "applin_2": [
+        "base",
+        [
+            27,
+            "dipplin"
+        ],
+        [
+            51,
+            "hydrapple"
+        ]
+    ],
+    "dipplin": [
+        "mid",
+        [
+            27,
+            "applin_2"
+        ],
+        [
+            51,
+            "hydrapple"
+        ]
+    ],
+    "hydrapple": [
+        "last",
+        [
+            27,
+            "applin_2"
+        ],
+        [
+            51,
+            "dipplin"
+        ]
+    ],
+    "silicobra": [
+        "base",
+        [
+            36,
+            "sandaconda"
+        ]
+    ],
+    "sandaconda": [
+        "last",
+        [
+            36,
+            "silicobra"
+        ]
+    ],
+    "attokuda": [
+        "base",
+        [
+            34,
+            "barraskewda"
+        ]
+    ],
+    "barraskewda": [
+        "last",
+        [
+            34,
+            "attokuda"
+        ]
+    ],
+    "toxel": [
+        "base",
+        [
+            32,
+            "toxtricity"
+        ]
+    ],
+    "toxtricity": [
+        "last",
+        [
+            32,
+            "toxel"
+        ]
+    ],
+    "sizzlipede": [
+        "base",
+        [
+            36,
+            "centiskorch"
+        ]
+    ],
+    "centiskorch": [
+        "last",
+        [
+            36,
+            "sizzlipede"
+        ]
+    ],
+    "clobbopus": [
+        "base",
+        [
+            36,
+            "grapploct"
+        ]
+    ],
+    "grapploct": [
+        "last",
+        [
+            36,
+            "clobbopus"
+        ]
+    ],
+    "sinistea": [
+        "base",
+        [
+            35,
+            "polteageist"
+        ]
+    ],
+    "polteageist": [
+        "last",
+        [
+            35,
+            "sinistea"
+        ]
+    ],
+    "hatenna": [
+        "base",
+        [
+            22,
+            "hattrem"
+        ],
+        [
+            44,
+            "hatterenne"
+        ]
+    ],
+    "hattrem": [
+        "mid",
+        [
+            22,
+            "hatenna"
+        ],
+        [
+            44,
+            "hatterenne"
+        ]
+    ],
+    "hatterenne": [
+        "last",
+        [
+            22,
+            "hatenna"
+        ],
+        [
+            44,
+            "hattrem"
+        ]
+    ],
+    "impidimp": [
+        "base",
+        [
+            22,
+            "morgrem"
+        ],
+        [
+            44,
+            "grimmsnarl"
+        ]
+    ],
+    "morgrem": [
+        "mid",
+        [
+            22,
+            "impidimp"
+        ],
+        [
+            44,
+            "grimmsnarl"
+        ]
+    ],
+    "grimmsnarl": [
+        "last",
+        [
+            22,
+            "impidimp"
+        ],
+        [
+            44,
+            "morgrem"
+        ]
+    ],
+    "milcery": [
+        "base",
+        [
+            33,
+            "alcremie"
+        ]
+    ],
+    "alcremie": [
+        "last",
+        [
+            33,
+            "milcery"
+        ]
+    ],
+    "snom": [
+        "base",
+        [
+            28,
+            "frosmoth"
+        ]
+    ],
+    "frosmoth": [
+        "last",
+        [
+            28,
+            "snom"
+        ]
+    ],
+    "cufant": [
+        "base",
+        [
+            37,
+            "copperajah"
+        ]
+    ],
+    "copperajah": [
+        "last",
+        [
+            37,
+            "cufant"
+        ]
+    ],
+    "duraludon": [
+        "base",
+        [
+            61,
+            "archaludon"
+        ]
+    ],
+    "archaludon": [
+        "last",
+        [
+            61,
+            "duraludon"
+        ]
+    ],
+    "dreepy": [
+        "base",
+        [
+            24,
+            "drakloak"
+        ],
+        [
+            60,
+            "dragapult"
+        ]
+    ],
+    "drakloak": [
+        "mid",
+        [
+            24,
+            "dreepy"
+        ],
+        [
+            60,
+            "dragapult"
+        ]
+    ],
+    "dragapult": [
+        "last",
+        [
+            24,
+            "dreepy"
+        ],
+        [
+            60,
+            "drakloak"
+        ]
+    ],
+    "zacianeroe": [
+        "base",
+        [
+            65,
+            "zacianre"
+        ]
+    ],
+    "zacianre": [
+        "last",
+        [
+            65,
+            "zacianeroe"
+        ]
+    ],
+    "zamazentaeroe": [
+        "base",
+        [
+            65,
+            "zamazentare"
+        ]
+    ],
+    "zamazentare": [
+        "last",
+        [
+            65,
+            "zamazentaeroe"
+        ]
+    ],
+    "kubfu": [
+        "base",
+        [
+            42,
+            "urshifuacqua"
+        ]
+    ],
+    "urshifuacqua": [
+        "last",
+        [
+            42,
+            "kubfu"
+        ]
+    ],
+    "kubfu_1": [
+        "base",
+        [
+            42,
+            "urshifubuio"
+        ]
+    ],
+    "urshifubuio": [
+        "last",
+        [
+            42,
+            "kubfu_1"
+        ]
+    ],
+    "calyrex": [
+        "base",
+        [
+            61,
+            "calyrexcavaliereglaciale"
+        ]
+    ],
+    "calyrexcavaliereglaciale": [
+        "last",
+        [
+            61,
+            "calyrex"
+        ]
+    ],
+    "calyrex_1": [
+        "base",
+        [
+            61,
+            "calyrexcavalierespettrale"
+        ]
+    ],
+    "calyrexcavalierespettrale": [
+        "last",
+        [
+            61,
+            "calyrex_1"
+        ]
+    ],
+    "sprigatito": [
+        "base",
+        [
+            26,
+            "floragato"
+        ],
+        [
+            46,
+            "meowscarada"
+        ]
+    ],
+    "floragato": [
+        "mid",
+        [
+            26,
+            "sprigatito"
+        ],
+        [
+            46,
+            "meowscarada"
+        ]
+    ],
+    "meowscarada": [
+        "last",
+        [
+            26,
+            "sprigatito"
+        ],
+        [
+            46,
+            "floragato"
+        ]
+    ],
+    "fuecoco": [
+        "base",
+        [
+            26,
+            "crocalor"
+        ],
+        [
+            46,
+            "skeledirge"
+        ]
+    ],
+    "crocalor": [
+        "mid",
+        [
+            26,
+            "fuecoco"
+        ],
+        [
+            46,
+            "skeledirge"
+        ]
+    ],
+    "skeledirge": [
+        "last",
+        [
+            26,
+            "fuecoco"
+        ],
+        [
+            46,
+            "crocalor"
+        ]
+    ],
+    "quaxly": [
+        "base",
+        [
+            26,
+            "quaxwell"
+        ],
+        [
+            46,
+            "quaquaval"
+        ]
+    ],
+    "quaxwell": [
+        "mid",
+        [
+            26,
+            "quaxly"
+        ],
+        [
+            46,
+            "quaquaval"
+        ]
+    ],
+    "quaquaval": [
+        "last",
+        [
+            26,
+            "quaxly"
+        ],
+        [
+            46,
+            "quaxwell"
+        ]
+    ],
+    "lechonk": [
+        "base",
+        [
+            32,
+            "oinkologne"
+        ]
+    ],
+    "oinkologne": [
+        "last",
+        [
+            32,
+            "lechonk"
+        ]
+    ],
+    "tarountula": [
+        "base",
+        [
+            25,
+            "spidops"
+        ]
+    ],
+    "spidops": [
+        "last",
+        [
+            25,
+            "tarountula"
+        ]
+    ],
+    "nymble": [
+        "base",
+        [
+            28,
+            "lokix"
+        ]
+    ],
+    "lokix": [
+        "last",
+        [
+            28,
+            "nymble"
+        ]
+    ],
+    "pawmi": [
+        "base",
+        [
+            20,
+            "pawmo"
+        ],
+        [
+            42,
+            "pawmot"
+        ]
+    ],
+    "pawmo": [
+        "mid",
+        [
+            20,
+            "pawmi"
+        ],
+        [
+            42,
+            "pawmot"
+        ]
+    ],
+    "pawmot": [
+        "last",
+        [
+            20,
+            "pawmi"
+        ],
+        [
+            42,
+            "pawmo"
+        ]
+    ],
+    "tandemaus": [
+        "base",
+        [
+            42,
+            "maushold"
+        ]
+    ],
+    "maushold": [
+        "last",
+        [
+            42,
+            "tandemaus"
+        ]
+    ],
+    "fidough": [
+        "base",
+        [
+            34,
+            "dachsbun"
+        ]
+    ],
+    "dachsbun": [
+        "last",
+        [
+            34,
+            "fidough"
+        ]
+    ],
+    "smoliv": [
+        "base",
+        [
+            21,
+            "dolliv"
+        ],
+        [
+            43,
+            "arboliva"
+        ]
+    ],
+    "dolliv": [
+        "mid",
+        [
+            21,
+            "smoliv"
+        ],
+        [
+            43,
+            "arboliva"
+        ]
+    ],
+    "arboliva": [
+        "last",
+        [
+            21,
+            "smoliv"
+        ],
+        [
+            43,
+            "dolliv"
+        ]
+    ],
+    "nacli": [
+        "base",
+        [
+            22,
+            "naclstack"
+        ],
+        [
+            43,
+            "garganacl"
+        ]
+    ],
+    "naclstack": [
+        "mid",
+        [
+            22,
+            "nacli"
+        ],
+        [
+            43,
+            "garganacl"
+        ]
+    ],
+    "garganacl": [
+        "last",
+        [
+            22,
+            "nacli"
+        ],
+        [
+            43,
+            "naclstack"
+        ]
+    ],
+    "charcadet": [
+        "base",
+        [
+            34,
+            "armarouge"
+        ]
+    ],
+    "armarouge": [
+        "last",
+        [
+            34,
+            "charcadet"
+        ]
+    ],
+    "charcadet_1": [
+        "base",
+        [
+            34,
+            "ceruledge"
+        ]
+    ],
+    "ceruledge": [
+        "last",
+        [
+            34,
+            "charcadet_1"
+        ]
+    ],
+    "tadbulb": [
+        "base",
+        [
+            33,
+            "bellibot"
+        ]
+    ],
+    "bellibot": [
+        "last",
+        [
+            33,
+            "tadbulb"
+        ]
+    ],
+    "wattrel": [
+        "base",
+        [
+            34,
+            "kilowattrel"
+        ]
+    ],
+    "kilowattrel": [
+        "last",
+        [
+            34,
+            "wattrel"
+        ]
+    ],
+    "maschiff": [
+        "base",
+        [
+            37,
+            "mabosstiff"
+        ]
+    ],
+    "mabosstiff": [
+        "last",
+        [
+            37,
+            "maschiff"
+        ]
+    ],
+    "shroodle": [
+        "base",
+        [
+            34,
+            "grafaiai"
+        ]
+    ],
+    "grafaiai": [
+        "last",
+        [
+            34,
+            "shroodle"
+        ]
+    ],
+    "bramblin": [
+        "base",
+        [
+            33,
+            "brambleghast"
+        ]
+    ],
+    "brambleghast": [
+        "last",
+        [
+            33,
+            "bramblin"
+        ]
+    ],
+    "toedscool": [
+        "base",
+        [
+            37,
+            "toedscruel"
+        ]
+    ],
+    "toedscruel": [
+        "last",
+        [
+            37,
+            "toedscool"
+        ]
+    ],
+    "capsakid": [
+        "base",
+        [
+            34,
+            "scovillain"
+        ]
+    ],
+    "scovillain": [
+        "last",
+        [
+            34,
+            "capsakid"
+        ]
+    ],
+    "rellor": [
+        "base",
+        [
+            32,
+            "rabsca"
+        ]
+    ],
+    "rabsca": [
+        "last",
+        [
+            32,
+            "rellor"
+        ]
+    ],
+    "flittle": [
+        "base",
+        [
+            32,
+            "espathra"
+        ]
+    ],
+    "espathra": [
+        "last",
+        [
+            32,
+            "flittle"
+        ]
+    ],
+    "tinkatink": [
+        "base",
+        [
+            24,
+            "tinkatuff"
+        ],
+        [
+            44,
+            "tinkaton"
+        ]
+    ],
+    "tinkatuff": [
+        "mid",
+        [
+            24,
+            "tinkatink"
+        ],
+        [
+            44,
+            "tinkaton"
+        ]
+    ],
+    "tinkaton": [
+        "last",
+        [
+            24,
+            "tinkatink"
+        ],
+        [
+            44,
+            "tinkatuff"
+        ]
+    ],
+    "wiglett": [
+        "base",
+        [
+            28,
+            "wugtrio"
+        ]
+    ],
+    "wugtrio": [
+        "last",
+        [
+            28,
+            "wiglett"
+        ]
+    ],
+    "finizen": [
+        "base",
+        [
+            28,
+            "palafiningenua"
+        ],
+        [
+            45,
+            "palafinpossente"
+        ]
+    ],
+    "palafiningenua": [
+        "mid",
+        [
+            28,
+            "finizen"
+        ],
+        [
+            45,
+            "palafinpossente"
+        ]
+    ],
+    "palafinpossente": [
+        "last",
+        [
+            28,
+            "finizen"
+        ],
+        [
+            45,
+            "palafiningenua"
+        ]
+    ],
+    "varoom": [
+        "base",
+        [
+            35,
+            "revavroom"
+        ]
+    ],
+    "revavroom": [
+        "last",
+        [
+            35,
+            "varoom"
+        ]
+    ],
+    "glimmet": [
+        "base",
+        [
+            30,
+            "glimmora"
+        ]
+    ],
+    "glimmora": [
+        "last",
+        [
+            30,
+            "glimmet"
+        ]
+    ],
+    "greavard": [
+        "base",
+        [
+            24,
+            "houdstone"
+        ]
+    ],
+    "houdstone": [
+        "last",
+        [
+            24,
+            "greavard"
+        ]
+    ],
+    "cetoddle": [
+        "base",
+        [
+            38,
+            "cetitan"
+        ]
+    ],
+    "cetitan": [
+        "last",
+        [
+            38,
+            "cetoddle"
+        ]
+    ],
+    "frigibax": [
+        "base",
+        [
+            27,
+            "arctibax"
+        ],
+        [
+            60,
+            "baxcalibur"
+        ]
+    ],
+    "arctibax": [
+        "mid",
+        [
+            27,
+            "frigibax"
+        ],
+        [
+            60,
+            "baxcalibur"
+        ]
+    ],
+    "baxcalibur": [
+        "last",
+        [
+            27,
+            "frigibax"
+        ],
+        [
+            60,
+            "arctibax"
+        ]
+    ],
+    "gimmighoul": [
+        "base",
+        [
+            38,
+            "gholdengo"
+        ]
+    ],
+    "gholdengo": [
+        "last",
+        [
+            38,
+            "gimmighoul"
+        ]
+    ],
+    "poltchageist": [
+        "base",
+        [
+            25,
+            "sinistcha"
+        ]
+    ],
+    "sinistcha": [
+        "last",
+        [
+            25,
+            "poltchageist"
+        ]
+    ],
+    "terapagos": [
+        "base",
+        [
+            64,
+            "terapagosastrale"
+        ]
+    ],
+    "terapagosastrale": [
+        "last",
+        [
+            64,
+            "terapagos"
+        ]
+    ]
 }
