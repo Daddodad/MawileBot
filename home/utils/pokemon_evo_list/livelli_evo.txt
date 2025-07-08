@@ -1,0 +1,394 @@
+bulbasaur 26 ivysaur 46 venusaur 
+charmander 25 charmeleon 47 charizard 
+squirtle 26 wartortle 47 blastoise 
+caterpie 10 metapod 25 butterfree
+weedle 10 kakuna 25 beedrill
+pidgey 20 pidgeotto 41 pidgeot
+rattata 28 raticate
+rattataalola 28 raticatealola
+spearow 30 fearow
+ekans 31 arbok
+pichu 11 pikachu 40 raichu
+pichu 11 pikachu 40 raichualola
+sandshrew 33 sandslash
+sandshrewalola 33 sandslashalola
+nidoranfemmina 22 nidorina 43 nidoqueen
+nidoranmaschio 22 nidorino 43 nidoking
+cleffa 16 clefairy 35 clefable
+vulpix 35 ninetales
+vulpixalola 35 ninetalesalola
+igglypuff 14 jigglypuff 35 wigglytuff
+zubat 25 golbat 49 crobat
+oddish 26 gloom 44 vileplume
+oddish 26 gloom 44 bellossom
+paras 29 parasect
+diglett 29 dugtrio
+diglettalola 29 dugtrioalola
+meowht 32 persian
+meowhtalola 32 persianalola
+meowhtgalar 32 perrserker
+psyduck 36 golduck
+mankey 28 primeape 49 annihilapt
+growlithe 40 arcanine
+growlithehisui 40 arcaninehisui
+poliwag 24 poliwhirl 45 poliwrath
+poliwag 24 poliwhirl 45 politoed
+abra 26 kadabra 45 alakazam
+machop 25 machoke 45 machamp
+bellsprout 25 weepinbell 45 victrebell
+tentacool 37 tentacruel
+geodude 25 graveler 44 golem
+geodudealola 25 graveleralola 44 golemalola
+ponyta 46 rapidash
+ponytagalar 46 rapidashgalar
+slowpoke 25 slowbro
+slowpoke 25 slowking
+slowpokegalar 25 slowbrogalar
+slowpokegalar 25 slowkinggalar
+magnemite 29 magneton 50 magnezone
+farfetchdgalar 39 sirfetchd
+doduo 34 dodrio
+seel 35 dewgong
+grimer 36 muk
+grimealola 36 mukalola
+shellder 36 cloyster
+gastly 26 haunter 45 gengar
+onix 40 steelix
+drowzee 35 hypno
+krabby 34 kingler
+voltorb 36 electrode
+voltorbhisui 36 electrode
+exeggcute 38 exeggutor
+exeggcute 38 exeggutoralola 
+cubone 32 marowak
+cubone 32 marowakalola
+tyrogue 28 hitmonlee
+tyrogue 28 hitmonchan
+tyrogue 28 hitmontop
+lickitung 40 lickiliky
+koffing 37 weezing
+koffing 37 weezinggalar
+rhyhorn 31 rhydon 51 rhyperior
+happiny 24 chansey 50 blissey
+tangela 48 tangrowht
+horsea 27 seadra 49 kingdra
+goldeen 34 seaking
+staryu 36 starmie
+mimejr 34 mrrime
+mrmimegalar 40 mrrime
+scyther 50 scizor
+scyther 50 kleavor
+smoochum 33 jynx
+elekid 33 electabuzz 52
+magby 34 magmar 52 magmortar
+magikarp 32 gyarados
+eevee 37 (tutte le eevoluzioni)
+porygon 35 porygon2 52 porygonz
+omanyte 37 omastar
+kabuto 37 kabutops
+dratini 26 dragonair 60 dragonite
+chikorita 26 bayleef 46 meganium
+cyndaquill 25 quilava 47 typhlosion 
+cyndaquill 25 quilava 47 typhlisionhisui
+totodil 26 croconaw 47 feraligatr
+sentret 26 furett
+hoothoot 31 noctowl
+ledyba 28 ledian
+spinarak 28 ariados
+chinchou 35 lanturn
+togepi 22 togetic 47 togekiss
+mareep 22 flaaffy 44 ampharos
+azurill 12 marill 34 azurill
+bonsly 30 sudowoodo
+hoppip 20 skiploom 40 jumpluff
+aipom 42 ambipom 
+sunkern 30 sunflora
+wooper 27 quagsire
+woopergalar 27 clodsire
+murkrow 45 honchkrow
+misdreavus 46 mismagius
+wynaut 28 wobbuffett
+girafarig 40 farigiraf
+pineco 33 forretress
+dunsparce 48 dudunsparce
+gligar 47 gliscor
+snubbull 33 granbull
+qwilfishhisui 48 overquill
+sneasel 47 weavile
+sneaselhisui 48 sneasler
+teddiursa 22 ursaring 53 ursaluna
+slugma 29 magcargo
+swinub 25 piloswine 40 mamoswine
+corsolagalar 41 cursola
+remoraid 36 octillery
+mantyke 46 mantine
+houndour 37 houndoom
+phanphy 37 donphan
+stantler 49 wyrdeer
+larvitar 26 pupitar 60 tyranitar
+treecko 26 grovyle 47 sceptile
+torchi 26 combusken 47 blaziken
+mudkip 26 marshtomp 47 swampert
+poochyena 27 mightyena
+zigzagoon 28 linoone
+zigzagoongalar 18 linoonegalar 47 obstagoon
+wurmple 10 silcoon 25 beautifly
+wurmple 10 cascoon 25 dustox
+lotad 19 lobre 41 ludicolo
+seedot 19 nuzleaf 41 shiftry
+taillow 31 swellow
+wingull 31 pelipper
+ralts 18 kirlia 39 gardevoir
+ralts 19 kirlia 39 gallade
+surskit 31 masquerain
+shroomish 33 breloom
+slakoth 26 vigoroth 55 slaking
+nincada 31 ninjask
+whismur 20 loudred 38 exploud
+makuhita 30 hariyama
+nosepass 45 probopass
+skitty 28 delcatty
+aron 28 lairon 48 aggron
+meditite 30 medicham
+electrike 31 manectric
+budew 24 roselia 46 roserade
+gulpix 33 swalot
+carvanha 33 sharpedo
+wailmer 45 wailord
+numel 33 camerupt
+spoink 35 grumpig
+trapinch 17 vibrava 43 flygon
+cacnea 35 cacturne
+swablu 35 altaria
+barboach 32 whiscash
+corphish 32 crawdaunt
+baltoy 35 claydol
+lileep 37 cradily
+anorith 37 armaldo
+feebas 32 milotic
+shuppet 32 banette
+duskull 27 dusclops 49 dusknoir
+chingling 32 chimecho
+snorunt 34 glalie
+snorunt 34 froslass
+spheal 25 sealeo 47 walrein
+clamperl 36 huntail
+clamperl 36 gorebyss
+bagon 26 shelgon 60 salamence 
+beldum 26 metang 60 metagross
+turtwig 26 grotle 46 torterra
+chimchar 25 monferno 47 infernape
+pipilup 26 prinplup 47 empoleon
+starly 19 staravia 41 staraptor
+bidoof 28 bibarel
+kricketon 24 kricketune
+shinx 21 luxio 44 luxray
+cranidos 37 rampardos
+shieldon 37 bastiodon
+burmy 27 wormadam
+burmy 27 mothim
+combee 31 vespiquen
+buizel 36 floatzel
+cherubi 34 cherrim
+shellos 35 gastrodon
+drifloon 37 drifblim
+buneary 37 lopunny
+glameow 33 purugly
+stunky 35 skuntank
+bronzor 35 bronzong
+gible 26 gabite 60 garchomp
+riolu 35 lucario
+hippopotas 38 hippowdon
+skorupi 37 drapion
+croagunk 35 toxicroak
+finneon 25 lumineon
+snover 36 abomasnow
+phione 58 manaphy
+snivy 26 servine 47 serperior
+tepig 26 pignite 47 emboar
+oshawott 26 dewott 47 samurott
+oshawott 26 dewott 47 samurotthisui
+patrat 29 watchog
+lillipup 22 herdier 44 stoutland
+purrloin 31 liepard
+pansage 35 simisage
+pansear 35 simisear
+panpour 35 simipour
+munna 34 musharna
+pidove 21 tranquill 42 unfezant
+blitzee 34 zebstrika
+roggenrola 24 boldore 45 gigalith
+woobat 32 swoobat
+drillbur 36 excadrill
+timburr 25 gurdurr 45 conkeldurr 
+tympole 24 palpitoad 44 seismitoad
+sewaddle 25 swadloon 25 leavanny
+venipede 21 whirlipede 42 scolipede
+cotonee 33 whimsicott
+petilil 33 lilligant
+petilil 33 lilliganthisui
+basculin 50 basculegion
+sandile 22 krokorok 43 krookodile
+darumaka 35 darmanitan
+darumakagalar 35 darmanita
+dwebble 35 crustle
+scraggy 36 scrafty
+yamask 34 caofagrigus
+yamaskgalar 34 runerigus
+tirtouga 37 carracosta
+archen 37 archeops
+trubbish 35 garbodor
+zorua 37 zoroark
+zoruahisui 37 zoroarkhisui
+minccino 34 cinccino
+gothita 24 gothorita 44 gothitelle
+solosis 24 duosion44 reuniclus
+ducklett 34 swanna
+vanillite 25 vanillish 41 vanilluxe
+deerling 35 sawsbuck
+karrablast 35 escalier
+foongus 33 amoonguss
+frillish 36 jellicent
+joltik 34 galvantula
+ferroseed 34 ferrothorn
+klink 22 klang 48 klinklang
+tynamo 24 eelektris 46 eelektross
+elgyem 36 beeheyem
+litwick 22 lampent 45 chandelure
+axew 27 fraxure 48 haxorus
+cubchoo 35 beartic
+shelmet 35 accelgor
+mienfoo 38 mienshao
+golett 34 golurk
+pawniard 32 bisharp 52 kingambit
+rufflet 38 braviary
+rufflet 38 braviaryhisui
+vullaby 38 mandibuzz
+deino 26 zweilous 60 hydreigon
+kyurem 65 kyurembianco
+kyurem 65 kyuremnero
+chespin 26 quilladin 47 chesnaught
+fennekin 25 braixen 47 delphox
+froakie 26 frogadier 47 greninja
+bunnelby 28 diggersby
+fletchling 26 fletchinder 44 talonflame
+scatterbug 11 spewpa 26 vivillon
+litleto 38 pyroar
+flabebe 19 floette 46 florges
+skiddo 39 gogoar
+pancham 37 pangoro
+espurr 36 meowstic
+honedge 26 doublade 47 aegislash
+spritzee 35 aromatisse
+swirlix 36 slurpuff
+inkay 33 malamar
+binacle 35 barbaracle
+skrelp 36 dragalge
+clauncher 37 clawitze
+helioptile 33 heliolisk
+tyrunt 39 tyrantrum
+amaura 39 aurorus
+goomy 28 sligoo 62 goodra
+goomy 28 sligoohisui 62 goodrahisui
+phantum 34 trevenant
+pumpkaboo 36 gourgeist
+bergmite 36 avalugg
+bermgite 36 avalugghisui
+noibat 34 noivern
+zygarde10 48 zygarde50 65 zygardeperfetta
+rowlett 27 dartrix 48 decidueye
+rowlett 27 dartrix 48 decidueyehisui
+litten 27 torract 49 incineraor
+popplio 27 brionne 48 primarina
+pikipek 21 trumbeak 42 toucannon
+yungoos 28 gumshoos
+grubbin 25 charjabug 45 vikavolt
+crabrawler 35 crabominable
+cutiefly 33 ribombee
+rockruff 33 lycanroc
+wishiwashiindiduale 31 wishiwashibanco
+mareanie 35 toxapex
+mudbray 39 mudsdale
+dewpider 31 araquanid
+fomantis 32 lurantis
+morelull 29 shiinotic
+salandit 35 salazzle
+stufful 37 beweat
+bounsweet 15 steenee 40 tsareena
+wimpid 33 golisopd
+sandygast 25 palossand
+tipozero 49 silvally
+jangmoo 26 hakamoo 60 kommoo
+cosmog 20 cosmoen 56 solgaleo
+cosmog 20 cosmoen 56 lunala
+necrozma 65 necrozmavespro
+necrozma 65 necrozmaaurora
+poipole 43 naganadel
+meltan 49 melmetal
+grookey 26 thwackey 48 rillaboom
+scorbunny 26 raboot 48 cinderace
+sobble 26 drizzile 48 inteleon
+skwovet 32 greedent
+rookidee 20 corvisquire 43 corviknight
+blipbug 16 dottler 42 orbeetle
+nickit 30 thievul
+gossifleur 31 eldegoss
+wooloo 33 dubwool
+chewtle 33 drednaw
+yamper 33 boltund
+rolycoly 23 corkol 46 coalossal
+applin 32 flapple
+applin 32 appeltun
+applin 27 dipplin 51 hydrapple
+silicobra 36 sandaconda
+attokuda 34 barraskewda 
+toxel 32 toxtricity
+sizzlipede 36 centiskorch
+clobbopus 36 grapploct
+sinistea 35 polteageist
+hatenna 22 hattrem 44 hatterenne
+impidimp 22 morgrem 44 grimmsnarl
+milcery 33 alcremie
+snom 28 frosmoth
+cufant 37 copperajah
+duraludon 61 archaludon
+dreepy 24 drakloak 60 dragapult
+zacianeroe 65 zacianre
+zamazentaeroe 65 zamazentare
+kubfu 42 urshifuacqua
+kubfu 42 urshifubuio
+calyrex 61 calyrexcavaliereglaciale
+calyrex 61 calyrexcavalierespettrale
+sprigatito 26 floragato 46 meowscarada
+fuecoco 26 crocalor 46 skeledirge
+quaxly 26 quaxwell 46 quaquaval
+lechonk 32 oinkologne
+tarountula 25 spidops
+nymble 28 lokix
+pawmi 20 pawmo 42 pawmot
+tandemaus 42 maushold
+fidough 34 dachsbun
+smoliv 21 dolliv 43 arboliva
+nacli 22 naclstack 43 garganacl
+charcadet 34 armarouge
+charcadet 34 ceruledge
+tadbulb 33 bellibot
+wattrel 34 kilowattrel
+maschiff 37 mabosstiff
+shroodle 34 grafaiai
+bramblin 33 brambleghast
+toedscool 37 toedscruel
+capsakid 34 scovillain
+rellor 32 rabsca
+flittle 32 espathra
+tinkatink 24 tinkatuff 44 tinkaton
+wiglett 28 wugtrio
+finizen 28 palafiningenua 45 palafinpossente
+varoom 35 revavroom
+glimmet 30 glimmora
+greavard 24 houdstone
+cetoddle 38 cetitan
+frigibax 27 arctibax 60 baxcalibur
+gimmighoul 38 gholdengo
+poltchageist 25 sinistcha
+terapagos 64 terapagosastrale
