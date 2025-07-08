@@ -242,7 +242,7 @@ zorua 37 zoroark
 zoruahisui 37 zoroarkhisui
 minccino 34 cinccino
 gothita 24 gothorita 44 gothitelle
-solosis 24 duosion44 reuniclus
+solosis 24 duosion 44 reuniclus
 ducklett 34 swanna
 vanillite 25 vanillish 41 vanilluxe
 deerling 35 sawsbuck
