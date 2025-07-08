@@ -195,20 +195,29 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         text = "Come ripetuto prima, il bot è indipendente dalla lega e le sue informazioni sono limitate. Controlla sempre quanto Sableye ti dice, non fidarti alla cieca. E se commette errori, o ci sono bug, puoi farlo presente sul gruppo ufficiale, ma se sbagli la colpa sarà tua..."
         await update.message.reply_text(text)
         await asyncio.sleep(5)
-        text = "🎉🎉NOVITÀ🎉🎉 \n\n Sto imparando a leggere, quindi adesso, invece di usare il comando /team, puoi inviarmi direttamente la foto contentente la tua card... \n\nControlla sempre che quel che leggo ia corretto! Un ⚠️ accanto al nome significa che non ho capito bene qualcosa, ma non è detto che abbia sbagliato..."
+        text = "🎉🎉NOVITÀ🎉🎉 \n\n Sto imparando a leggere, quindi adesso, invece di usare il comando /team, puoi inviarmi direttamente la foto contentente la tua card... \n\nControlla sempre che quel che leggo ia corretto! Un ⚠️ accanto al nome significa che non ho capito bene qualcosa, ma non è detto che abbia sbagliato... Un 🔞 invece indica un errore..."
         await update.message.reply_text(text)
         await asyncio.sleep(5)
-        await add_route(str(update.effective_user.id), "Non_detta")
-        keyboard = [
-            [InlineKeyboardButton("Pari", callback_data='even'),
-            InlineKeyboardButton("Dispari", callback_data='odd')]
-        ]
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        await update.message.reply_text(
-            "Quindi, bando alle ciance e iniziamo! Per prima cosa, dimmi il percorso su cui ti trovi",
-            reply_markup=reply_markup
-        )
-        return ROUTE_SELECTION
+
+        skip_route_selection = True
+
+        if not skip_route_selection:
+            await add_route(str(update.effective_user.id), "Non_detta")
+            keyboard = [
+                [InlineKeyboardButton("Pari", callback_data='even'),
+                InlineKeyboardButton("Dispari", callback_data='odd')]
+            ]
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            await update.message.reply_text(
+                "Quindi, bando alle ciance e iniziamo! Per prima cosa, dimmi il percorso su cui ti trovi",
+                reply_markup=reply_markup
+            )
+            return ROUTE_SELECTION
+        else: 
+            await update.message.reply_text(
+                "Quindi, bando alle ciance e iniziamo!"
+            )
+            await add_route(str(update.effective_user.id), 'pari')
     
     elif route == "Non_detta":
         keyboard = [
@@ -540,14 +549,21 @@ async def gym_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         # Call the poke_gym function
         image_path = poke_gym(str(chat_id), gym_type)
         # Open the image file
-        cap = f"Ecco il risultato del tuo team contro la palestra {gym_type.capitalize()}.\n\n🔴: batte la fascia bassa ({enemy_powers[0]})\n🟡: batte la fascia media ({enemy_powers[2]})\n🟢: batte la fascia alta ({enemy_powers[4]})"
-        with open(image_path, 'rb') as image_file:
-            # Send a new message with the image
-            await context.bot.send_photo(
-                chat_id=chat_id,
-                photo=image_file,
-                caption=cap
-            )
+        try:
+            cap = f"Ecco il risultato del tuo team contro la palestra {gym_type.capitalize()}.\n\n🔴: batte la fascia bassa ({enemy_powers[0]})\n🟡: batte la fascia media ({enemy_powers[2]})\n🟢: batte la fascia alta ({enemy_powers[4]})"
+            with open(image_path, 'rb') as image_file:
+                # Send a new message with the image
+                await context.bot.send_photo(
+                    chat_id=chat_id,
+                    photo=image_file,
+                    caption=cap
+                )
+        except:
+            with open(image_path, 'rb') as image_file:
+                await context.bot.send_message(
+                    chat_id=chat_id,
+                    text=image_file.size()
+                )
         return ConversationHandler.END
 
 async def choose_pokemon_gym(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
