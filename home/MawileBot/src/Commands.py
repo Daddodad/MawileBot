@@ -730,7 +730,7 @@ async def choose_pokemon(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     if poke_exist(pokemon_name) == True:
         index = context.user_data['editing_index']
         #current_team[index][0] = pokemon_name
-        change_secret_player_data_team(update, index, 0, pokemon_name)
+        change_secret_player_data_team(update, index, 0, pokemon_name.lower())
         await update.message.reply_text(f"Quindi il tuo nuovo Pokémon è {pokemon_name}... A che livello?")
         return CHOOSING_LEVEL
     else:
@@ -1381,6 +1381,8 @@ async def enter_pokemons(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if poke_exist(p) == False:
             await update.message.reply_text(f'Mhh... Non mi risulta nessun "{p}"... Riprova a dirmi la lista.')
             return ENTER_POKEMONS
+        
+    poke_list = [p.lower() for p in poke_list]  # Convert all Pokémon names to lowercase
 
     # Call the poke_Fight function
     await update.message.reply_text("Attendi un attimo per l'immagine...")
@@ -1399,12 +1401,12 @@ async def enter_pokemons(update: Update, context: ContextTypes.DEFAULT_TYPE):
             if len(poke_list)==1:
                 cap = "Ecco il risultato del tuo team contro questo Pokémon selvatico."
                 cap+= f"\n\n🔴: batte la fascia bassa ({e_p[0]})\n🟡: batte la fascia alta ({e_p[1]})\n"
-                cap+= f"🟢: batte {poke_list[0]} se boss ({e_p[2]})"
+                cap+= f"🟢: batte {poke_list[0].capitalize()} se boss ({e_p[2]})"
             else:
                 cap = "Ecco il risultato del tuo team contro questi Pokémon selvatici."
                 cap+= f"\n\n🔴: batte la fascia bassa ({e_p[0]})\n🟡: batte la fascia alta ({e_p[1]})\n"
                 for i, pk in enumerate(poke_list):
-                    cap+= f"🟢: batte {pk} se boss ({e_p[2+i]})\n"
+                    cap+= f"🟢: batte {pk.capitalize()} se boss ({e_p[2+i]})\n"
 
         # Open the image file
         with open(image_path, 'rb') as image_file:
@@ -1557,7 +1559,7 @@ async def team_update(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
     photo = message.photo  # list of PhotoSize objects, from smallest to largest
 
     if photo:
-        if True:
+        try:
             print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') sent a photo')
             photo_file = photo[-1] # Get the last photo.
             file = await context.bot.get_file(photo_file.file_id)
@@ -1585,13 +1587,14 @@ async def team_update(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
 
                 with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
                     data = json.load(file)
-                data[str(update.effective_user.id)]["team"] = secret_data
+                lowered_data = [[name.lower() if isinstance(name, str) else name, count] for name, count in secret_data]
+                data[str(update.effective_user.id)]["team"] = lowered_data
                 ## Save our changes to JSON file
                 jsonFile = open(ENV_PATH+"/secret_player_data.json", "w+")
                 jsonFile.write(json.dumps(data))
                 jsonFile.close()
-        # except: 
-        #     await update.message.reply_text("Non mi sembra una card... Che fai, mi mandi i meme?")
+        except: 
+            await update.message.reply_text("Ma che roba mi hai mandato? Non riesco a leggere questa immagine...")
     return ConversationHandler.END  # Fallback
 
 

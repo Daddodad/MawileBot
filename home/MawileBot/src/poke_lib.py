@@ -1049,9 +1049,9 @@ def create_pokemon_name_image(pokemon_name, front = True, shiny_or_default = 'de
     except IOError:
         font_bold = ImageFont.load_default()  # Fallback to default font if custom font isn't available
     if len(pokemon_name) > 12: # Add the Pokémon name to the right of the sprite
-        draw.text((110, 40), pokemon_name, fill="black", font=font_bold)  # Center the name vertically
+        draw.text((110, 40), pokemon_name.capitalize(), fill="black", font=font_bold)  # Center the name vertically
     else:
-        draw.text((110, 35), pokemon_name, fill="black", font=font_bold)  # Center the name vertically
+        draw.text((110, 35), pokemon_name.capitalize(), fill="black", font=font_bold)  # Center the name vertically
 
     border_width = 1
     image_width, image_height = blank_image.size
@@ -1161,9 +1161,9 @@ def create_pokemon_image(pokemon_name, power, front = False, shiny_or_default = 
         font_bold = ImageFont.load_default()  # Fallback to default font if custom font isn't available
         font_large = ImageFont.load_default()
     if len(pokemon_name) > 12:  # Add the Pokémon name to the right of the sprite
-        draw.text((110, 17), pokemon_name, fill="black", font=font_bold)  # Position (110, 17)
+        draw.text((110, 17), pokemon_name.capitalize(), fill="black", font=font_bold)  # Position (110, 17)
     else:
-        draw.text((110, 10), pokemon_name, fill="black", font=font_bold)  # Position (110, 10)
+        draw.text((110, 10), pokemon_name.capitalize(), fill="black", font=font_bold)  # Position (110, 10)
     draw.text((110, 40), str(power), fill="black", font=font_large)  # Add the power number below the name with larger font
 
     border_width = 1 # Draw lines
@@ -1583,9 +1583,9 @@ async def automatic_card_reader(image):
             pokemon_probable_power = compare_with_saved_data_json(splits)
 
             if pokemon_probable_name != '':
-                if poke_exist(pokemon_probable_name):
+                if poke_exist(pokemon_probable_name.lower()):
                     secret_data.append([pokemon_probable_name,int(pokemon_probable_level)])
-                    if round(get_poke_bst(pokemon_probable_name)*int(pokemon_probable_level)/100) != int(pokemon_probable_power):
+                    if round(get_poke_bst(pokemon_probable_name.lower())*int(pokemon_probable_level)/100) != int(pokemon_probable_power):
                         errors.append('01')
                     else:
                         errors.append('00')
