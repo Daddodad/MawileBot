@@ -50,7 +50,7 @@ def whitelist(chat_id):
 
 # Werry = 762058738
 
-async def id_check(update: Update) ->None:
+async def id_check(update: Update, command_is_start = False) ->None:
 
     #####################################################################   ██████╗  ██████╗ ████████╗████████╗ ██████╗ ███╗   ██╗███████╗    ██████╗  ██████╗ ███████╗███████╗ ██████╗ 
     #####################################################################   ██╔══██╗██╔═══██╗╚══██╔══╝╚══██╔══╝██╔═══██╗████╗  ██║██╔════╝    ██╔══██╗██╔═══██╗██╔════╝██╔════╝██╔═══██╗
@@ -61,7 +61,7 @@ async def id_check(update: Update) ->None:
     # Ringraziamo chatgpt per la scritta "Bottone Rosso"
 
     chat_id = update.effective_chat.id
-    #print(chat_id)
+
     if chat_id in []:
         answers = [
             "… i Vassago non dovrebbero affidarsi a tool di Laoconte, potrebbero rimetterci le corna",
@@ -71,11 +71,18 @@ async def id_check(update: Update) ->None:
             "… uh guarda, un bel sacrificio Vassago si è palesato"
             ]
         await update.message.reply_text(random.choice(answers))
+
     if deactivate_the_bot:
         if not whitelist(chat_id):
             await update.message.reply_text('█▀█ ███ █▀█   ▞▚ █▀█ C ███ ▛▄ ▞▚ . . . \n █▀█ ███ █▀█   ☰   ▞▚ █▀█ C ███ ▛▄ ▞▚   █ █▄▄   █▀█▀█ ███ █▀█▀█ ☰ █▀█ ▀█▀ ███ . . .')
             raise UnauthorizedAccess("You are not authorized to use this bot.") # Soluzione terribile, but it works...
-
+    elif command_is_start == False:
+        with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
+            data = json.load(file)
+        if str(chat_id) not in data.keys():
+            await update.message.reply_text('Non ti conosco...\nProva a usare /start...')
+            raise UnauthorizedAccess("User did not press start") # Soluzione terribile, but it works...
+        
 async def manutenzione(update: Update) ->None:
     # infila await manutenzione(update)
     if update.callback_query:
@@ -137,7 +144,7 @@ async def curse_player(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-    await id_check(update)
+    await id_check(update, command_is_start = True)
 
     #await curse_player(update, context) # Non lo metterei su start.
 
@@ -195,7 +202,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         text = "Come ripetuto prima, il bot è indipendente dalla lega e le sue informazioni sono limitate. Controlla sempre quanto Sableye ti dice, non fidarti alla cieca. E se commette errori, o ci sono bug, puoi farlo presente sul gruppo ufficiale, ma se sbagli la colpa sarà tua..."
         await update.message.reply_text(text)
         await asyncio.sleep(5)
-        text = "🎉🎉NOVITÀ🎉🎉 \n\n Sto imparando a leggere, quindi adesso, invece di usare il comando /team, puoi inviarmi direttamente la foto contentente la tua card... \n\nControlla sempre che quel che leggo ia corretto! Un ⚠️ accanto al nome significa che non ho capito bene qualcosa, ma non è detto che abbia sbagliato... Un 🔞 invece indica un errore..."
+        text = "🎉🎉NOVITÀ🎉🎉 \n\nSto imparando a leggere, quindi adesso, invece di usare il comando /team, puoi inviarmi direttamente la foto contentente la tua card... \n\nControlla sempre che quel che leggo ia corretto! Un ⚠️ accanto al nome significa che non ho capito bene qualcosa, ma non è detto che abbia sbagliato... Un 🔞 invece indica un errore..."
         await update.message.reply_text(text)
         await asyncio.sleep(5)
 
