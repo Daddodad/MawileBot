@@ -1456,10 +1456,9 @@ def get_pokemon_image_path(pokemon_name):
         for file in os.listdir(base_path):
             if file.lower() == f"{pokemon_name.lower()}.png":
                 return os.path.join(base_path, file)
-    except FileNotFoundError:
-        pass  # base_path doesn't exist
-
-    return os.path.join(base_path, "Missing.png")
+    except Exception as e:  
+        print(f"Errore nella ricerca dell'immagine per card: {e}")
+        return os.path.join(base_path, "Missing.png")
 
 async def card_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await id_check(update)
