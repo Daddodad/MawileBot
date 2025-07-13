@@ -211,18 +211,18 @@
             "rattata"
         ]
     ],
-    "rattataalola": [
+    "rattata-alola": [
         "base",
         [
             28,
-            "raticatealola"
+            "raticate-alola"
         ]
     ],
-    "raticatealola": [
+    "raticate-alola": [
         "last",
         [
             28,
-            "rattataalola"
+            "rattata-alola"
         ]
     ],
     "spearow": [
@@ -294,7 +294,7 @@
         ],
         [
             40,
-            "raichualola"
+            "raichu-alola"
         ]
     ],
     "pikachu_1": [
@@ -305,10 +305,10 @@
         ],
         [
             40,
-            "raichualola"
+            "raichu-alola"
         ]
     ],
-    "raichualola": [
+    "raichu-alola": [
         "last",
         [
             11,
@@ -333,18 +333,18 @@
             "sandshrew"
         ]
     ],
-    "sandshrewalola": [
+    "sandshrew-alola": [
         "base",
         [
             33,
-            "sandslashalola"
+            "sandslash-alola"
         ]
     ],
-    "sandslashalola": [
+    "sandslash-alola": [
         "last",
         [
             33,
-            "sandshrewalola"
+            "sandshrew-alola"
         ]
     ],
     "nidoranfemmina": [
@@ -460,18 +460,18 @@
             "vulpix"
         ]
     ],
-    "vulpixalola": [
+    "vulpix-alola": [
         "base",
         [
             35,
-            "ninetalesalola"
+            "ninetales-alola"
         ]
     ],
-    "ninetalesalola": [
+    "ninetales-alola": [
         "last",
         [
             35,
-            "vulpixalola"
+            "vulpix-alola"
         ]
     ],
     "igglypuff": [
@@ -634,21 +634,21 @@
             "diglett"
         ]
     ],
-    "diglettalola": [
+    "diglett-alola": [
         "base",
         [
             29,
-            "dugtrioalola"
+            "dugtrio-alola"
         ]
     ],
-    "dugtrioalola": [
+    "dugtrio-alola": [
         "last",
         [
             29,
-            "diglettalola"
+            "diglett-alola"
         ]
     ],
-    "meowht": [
+    "meowth": [
         "base",
         [
             32,
@@ -659,24 +659,24 @@
         "last",
         [
             32,
-            "meowht"
+            "meowth"
         ]
     ],
-    "meowhtalola": [
+    "meowth-alola": [
         "base",
         [
             32,
-            "persianalola"
+            "persian-alola"
         ]
     ],
-    "persianalola": [
+    "persian-alola": [
         "last",
         [
             32,
-            "meowhtalola"
+            "meowth-alola"
         ]
     ],
-    "meowhtgalar": [
+    "meowth--galar": [
         "base",
         [
             32,
@@ -687,7 +687,7 @@
         "last",
         [
             32,
-            "meowhtgalar"
+            "meowth-galar"
         ]
     ],
     "psyduck": [
@@ -712,7 +712,7 @@
         ],
         [
             49,
-            "annihilapt"
+            "annihilape"
         ]
     ],
     "primeape": [
@@ -726,7 +726,7 @@
             "annihilapt"
         ]
     ],
-    "annihilapt": [
+    "annihilape": [
         "last",
         [
             28,
@@ -751,18 +751,18 @@
             "growlithe"
         ]
     ],
-    "growlithehisui": [
+    "growlithe-hisui": [
         "base",
         [
             40,
-            "arcaninehisui"
+            "arcanine-hisui"
         ]
     ],
-    "arcaninehisui": [
+    "arcanine-hisui": [
         "last",
         [
             40,
-            "growlithehisui"
+            "growlithe-hisui"
         ]
     ],
     "poliwag": [
@@ -977,37 +977,37 @@
             "graveler"
         ]
     ],
-    "geodudealola": [
+    "geodude-alola": [
         "base",
         [
             25,
-            "graveleralola"
+            "graveler-alola"
         ],
         [
             44,
-            "golemalola"
+            "golem-alola"
         ]
     ],
-    "graveleralola": [
+    "graveler-alola": [
         "mid",
         [
             25,
-            "geodudealola"
+            "geodude-alola"
         ],
         [
             44,
-            "golemalola"
+            "golem-alola"
         ]
     ],
-    "golemalola": [
+    "golem-alola": [
         "last",
         [
             25,
-            "geodudealola"
+            "geodude-alola"
         ],
         [
             44,
-            "graveleralola"
+            "graveler-alola"
         ]
     ],
     "ponyta": [
@@ -1024,18 +1024,18 @@
             "ponyta"
         ]
     ],
-    "ponytagalar": [
+    "ponyta-galar": [
         "base",
         [
             46,
-            "rapidashgalar"
+            "rapidash-galar"
         ]
     ],
-    "rapidashgalar": [
+    "rapidash-galar": [
         "last",
         [
             46,
-            "ponytagalar"
+            "ponyta-galar"
         ]
     ],
     "slowpoke": [
@@ -1066,32 +1066,32 @@
             "slowpoke_1"
         ]
     ],
-    "slowpokegalar": [
+    "slowpoke-galar": [
         "base",
         [
             25,
-            "slowbrogalar"
+            "slowbro-galar"
         ]
     ],
-    "slowbrogalar": [
+    "slowbro-galar": [
         "last",
         [
             25,
-            "slowpokegalar"
+            "slowpoke-galar"
         ]
     ],
-    "slowpokegalar_1": [
+    "slowpoke-galar_1": [
         "base",
         [
             25,
-            "slowkinggalar"
+            "slowking-galar"
         ]
     ],
-    "slowkinggalar": [
+    "slowking-galar": [
         "last",
         [
             25,
-            "slowpokegalar_1"
+            "slowpoke-galar_1"
         ]
     ],
     "magnemite": [
@@ -1127,7 +1127,7 @@
             "magneton"
         ]
     ],
-    "farfetchdgalar": [
+    "farfetchd-galar": [
         "base",
         [
             39,
@@ -1138,7 +1138,7 @@
         "last",
         [
             39,
-            "farfetchdgalar"
+            "farfetchd-galar"
         ]
     ],
     "doduo": [
@@ -1183,18 +1183,18 @@
             "grimer"
         ]
     ],
-    "grimealola": [
+    "grimer-alola": [
         "base",
         [
             36,
-            "mukalola"
+            "muk-alola"
         ]
     ],
-    "mukalola": [
+    "muk-alola": [
         "last",
         [
             36,
-            "grimealola"
+            "grimer-alola"
         ]
     ],
     "shellder": [
@@ -1300,7 +1300,7 @@
             "voltorb"
         ]
     ],
-    "voltorbhisui": [
+    "voltorb-hisui": [
         "base",
         [
             36,
@@ -1311,7 +1311,7 @@
         "last",
         [
             36,
-            "voltorbhisui"
+            "voltorb-hisui"
         ]
     ],
     "exeggcute": [
@@ -1332,10 +1332,10 @@
         "base",
         [
             38,
-            "exeggutoralola"
+            "exeggutor-alola"
         ]
     ],
-    "exeggutoralola": [
+    "exeggutor-alola": [
         "last",
         [
             38,
@@ -1360,10 +1360,10 @@
         "base",
         [
             32,
-            "marowakalola"
+            "marowak-alola"
         ]
     ],
-    "marowakalola": [
+    "marowak-alola": [
         "last",
         [
             32,
@@ -1416,10 +1416,10 @@
         "base",
         [
             40,
-            "lickiliky"
+            "lickilicky"
         ]
     ],
-    "lickiliky": [
+    "lickilicky": [
         "last",
         [
             40,
@@ -1444,10 +1444,10 @@
         "base",
         [
             37,
-            "weezinggalar"
+            "weezing-galar"
         ]
     ],
-    "weezinggalar": [
+    "weezing-galar": [
         "last",
         [
             37,
@@ -1609,7 +1609,7 @@
             "mimejr"
         ]
     ],
-    "mrmimegalar": [
+    "mrmime-galar": [
         "base",
         [
             40,
@@ -1620,7 +1620,7 @@
         "last",
         [
             40,
-            "mrmimegalar"
+            "mrmime-galar"
         ]
     ],
     "scyther": [
@@ -1965,7 +1965,7 @@
             "bayleef"
         ]
     ],
-    "cyndaquill": [
+    "cyndaquil": [
         "base",
         [
             25,
@@ -1980,7 +1980,7 @@
         "mid",
         [
             25,
-            "cyndaquill"
+            "cyndaquil"
         ],
         [
             47,
@@ -1991,14 +1991,14 @@
         "last",
         [
             25,
-            "cyndaquill"
+            "cyndaquil"
         ],
         [
             47,
             "quilava"
         ]
     ],
-    "cyndaquill_1": [
+    "cyndaquil_1": [
         "base",
         [
             25,
@@ -2006,32 +2006,32 @@
         ],
         [
             47,
-            "typhlisionhisui"
+            "typhlosion-hisui"
         ]
     ],
     "quilava_1": [
         "mid",
         [
             25,
-            "cyndaquill_1"
+            "cyndaquil_1"
         ],
         [
             47,
-            "typhlisionhisui"
+            "typhlosion-hisui"
         ]
     ],
-    "typhlisionhisui": [
+    "typhlosion-hisui": [
         "last",
         [
             25,
-            "cyndaquill_1"
+            "cyndaquil_1"
         ],
         [
             47,
             "quilava_1"
         ]
     ],
-    "totodil": [
+    "totodile": [
         "base",
         [
             26,
@@ -2046,7 +2046,7 @@
         "mid",
         [
             26,
-            "totodil"
+            "totodile"
         ],
         [
             47,
@@ -2057,7 +2057,7 @@
         "last",
         [
             26,
-            "totodil"
+            "totodile"
         ],
         [
             47,
@@ -2068,10 +2068,10 @@
         "base",
         [
             26,
-            "furett"
+            "furret"
         ]
     ],
-    "furett": [
+    "furret": [
         "last",
         [
             26,
@@ -2311,7 +2311,7 @@
             "wooper"
         ]
     ],
-    "woopergalar": [
+    "wooper-galar": [
         "base",
         [
             27,
@@ -2322,7 +2322,7 @@
         "last",
         [
             27,
-            "woopergalar"
+            "wooper-galar"
         ]
     ],
     "murkrow": [
@@ -2437,7 +2437,7 @@
             "snubbull"
         ]
     ],
-    "qwilfishhisui": [
+    "qwilfish-hisui": [
         "base",
         [
             48,
@@ -2448,7 +2448,7 @@
         "last",
         [
             48,
-            "qwilfishhisui"
+            "qwilfish-hisui"
         ]
     ],
     "sneasel": [
@@ -2465,7 +2465,7 @@
             "sneasel"
         ]
     ],
-    "sneaselhisui": [
+    "sneasel-hisui": [
         "base",
         [
             48,
@@ -2476,7 +2476,7 @@
         "last",
         [
             48,
-            "sneaselhisui"
+            "sneasel-hisui"
         ]
     ],
     "teddiursa": [
@@ -2559,7 +2559,7 @@
             "piloswine"
         ]
     ],
-    "corsolagalar": [
+    "corsola-galar": [
         "base",
         [
             41,
@@ -2570,7 +2570,7 @@
         "last",
         [
             41,
-            "corsolagalar"
+            "corsola-galar"
         ]
     ],
     "remoraid": [
@@ -2709,7 +2709,7 @@
             "grovyle"
         ]
     ],
-    "torchi": [
+    "tochic": [
         "base",
         [
             26,
@@ -2724,7 +2724,7 @@
         "mid",
         [
             26,
-            "torchi"
+            "tochic"
         ],
         [
             47,
@@ -2735,7 +2735,7 @@
         "last",
         [
             26,
-            "torchi"
+            "tochic"
         ],
         [
             47,
@@ -2803,22 +2803,22 @@
             "zigzagoon"
         ]
     ],
-    "zigzagoongalar": [
+    "zigzagoon-galar": [
         "base",
         [
             18,
-            "linoonegalar"
+            "linoone-galar"
         ],
         [
             47,
             "obstagoon"
         ]
     ],
-    "linoonegalar": [
+    "linoone-galar": [
         "mid",
         [
             18,
-            "zigzagoongalar"
+            "zigzagoon-galar"
         ],
         [
             47,
@@ -2829,11 +2829,11 @@
         "last",
         [
             18,
-            "zigzagoongalar"
+            "zigzagoon-galar"
         ],
         [
             47,
-            "linoonegalar"
+            "linoone-galar"
         ]
     ],
     "wurmple": [
@@ -3306,7 +3306,7 @@
             "roselia"
         ]
     ],
-    "gulpix": [
+    "gulpin": [
         "base",
         [
             33,
@@ -3317,7 +3317,7 @@
         "last",
         [
             33,
-            "gulpix"
+            "gulpin"
         ]
     ],
     "carvanha": [
@@ -3803,7 +3803,7 @@
             "monferno"
         ]
     ],
-    "pipilup": [
+    "piplup": [
         "base",
         [
             26,
@@ -3818,7 +3818,7 @@
         "mid",
         [
             26,
-            "pipilup"
+            "piplup"
         ],
         [
             47,
@@ -3829,7 +3829,7 @@
         "last",
         [
             26,
-            "pipilup"
+            "piplup"
         ],
         [
             47,
@@ -3883,7 +3883,7 @@
             "bidoof"
         ]
     ],
-    "kricketon": [
+    "kricketot": [
         "base",
         [
             24,
@@ -3894,7 +3894,7 @@
         "last",
         [
             24,
-            "kricketon"
+            "kricketot"
         ]
     ],
     "shinx": [
@@ -4350,7 +4350,7 @@
         ],
         [
             47,
-            "samurotthisui"
+            "samurott-hisui"
         ]
     ],
     "dewott_1": [
@@ -4361,10 +4361,10 @@
         ],
         [
             47,
-            "samurotthisui"
+            "samurott-hisui"
         ]
     ],
-    "samurotthisui": [
+    "samurott-hisui": [
         "last",
         [
             26,
@@ -4764,10 +4764,10 @@
         "base",
         [
             33,
-            "lilliganthisui"
+            "lilligant-hisui"
         ]
     ],
-    "lilliganthisui": [
+    "lilligant-hisui": [
         "last",
         [
             33,
@@ -4835,7 +4835,7 @@
             "darumaka"
         ]
     ],
-    "darumakagalar": [
+    "darumaka-galar": [
         "base",
         [
             35,
@@ -4846,7 +4846,7 @@
         "last",
         [
             35,
-            "darumakagalar"
+            "darumaka-galar"
         ]
     ],
     "dwebble": [
@@ -4891,7 +4891,7 @@
             "yamask"
         ]
     ],
-    "yamaskgalar": [
+    "yamask-galar": [
         "base",
         [
             34,
@@ -4902,7 +4902,7 @@
         "last",
         [
             34,
-            "yamaskgalar"
+            "yamask-galar"
         ]
     ],
     "tirtouga": [
@@ -4961,18 +4961,18 @@
             "zorua"
         ]
     ],
-    "zoruahisui": [
+    "zorua-hisui": [
         "base",
         [
             37,
-            "zoroarkhisui"
+            "zoroark-hisui"
         ]
     ],
-    "zoroarkhisui": [
+    "zoroark-hisui": [
         "last",
         [
             37,
-            "zoruahisui"
+            "zorua-hisui"
         ]
     ],
     "minccino": [
@@ -5439,10 +5439,10 @@
         "base",
         [
             38,
-            "braviaryhisui"
+            "braviary-hisui"
         ]
     ],
-    "braviaryhisui": [
+    "braviary-hisui": [
         "last",
         [
             38,
@@ -5988,14 +5988,14 @@
         "base",
         [
             28,
-            "sligoohisui"
+            "sligoo-hisui"
         ],
         [
             62,
-            "goodrahisui"
+            "goodra-hisui"
         ]
     ],
-    "sligoohisui": [
+    "sligoo-hisui": [
         "mid",
         [
             28,
@@ -6003,10 +6003,10 @@
         ],
         [
             62,
-            "goodrahisui"
+            "goodra-hisui"
         ]
     ],
-    "goodrahisui": [
+    "goodra-hisui": [
         "last",
         [
             28,
@@ -6014,7 +6014,7 @@
         ],
         [
             62,
-            "sligoohisui"
+            "sligoo-hisui"
         ]
     ],
     "phantum": [
@@ -6063,10 +6063,10 @@
         "base",
         [
             36,
-            "avalugghisui"
+            "avalugg-hisui"
         ]
     ],
-    "avalugghisui": [
+    "avalugg-hisui": [
         "last",
         [
             36,
@@ -6161,7 +6161,7 @@
         ],
         [
             48,
-            "decidueyehisui"
+            "decidueye-hisui"
         ]
     ],
     "dartrix_1": [
@@ -6172,10 +6172,10 @@
         ],
         [
             48,
-            "decidueyehisui"
+            "decidueye-hisui"
         ]
     ],
-    "decidueyehisui": [
+    "decidueye-hisui": [
         "last",
         [
             27,
@@ -7151,7 +7151,7 @@
         ],
         [
             44,
-            "hatterenne"
+            "hatterene"
         ]
     ],
     "hattrem": [

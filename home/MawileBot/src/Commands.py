@@ -1390,7 +1390,7 @@ async def enter_pokemons(update: Update, context: ContextTypes.DEFAULT_TYPE):
             return ENTER_POKEMONS
         
     poke_list = [p.lower() for p in poke_list]  # Convert all Pokémon names to lowercase
-
+    
     # Call the poke_Fight function
     await update.message.reply_text("Attendi un attimo per l'immagine...")
     try:
@@ -1569,6 +1569,7 @@ async def team_update(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
     if photo:
         try:
             print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') sent a photo')
+            await update.message.reply_text("👓 Ricevuto! Dammi un secondo... 👓")
             photo_file = photo[-1] # Get the last photo.
             file = await context.bot.get_file(photo_file.file_id)
             photo_bytes = await file.download_as_bytearray()
