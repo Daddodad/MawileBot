@@ -1445,20 +1445,21 @@ def get_fight_conversation_handler():
 
 # --------------------------------------------------------------------------- CARD -------------------------------------------------------------------------------------------
 def get_pokemon_image_path(pokemon_name):
-
     """
     Returns the path for the Pokemon image based on the Pokemon name.
-    Searches for the image in the /images/pokemons folder.
+    Searches for the image in the /images/pokemons folder (case-insensitive).
     Returns 'Missing.png' if the specific Pokemon image is not found.
     """
-    base_path = ENV_PATH+"/images/pokemons"
-    pokemon_image = f"{pokemon_name}.png"
-    full_path = os.path.join(base_path, pokemon_image)
+    base_path = os.path.join(ENV_PATH, "images", "pokemons")
 
-    if os.path.exists(full_path):
-        return full_path
-    else:
-        return os.path.join(base_path, "Missing.png")
+    try:
+        for file in os.listdir(base_path):
+            if file.lower() == f"{pokemon_name.lower()}.png":
+                return os.path.join(base_path, file)
+    except FileNotFoundError:
+        pass  # base_path doesn't exist
+
+    return os.path.join(base_path, "Missing.png")
 
 async def card_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await id_check(update)
