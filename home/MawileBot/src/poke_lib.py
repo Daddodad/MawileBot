@@ -1246,11 +1246,11 @@ def create_pokemon_collage(df, type = 'gym', path=None, enemy_powers=None):
                         bg = (255,255,255)
                 elif type == 'encounter':
                     try: #Se enemy_power = None o corto almeno non si blocca
-                        if scaled_power > enemy_powers[0]:
+                        if scaled_power >= enemy_powers[0]:
                             bg = (255, 111, 111) # Red
-                            if scaled_power > enemy_powers[1]:
+                            if scaled_power >= enemy_powers[1]:
                                 bg = (255, 255, 111) # Yellow
-                                if scaled_power > enemy_powers[col]: # nel caso encounter, enemy_powers è [bassa,media,boss1,boss2,boss3 ...],l'indice col ci fa un grand favore partendo da 2
+                                if scaled_power >= enemy_powers[col]: # nel caso encounter, enemy_powers è [bassa,media,boss1,boss2,boss3 ...],l'indice col ci fa un grand favore partendo da 2
                                     bg = (99, 238, 99) # Green
                         else:
                             bg = (255,255,255)
@@ -1258,11 +1258,11 @@ def create_pokemon_collage(df, type = 'gym', path=None, enemy_powers=None):
                         bg = (0,0,0)
                 else:
                     try: #Se enemy_power = None o corto almeno non si blocca
-                        if scaled_power > enemy_powers[0]:
+                        if scaled_power >= enemy_powers[0]:
                             bg = (255, 111, 111) # Red
-                            if scaled_power > enemy_powers[1]:
+                            if scaled_power >= enemy_powers[1]:
                                 bg = (255, 255, 111) # Yellow
-                                if scaled_power > enemy_powers[2]:
+                                if scaled_power >= enemy_powers[2]:
                                     bg = (99, 238, 99) # Green
                         else:
                             bg = (255,255,255)

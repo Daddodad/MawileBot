@@ -1,7 +1,7 @@
 {
     "rock": {
         "team": ["every type combo"],
-        "actual_team": [],
+        "actual_team": ["Anorith", "Anorith", "Armaldo", "Bonsly", "Bonsly", "Suudowoodo"],
         "power": [24, 24, 30, 30, 36, 36],
         "multiplier": 5
     },
