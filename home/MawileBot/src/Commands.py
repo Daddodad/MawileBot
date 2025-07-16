@@ -31,7 +31,7 @@ else:
 from poke_lib import calculate_bonus_answer, random_pokemon, random_player, get_power, poke_evo_level,format_types_emoji
 from poke_lib import add_new_player, poke_lega_single, poke_lega_all, poke_gym, poke_exist, poke_dex1, poke_dex2, poke_cell
 from poke_lib import add_route,check_route, poke_check_if_evo, poke_fight, poke_counter, has_a_team, poke_gym_test, poke_lega_team_team
-from poke_lib import automatic_card_reader
+from poke_lib import automatic_card_reader, gym_types, gym_cell
 # ----------------------------------------------------------------- GENERIC COMMANDS --------------------------------------------------------------------------------
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -500,12 +500,6 @@ def get_edgy_answer():
 
 # ---------------------------------------------------------------------- GYM ------------------------------------------------------------------
 
-POKEMON_TYPES = [
-    "Rock", "Fighting", "Dark", "Electric", "Fairy", "Grass",
-    "Normal", "Fire", "Bug", "Flying", "Ghost", "Ice",
-    "Ground", "Poison", "Psychic", "Water", "Steel", "Dragon"
-]
-
 CHOOSING_POKEMON_GYM, CHOOSING_GYM_COUNT, CHOOSING_CUSTOM_GYM_COUNT = range(3)
 
 async def gym(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -520,8 +514,8 @@ async def gym(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if has_a_team(chat_id):
 
         keyboard = [
-            [InlineKeyboardButton(type, callback_data=f"gym_{type.lower()}") for type in POKEMON_TYPES[i:i+3]]
-            for i in range(0, len(POKEMON_TYPES), 3)
+            [InlineKeyboardButton(type.capitalize(), callback_data=f"gym_{type.lower()}") for type in gym_types()[i:i+3]]
+            for i in range(0, len(gym_types()), 3)
         ]
         row = [
                     InlineKeyboardButton("Testa un Pokémon",callback_data="gym_test")

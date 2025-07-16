@@ -1,4 +1,26 @@
 {
+
+    "order_of_gym_types" : ["rock",
+                        "fighting", 
+                        "grass",
+                        "fairy",
+                        "flying",
+                        "ice",
+                        "dark",
+                        "fire",
+                        "steel",
+                        "electric", 
+                        "dark", 
+                        "ground",
+                        "bug",
+                        "normal",
+                        "poison",
+                        "psychic",
+                        "dragon",
+                        "water"], 
+
+    "gym_cell" : [4,5,7,13,14,18,19,21,23,25,28,29,31,34,35,38,40,42],
+
     "rock": {
         "team": ["every type combo"],
         "actual_team": ["anorith", "anorith", "armaldo", "bonsly", "bonsly", "sudowoodo"],

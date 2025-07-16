@@ -35,11 +35,6 @@ STARTING_DATE = date(2025,7,7)  # Data di inizio della lega, da cambiare ogni le
 
 EVENTUALE_PAUSA = 0  # Giorni di pausa in una lega
 
-gym_cell = [4,5,7,13,14,18,19,21,23,25,28,29,31,34,35,38,40,42]
-
-gym_types = ["rock", "fighting", "grass", "fairy", "flying", "ice",
-             "dark", "fire", "steel", "electric", "dark", "ground", "bug",
-             "normal", "poison", "psychic", "dragon", "water"]
 
 ###############################################################################################
 ###############################################################################################
@@ -416,6 +411,17 @@ def poke_lega_team_team(chat_id, enemies):
 
     return path
 
+
+def gym_cell():
+    with open(ENV_PATH+'/gym_data.json', 'r') as file:
+        gym_data = json.load(file)
+    return gym_data["gym_cell"]
+
+def gym_types():
+    with open(ENV_PATH+'/gym_data.json', 'r') as file:
+        gym_data = json.load(file)
+    return gym_data["order_of_gym_types"]
+
 def poke_gym(chat_id, gym):
     with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
         priv_data = json.load(file)
@@ -441,7 +447,7 @@ def poke_gym(chat_id, gym):
         except:
             necessary_lvls[p[0]] = None#Da fixare
     
-    print(f"Team: {team_with_level}\nEnemy: {enemy}\nEnemy Powers: {enemy_powers}\nMultiplier: {multiplier}\nNecessary Levels: {necessary_lvls}")
+    #print(f"Team: {team_with_level}\nEnemy: {enemy}\nEnemy Powers: {enemy_powers}\nMultiplier: {multiplier}\nNecessary Levels: {necessary_lvls}")
 
     tab, limits = match_prevision(team, enemy, enemy_powers, multiplier, necessary_lvls)
 
@@ -552,7 +558,7 @@ def poke_cell(cell):
         mid_power = int((LvL[casella])*coeff[int(casella/7)])
         high_power = int((LvL[casella]+aumento)*coeff[int(casella/7)])
         super_power = int((LvL[casella]+2*aumento)*coeff[int(casella/7)])
-        if casella+1 in gym_cell:
+        if casella+1 in gym_cell():
             trainer_power = [low_power,mid_power,high_power]
             gym_power = [mid_power,mid_power,high_power,high_power,super_power,super_power]
             return True, trainer_power, gym_power, multiplier, LvL[casella]
@@ -730,7 +736,7 @@ async def poke_trainer(chat_id,pokemons):
     casella = int(((today-start).days-pausa)/2)
 
     offset = 0
-    while casella+1+offset not in gym_cell:
+    while casella+1+offset not in gym_cell():
         offset += 1
     #print(casella, offset)
 
@@ -762,7 +768,7 @@ async def poke_encounter(chat_id,encounter):
     casella = int(((today-start).days-pausa)/2)
 
     offset = 0
-    while casella+1+offset in gym_cell:
+    while casella+1+offset in gym_cell():
         offset += 1
     #print(casella, offset)
 
@@ -918,7 +924,7 @@ def poke_gym_test(chat_id, pokemon, livello=0, next=4):
     casella = int(((today-start).days-pausa)/2)
 
     offset = 0
-    while casella+1 > gym_cell[offset]:
+    while casella+1 > gym_cell()[offset]:
         offset += 1
 
     with open(ENV_PATH+'/gym_data.json', 'r') as file:
@@ -926,9 +932,9 @@ def poke_gym_test(chat_id, pokemon, livello=0, next=4):
 
     results = []
 
-    end = min(offset + next, len(gym_types))
+    end = min(offset + next, len(gym_types()))
 
-    for gym in gym_types[offset:end]:
+    for gym in gym_types()[offset:end]:
         results.append(get_gym_results(gym, gym_data, pokemon, livello, chat_id))
     
     return results
@@ -944,7 +950,6 @@ def get_gym_results(gym, gym_data, pokemon, livello, chat_id):
             enemy = gym_data[gym]["team"]   
     else:
         enemy = gym_data[gym]["actual_team"]
-    print(enemy)
     enemy_powers = gym_data[gym]["power"]
     limits = [enemy_powers[0],enemy_powers[2],enemy_powers[4]]
     multiplier = gym_data[gym]["multiplier"]
