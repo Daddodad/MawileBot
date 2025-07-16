@@ -1,15 +1,15 @@
 {
     "rock": {
         "team": ["every type combo"],
-        "actual_team": ["Anorith", "Anorith", "Armaldo", "Bonsly", "Bonsly", "Suudowoodo"],
+        "actual_team": ["anorith", "anorith", "armaldo", "bonsly", "bonsly", "sudowoodo"],
         "power": [24, 24, 30, 30, 36, 36],
         "multiplier": 5
     },
 
     "fighting": {
         "team": ["every type combo"],
-        "actual_team": [],
-        "power": [33, 33, 39, 39, 45, 45],
+        "actual_team": ["Pancham","Pangoro","Pangoro","Pangoro","Pangoro","Mienfoo"],
+        "power": [30,30, 36, 36, 42, 42],
         "multiplier": 5
     },
 

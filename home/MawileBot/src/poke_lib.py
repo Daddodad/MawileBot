@@ -436,7 +436,10 @@ def poke_gym(chat_id, gym):
     team_with_level = [[pokemon[0], pokemon[1]] for pokemon in priv_data[chat_id]["team"] if pokemon[0]]
     necessary_lvls = {}
     for p in team_with_level:
-        necessary_lvls[p[0]] = get_gym_results(gym, gym_data, p[0], p[1], chat_id)[-1]
+        try:
+            necessary_lvls[p[0]] = get_gym_results(gym, gym_data, p[0], p[1], chat_id)[-1]
+        except:
+            necessary_lvls[p[0]] = None#Da fixare
     
     print(f"Team: {team_with_level}\nEnemy: {enemy}\nEnemy Powers: {enemy_powers}\nMultiplier: {multiplier}\nNecessary Levels: {necessary_lvls}")
 
@@ -941,6 +944,7 @@ def get_gym_results(gym, gym_data, pokemon, livello, chat_id):
             enemy = gym_data[gym]["team"]   
     else:
         enemy = gym_data[gym]["actual_team"]
+    print(enemy)
     enemy_powers = gym_data[gym]["power"]
     limits = [enemy_powers[0],enemy_powers[2],enemy_powers[4]]
     multiplier = gym_data[gym]["multiplier"]
