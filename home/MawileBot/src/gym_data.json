@@ -1,7 +1,7 @@
 {
 
     "order_of_gym_types" : ["rock",
-                        "fighting", 
+                        "fighting",
                         "grass",
                         "fairy",
                         "flying",
@@ -9,15 +9,15 @@
                         "dark",
                         "fire",
                         "steel",
-                        "electric", 
-                        "dark", 
+                        "electric",
+                        "dark",
                         "ground",
                         "bug",
                         "normal",
                         "poison",
                         "psychic",
                         "dragon",
-                        "water"], 
+                        "water"],
 
     "gym_cell" : [4,5,7,13,14,18,19,21,23,25,28,29,31,34,35,38,40,42],
 
@@ -59,7 +59,7 @@
     "grass": {
         "team": ["every type combo"],
         "actual_team": [],
-        "power": [92, 92, 104, 104, 116, 116],
+        "power": [39, 39, 45, 45, 52, 52],
         "multiplier": 11
     },
 
