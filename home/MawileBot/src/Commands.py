@@ -540,7 +540,6 @@ async def gym_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     await query.answer()
 
     if query.data == "gym_test":
-        #await manutenzione(update)  # fixa con nuove palestre per tipo
         await query.edit_message_text("Dimmi un Pokémon e il suo livello...\n\nScrivi \"Pokémon Livello\".\n\nPuoi inserire livello 0 per ottenre una valutazione dei soli bonus.")
         return CHOOSING_POKEMON_GYM
     else:
