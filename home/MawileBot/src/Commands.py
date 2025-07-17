@@ -31,7 +31,7 @@ else:
 from poke_lib import calculate_bonus_answer, random_pokemon, random_player, get_power, poke_evo_level,format_types_emoji
 from poke_lib import add_new_player, poke_lega_single, poke_lega_all, poke_gym, poke_exist, poke_dex1, poke_dex2, poke_cell
 from poke_lib import add_route,check_route, poke_check_if_evo, poke_fight, poke_counter, has_a_team, poke_gym_test, poke_lega_team_team
-from poke_lib import automatic_card_reader, gym_types, gym_cell
+from poke_lib import automatic_card_reader, gym_types, gym_cell, poke_cell_gym
 # ----------------------------------------------------------------- GENERIC COMMANDS --------------------------------------------------------------------------------
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -544,8 +544,11 @@ async def gym_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         chat_id = update.effective_chat.id
         with open(ENV_PATH+'/gym_data.json', 'r') as file:
             gym_data = json.load(file)
-        enemy_powers = gym_data[gym_type]["power"]
-        temp_multi   = gym_data[gym_type]["multiplier"]
+        
+        order_of_gym_types = gym_data["order_of_gym_types"]
+        casella = gym_data["gym_cell"][order_of_gym_types.index(gym_type)]
+        _, _, enemy_powers, temp_multi, _ = poke_cell_gym(casella-1)
+
         await query.edit_message_text(f"Il moltiplicatore della palestra sarà {temp_multi}\n\nAttendi per la foto...")
         # Call the poke_gym function
         image_path = poke_gym(str(chat_id), gym_type)

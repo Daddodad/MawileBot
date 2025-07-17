@@ -148,6 +148,13 @@ async def check_route(chat_id):
 
     return data[chat_id]["route"]
 
+def get_casella():
+    start = STARTING_DATE
+    today = datetime.now().date()
+    pausa = EVENTUALE_PAUSA
+    casella = int(((today-start).days-pausa)/2)
+    return casella
+
 async def add_route(chat_id, route):
 
     jsonFile = open(ENV_PATH+"/secret_player_data.json", "r") # Open the JSON file for reading
@@ -436,8 +443,11 @@ def poke_gym(chat_id, gym):
                 enemy = gym_data[gym]["team"]   
     else:
         enemy = gym_data[gym]["actual_team"]
-    enemy_powers = gym_data[gym]["power"]
-    multiplier = gym_data[gym]["multiplier"]
+
+    order_of_gym_types = gym_data["order_of_gym_types"]
+    casella = gym_data["gym_cell"][order_of_gym_types.index(gym)]
+
+    _, _, enemy_powers, multiplier, _ = poke_cell_gym(casella-1)
 
     team_with_level = [[pokemon[0], pokemon[1]] for pokemon in priv_data[chat_id]["team"] if pokemon[0]]
     necessary_lvls = {}
@@ -445,7 +455,7 @@ def poke_gym(chat_id, gym):
         try:
             necessary_lvls[p[0]] = get_gym_results(gym, gym_data, p[0], p[1], chat_id)[-1]
         except:
-            necessary_lvls[p[0]] = None#Da fixare
+            necessary_lvls[p[0]] = None # Da fixare
     
     #print(f"Team: {team_with_level}\nEnemy: {enemy}\nEnemy Powers: {enemy_powers}\nMultiplier: {multiplier}\nNecessary Levels: {necessary_lvls}")
 
@@ -541,8 +551,19 @@ def match_table(team,enemy,multiplier,limits = None, necessary_lvls=None):
         tab.columns = cols
     return(bonus_netti,tab)
 
-
-
+def poke_cell_gym(casella):
+    multiplier = 5 + 3*int(casella/7)
+    if casella < 42:
+        aumento = int(casella/14) + 2
+        low_power = int((LvL[casella]-aumento)*coeff[int(casella/7)])
+        mid_power = int((LvL[casella])*coeff[int(casella/7)])
+        high_power = int((LvL[casella]+aumento)*coeff[int(casella/7)])
+        super_power = int((LvL[casella]+2*aumento)*coeff[int(casella/7)])
+        trainer_power = [low_power,mid_power,high_power]
+        gym_power = [mid_power,mid_power,high_power,high_power,super_power,super_power]
+        return True, trainer_power, gym_power, multiplier, LvL[casella]
+    else:
+        return None
 
 def poke_cell(cell):
     start = STARTING_DATE
@@ -729,11 +750,7 @@ async def poke_trainer(chat_id,pokemons):
         priv_data = json.load(file)
     team = [[pokemon[0], get_power(pokemon[0], pokemon[1])] for pokemon in priv_data[chat_id]["team"] if pokemon[0]]
 
-
-    start = STARTING_DATE
-    today = datetime.now().date()
-    pausa = EVENTUALE_PAUSA
-    casella = int(((today-start).days-pausa)/2)
+    casella = get_casella()
 
     offset = 0
     while casella+1+offset not in gym_cell():
@@ -762,10 +779,7 @@ async def poke_encounter(chat_id,encounter):
     team = [[pokemon[0], get_power(pokemon[0], pokemon[1])] for pokemon in priv_data[chat_id]["team"] if pokemon[0]]
     route = priv_data[chat_id]["route"]
 
-    start = STARTING_DATE
-    today = datetime.now().date()
-    pausa = EVENTUALE_PAUSA
-    casella = int(((today-start).days-pausa)/2)
+    casella = get_casella()
 
     offset = 0
     while casella+1+offset in gym_cell():
@@ -918,10 +932,7 @@ def get_wins(pokemon, livello, all_types_combo, multiplier, limits):
 
 def poke_gym_test(chat_id, pokemon, livello=0, next=4):
 
-    start = STARTING_DATE
-    today = datetime.now().date()
-    pausa = EVENTUALE_PAUSA
-    casella = int(((today-start).days-pausa)/2)
+    casella = get_casella()
 
     offset = 0
     while casella+1 > gym_cell()[offset]:
@@ -950,9 +961,13 @@ def get_gym_results(gym, gym_data, pokemon, livello, chat_id):
             enemy = gym_data[gym]["team"]   
     else:
         enemy = gym_data[gym]["actual_team"]
-    enemy_powers = gym_data[gym]["power"]
+
+    order_of_gym_types = gym_data["order_of_gym_types"]
+    casella = gym_data["gym_cell"][order_of_gym_types.index(gym)]
+
+    _, _, enemy_powers, multiplier, _ = poke_cell_gym(casella-1)
+
     limits = [enemy_powers[0],enemy_powers[2],enemy_powers[4]]
-    multiplier = gym_data[gym]["multiplier"]
 
     all_types_combo = generate_all_types_combo(enemy[1])
 
