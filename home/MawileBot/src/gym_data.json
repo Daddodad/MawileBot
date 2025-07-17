@@ -23,127 +23,91 @@
 
     "rock": {
         "team": ["every type combo"],
-        "actual_team": ["anorith", "anorith", "armaldo", "bonsly", "bonsly", "sudowoodo"],
-        "power": [24, 24, 30, 30, 36, 36],
-        "multiplier": 5
+        "actual_team": ["anorith", "anorith", "armaldo", "bonsly", "bonsly", "sudowoodo"]
     },
 
     "fighting": {
         "team": ["every type combo"],
-        "actual_team": ["Pancham","Pangoro","Pangoro","Pangoro","Pangoro","Mienfoo"],
-        "power": [30,30, 36, 36, 42, 42],
-        "multiplier": 5
+        "actual_team": ["Pancham","Pangoro","Pangoro","Pangoro","Pangoro","Mienfoo"]
     },
 
     "dark": {
         "team": ["every type combo"],
-        "actual_team": [],
-        "power": [45, 45, 52, 52, 59, 59],
-        "multiplier": 8
+        "actual_team": []
     },
 
     "electric": {
         "team": ["every type combo"],
-        "actual_team": [],
-        "power": [59, 59, 66, 66, 73, 73],
-        "multiplier": 8
+        "actual_team": []
     },
 
     "fairy": {
         "team": ["every type combo"],
-        "actual_team": [],
-        "power": [70, 70, 77, 77, 84, 84],
-        "multiplier": 8
+        "actual_team": []
     },
 
     "grass": {
         "team": ["every type combo"],
-        "actual_team": [],
-        "power": [39, 39, 45, 45, 52, 52],
-        "multiplier": 11
+        "actual_team": []
     },
 
     "normal": {
         "team": ["every type combo"],
-        "actual_team": [],
-        "power": [108, 108, 120, 120, 132, 132],
-        "multiplier": 11
+        "actual_team": []
     },
 
     "fire": {
         "team": ["every type combo"],
-        "actual_team": [],
-        "power": [120, 120, 132, 132, 144, 144],
-        "multiplier": 11
+        "actual_team": []
     },
 
     "bug": {
         "team": ["every type combo"],
-        "actual_team": [],
-        "power": [148, 148, 162, 162, 175, 175],
-        "multiplier": 14
+        "actual_team": []
     },
 
     "flying": {
         "team": ["every type combo"],
-        "actual_team": [],
-        "power": [171, 171, 184, 184, 198, 198],
-        "multiplier": 14
+        "actual_team": []
     },
 
     "ghost": {
         "team": ["every type combo"],
-        "actual_team": [],
-        "power": [202, 202, 216, 216, 229, 229],
-        "multiplier": 14
+        "actual_team": []
     },
 
     "ice": {
         "team": ["every type combo"],
-        "actual_team": [],
-        "power": [240, 240, 260, 260, 280, 280],
-        "multiplier": 17
+        "actual_team": []
     },
 
     "ground": {
         "team": ["every type combo"],
-        "actual_team": [],
-        "power": [255, 255, 275, 275, 295, 295],
-        "multiplier": 17
+        "actual_team": []
     },
 
     "poison": {
         "team": ["every type combo"],
-        "actual_team": [],
-        "power": [270, 270, 290, 290, 310, 310],
-        "multiplier": 17
+        "actual_team": []
     },
 
     "psychic": {
         "team": ["every type combo"],
-        "actual_team": [],
-        "power": [295, 295, 315, 315, 335, 335],
-        "multiplier": 17
+        "actual_team": []
     },
 
     "water": {
         "team": ["every type combo"],
-        "actual_team": [],
-        "power": [341, 341, 363, 363, 385, 385],
-        "multiplier": 20
+        "actual_team": []
     },
 
     "steel": {
         "team": ["every type combo"],
-        "actual_team": [],
-        "power": [401, 401, 423, 423, 445, 445],
-        "multiplier": 20
+        "actual_team": []
     },
 
     "dragon": {
         "team": ["every type combo"],
-        "actual_team": [],
-        "power": [418, 418, 440, 440, 462, 462],
-        "multiplier": 20
+        "actual_team": []
     }
 }

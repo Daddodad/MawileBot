@@ -136,10 +136,15 @@ async def curse_player(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                 "CAACAgQAAxkBAAE2STpoTVqElBoxDdzAe3o3NfGHvrch9wACfQAEOuQGGu4twcvDFPs2BA"
             ]
     if random.random() > 0.95:
-        await update.message.reply_text(random.choice(cursed_replies))
-        await asyncio.sleep(1)
-        if random.random() > 0.50:
-            await update.message.reply_sticker(random.choice(cursed_stikers))
+        if random.random() > 0.90:
+            await update.message.reply_text("⚠️🔧 Questa funzione è in manutenzione 🔧⚠️")
+            await asyncio.sleep(10)
+            await update.message.reply_text("Eheheh... Stavo scherzando...")
+        else:
+            await update.message.reply_text(random.choice(cursed_replies))
+            await asyncio.sleep(1)
+            if random.random() > 0.50:
+                await update.message.reply_sticker(random.choice(cursed_stikers))
         await asyncio.sleep(1)
 
 
