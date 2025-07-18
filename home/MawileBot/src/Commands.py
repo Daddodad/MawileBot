@@ -1588,11 +1588,17 @@ async def card_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                     image.paste(placeholder, (x+offset_x, y+offset_y+pokemon_offset_y))
 
                 # Draw tipo:
-                types = poke.get(name = pokemon_name).types
-                for j, type in enumerate(types):
-                    type_image = Image.open(ENV_PATH + '/images/types/'+type.capitalize()+'.png')
-                    type_image = type_image.resize((48*2, 16*2))
-                    image.paste(type_image, (x + offset_x+115+ 100*j, y + offset_y+cell_height+81), type_image.convert('RGBA'))
+                try:
+                    types = poke.get(name = pokemon_name).types
+                    for j, type in enumerate(types):
+                        try: 
+                            type_image = Image.open(ENV_PATH + '/images/types/'+type.capitalize()+'.png')
+                        except:
+                                type_image = Image.open(ENV_PATH + '/images/types/'+type.lower()+'.png')
+                        type_image = type_image.resize((48*2, 16*2))
+                        image.paste(type_image, (x + offset_x+115+ 100*j, y + offset_y+cell_height+81), type_image.convert('RGBA'))
+                except Exception as e:
+                    print('ERrorreeeeeee ',e)
                 # Draw potenza:
                 text = f"{get_power(team[i][0],team[i][1])}"
                 draw.text((x + offset_x+170, y + offset_y+cell_height+119), str(text), fill='black', font=font)
