@@ -1203,13 +1203,15 @@ def create_pokemon_image(pokemon_name, power, front = False, shiny_or_default = 
 
     return blank_image
 
+def randomly_shiny():
+    if random.randint(0,1023) == 1:
+        return "shiny"
+    else:
+        return "default"
+        
 def create_pokemon_collage(df, type = 'gym', path=None, enemy_powers=None):
 
-    def randomly_shiny():
-        if random.randint(0,1023) == 1:
-            return "shiny"
-        else:
-            return "default"
+
         
     image_width = 250 # Assuming all images have the same size (250x98)
     image_height = 98

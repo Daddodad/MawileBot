@@ -32,7 +32,7 @@ else:
 from poke_lib import calculate_bonus_answer, random_pokemon, random_player, get_power, poke_evo_level,format_types_emoji
 from poke_lib import add_new_player, poke_lega_single, poke_lega_all, poke_gym, poke_exist, poke_dex1, poke_dex2, poke_cell
 from poke_lib import add_route,check_route, poke_check_if_evo, poke_fight, poke_counter, has_a_team, poke_gym_test, poke_lega_team_team
-from poke_lib import automatic_card_reader, gym_types, gym_cell, poke_cell_gym, load_fonts
+from poke_lib import automatic_card_reader, gym_types, gym_cell, poke_cell_gym, load_fonts,randomly_shiny
 # ----------------------------------------------------------------- GENERIC COMMANDS --------------------------------------------------------------------------------
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -1446,6 +1446,56 @@ def get_fight_conversation_handler():
     )
 
 # --------------------------------------------------------------------------- CARD -------------------------------------------------------------------------------------------
+def get_vqd(query):
+    url = 'https://duckduckgo.com/'
+    params = {'q': query}
+    headers = {'User-Agent': 'Mozilla/5.0'}
+
+    res = requests.get(url, params=params, headers=headers)
+    if res.status_code != 200:
+        print("Failed to get DuckDuckGo homepage")
+        return None
+
+    # Look for the vqd token in the page
+    match = re.search(r'vqd=\'([^\']+)\'', res.text)
+    if match:
+        return match.group(1)
+    else:
+        print("Could not find vqd token")
+        return None
+
+
+def search_image_duckduckgo(query):
+    vqd = get_vqd(query)
+    if not vqd:
+        return None
+
+    search_url = 'https://duckduckgo.com/i.js'
+    params = {
+        'q': query,
+        'vqd': vqd,
+        'o': 'json',
+        'f': ',,,',
+        'p': '1',
+        'l': 'us-en',
+        'v7exp': 'a',
+    }
+    headers = {
+        'User-Agent': 'Mozilla/5.0',
+        'Referer': 'https://duckduckgo.com/',
+    }
+
+    try:
+        resp = requests.get(search_url, headers=headers, params=params)
+        data = resp.json()
+        if 'results' in data and len(data['results']) > 0:
+            return data['results'][0]['image']
+        else:
+            print("No image results found")
+    except Exception as e:
+        print("Error fetching images:", e)
+    return None
+
 def get_pokemon_image_path(pokemon_name):
 
     """
@@ -1485,67 +1535,67 @@ async def card_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
     beta_card = True
     if beta_card == False:
-        # Image dimensions
+        # # Image dimensions
         image_width = 700
-        image_height = 1000
-        image = Image.new('RGB', (image_width, image_height), color='white')
-        draw = ImageDraw.Draw(image)
+        # image_height = 1000
+        # image = Image.new('RGB', (image_width, image_height), color='white')
+        # draw = ImageDraw.Draw(image)
 
-        # Calculate cell dimensions
-        cell_width = image_width // 3
-        cell_height = image_height // 3
+        # # Calculate cell dimensions
+        # cell_width = image_width // 3
+        # cell_height = image_height // 3
 
-        # Load fonts
-        font, font_small, font_big = load_fonts()
+        # # Load fonts
+        # font, font_small, font_big = load_fonts()
 
-        # Draw grid
-        for i in range(1, 3):
-            draw.line([(i * cell_width, 0), (i * cell_width, image_height)], fill='black', width=4)
-            draw.line([(0, i * cell_height), (image_width, i * cell_height)], fill='black', width=4)
+        # # Draw grid
+        # for i in range(1, 3):
+        #     draw.line([(i * cell_width, 0), (i * cell_width, image_height)], fill='black', width=4)
+        #     draw.line([(0, i * cell_height), (image_width, i * cell_height)], fill='black', width=4)
 
-        # Fill each cell
-        for i in range(min(9, len(team))):
-            row = i // 3
-            col = i % 3
-            x = col * cell_width
-            y = row * cell_height
+        # # Fill each cell
+        # for i in range(min(9, len(team))):
+        #     row = i // 3
+        #     col = i % 3
+        #     x = col * cell_width
+        #     y = row * cell_height
 
-            # Get Pokemon name and image path
-            pokemon_name = team[i][0]
-            pokemon_image_path = get_pokemon_image_path(pokemon_name)
-            if pokemon_name:
-                # Draw title
-                draw.text((x + 10, y + 5), pokemon_name, fill='black', font=font)
+        #     # Get Pokemon name and image path
+        #     pokemon_name = team[i][0]
+        #     pokemon_image_path = get_pokemon_image_path(pokemon_name)
+        #     if pokemon_name:
+        #         # Draw title
+        #         draw.text((x + 10, y + 5), pokemon_name, fill='black', font=font)
 
-                # Draw separator line
-                draw.line([(x, y + 30), (x + cell_width, y + 30)], fill='black', width=2)
+        #         # Draw separator line
+        #         draw.line([(x, y + 30), (x + cell_width, y + 30)], fill='black', width=2)
 
-                # Load and draw Pokemon image
-                try:
-                    pokemon_image = Image.open(pokemon_image_path)
-                    resized_pokemon = pokemon_image.resize((cell_width - 20, cell_height - 140))
-                    image.paste(resized_pokemon, (x + 10, y + 40), resized_pokemon.convert('RGBA'))
-                except Exception as e:
-                    #print(f"Error loading image for {pokemon_name}: {e}")
-                    placeholder = Image.new('RGB', (cell_width - 20, cell_height - 140), color='lightgray')
-                    draw.text((x + 15, y + 45), f"No image for {pokemon_name}", fill='black', font=font)
-                    image.paste(placeholder, (x + 10, y + 40))
+        #         # Load and draw Pokemon image
+        #         try:
+                    
+        #             pokemon_image = Image.open(pokemon_image_path)
+        #             resized_pokemon = pokemon_image.resize((cell_width - 20, cell_height - 140))
+        #             image.paste(resized_pokemon, (x + 10, y + 40), resized_pokemon.convert('RGBA'))
+        #         except Exception as e:
+        #             #print(f"Error loading image for {pokemon_name}: {e}")
+        #             placeholder = Image.new('RGB', (cell_width - 20, cell_height - 140), color='lightgray')
+        #             draw.text((x + 15, y + 45), f"No image for {pokemon_name}", fill='black', font=font)
+        #             image.paste(placeholder, (x + 10, y + 40))
 
-                # Draw bottom text
-                texts = [["Tipo:",50,f'{format_types_emoji(poke.get(name = pokemon_name).types)}'], ["Potenza:",90,f"{get_power(team[i][0],team[i][1])}"], ["Livello:",80,f"{team[i][1]}"], ["Livello Evo:",110,f"{poke_evo_level(chat_id,pokemon_name)}"]]
-                for j, text in enumerate(texts):
-                    text_y = y + cell_height - 108 + j * 22
-                    text_y_text = y + cell_height - 108 + j * 23
-                    # Draw line above each text, including "Tipo"
-                    draw.line([(x, text_y + 15), (x + cell_width, text_y + 15)], fill='black', width=1)
-                    draw.text((x + 10, text_y_text + 15), text[0], fill='black', font=font_small)
-                    draw.text((x + text[1], text_y_text + 14), text[2], fill='black', font=font)
+        #         # Draw bottom text
+        #         texts = [["Tipo:",50,f'{format_types_emoji(poke.get(name = pokemon_name).types)}'], ["Potenza:",90,f"{get_power(team[i][0],team[i][1])}"], ["Livello:",80,f"{team[i][1]}"], ["Livello Evo:",110,f"{poke_evo_level(chat_id,pokemon_name)}"]]
+        #         for j, text in enumerate(texts):
+        #             text_y = y + cell_height - 108 + j * 22
+        #             text_y_text = y + cell_height - 108 + j * 23
+        #             # Draw line above each text, including "Tipo"
+        #             draw.line([(x, text_y + 15), (x + cell_width, text_y + 15)], fill='black', width=1)
+        #             draw.text((x + 10, text_y_text + 15), text[0], fill='black', font=font_small)
+        #             draw.text((x + text[1], text_y_text + 14), text[2], fill='black', font=font)
 
-        # Save the image
-        os.makedirs('./images', exist_ok=True)
-        image_path = f'./images/{chat_id}_card.png'
-        image.save(image_path)
-
+        # # Save the image
+        # os.makedirs('./images', exist_ok=True)
+        # image_path = f'./images/{chat_id}_card.png'
+        # image.save(image_path)
     else:
         template_path = ENV_PATH + '/images/templates/Empty_Template.jpg'
         image = Image.open(template_path)
@@ -1577,15 +1627,34 @@ async def card_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
                 # Load and draw Pokemon image
                 pokemon_offset_y = 65
-                try:
-                    pokemon_image = Image.open(pokemon_image_path)
-                    resized_pokemon = pokemon_image.resize((cell_width, cell_height))
-                    image.paste(resized_pokemon, (x+offset_x, y+offset_y+pokemon_offset_y), resized_pokemon.convert('RGBA'))
-                except Exception as e:
-                    #print(f"Error loading image for {pokemon_name}: {e}")
-                    placeholder = Image.new('RGB', (cell_width, cell_height), color='lightgray')
-                    draw.text((x + 15, y + 45), f"No image for {pokemon_name}", fill='black', font=font)
-                    image.paste(placeholder, (x+offset_x, y+offset_y+pokemon_offset_y))
+                if "Missing" not in pokemon_image_path:
+                    try:
+                        pokemon_image = Image.open(pokemon_image_path)
+                        resized_pokemon = pokemon_image.resize((cell_width, cell_height))
+                        image.paste(resized_pokemon, (x+offset_x, y+offset_y+pokemon_offset_y), resized_pokemon.convert('RGBA'))
+                    except Exception as e:
+                        #print(f"Error loading image for {pokemon_name}: {e}")
+                        placeholder = Image.new('RGB', (cell_width, cell_height), color='lightgray')
+                        draw.text((x + 15, y + 45), f"No image for {pokemon_name}", fill='black', font=font)
+                        image.paste(placeholder, (x+offset_x, y+offset_y+pokemon_offset_y))
+                else:
+                    try:
+                        pokemon = poke.get(name=pokemon_name.lower())
+                        sprite_url = pokemon.sprites.front[randomly_shiny()]
+                        response = requests.get(sprite_url)
+                        sprite_image = Image.open(BytesIO(response.content)).convert("RGBA")  # Fetch the sprite imag
+                        resized_pokemon = sprite_image.resize((cell_width, cell_height))
+                        image.paste(resized_pokemon, (x+offset_x, y+offset_y+pokemon_offset_y), resized_pokemon.convert('RGBA'))
+                    except:
+                        try:
+                            pokemon_image = Image.open(pokemon_image_path)
+                            resized_pokemon = pokemon_image.resize((cell_width, cell_height))
+                            image.paste(resized_pokemon, (x+offset_x, y+offset_y+pokemon_offset_y), resized_pokemon.convert('RGBA'))
+                        except Exception as e:
+                            #print(f"Error loading image for {pokemon_name}: {e}")
+                            placeholder = Image.new('RGB', (cell_width, cell_height), color='lightgray')
+                            draw.text((x + 15, y + 45), f"No sprite for {pokemon_name}", fill='black', font=font)
+                            image.paste(placeholder, (x+offset_x, y+offset_y+pokemon_offset_y))
 
                 # Draw tipo:
                 try:
