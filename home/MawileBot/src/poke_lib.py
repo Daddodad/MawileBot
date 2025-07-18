@@ -1629,3 +1629,19 @@ async def automatic_card_reader(image):
                 errors.append('00')
 
     return secret_data,errors
+
+def load_fonts(font_path = '/arialbd.ttf', font_size = 20, font_size_small = 17, font_size_big = 24):
+    try: 
+        font = ImageFont.truetype(ENV_PATH+font_path,font_size)
+    except:
+        font = ImageFont.load_default()
+    try: 
+        font_small = ImageFont.truetype(ENV_PATH+font_path,font_size_small)
+    except:
+        font_small = ImageFont.load_default()
+    try: 
+        font_big = ImageFont.truetype(ENV_PATH+font_path,font_size_big)
+    except:
+        font_big = ImageFont.load_default()
+
+    return font, font_small, font_big

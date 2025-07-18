@@ -2,6 +2,7 @@ import asyncio
 import time
 import json
 import random
+from matplotlib import image
 import requests #test
 from PIL import Image, ImageDraw, ImageFont
 import os
@@ -31,7 +32,7 @@ else:
 from poke_lib import calculate_bonus_answer, random_pokemon, random_player, get_power, poke_evo_level,format_types_emoji
 from poke_lib import add_new_player, poke_lega_single, poke_lega_all, poke_gym, poke_exist, poke_dex1, poke_dex2, poke_cell
 from poke_lib import add_route,check_route, poke_check_if_evo, poke_fight, poke_counter, has_a_team, poke_gym_test, poke_lega_team_team
-from poke_lib import automatic_card_reader, gym_types, gym_cell, poke_cell_gym
+from poke_lib import automatic_card_reader, gym_types, gym_cell, poke_cell_gym, load_fonts
 # ----------------------------------------------------------------- GENERIC COMMANDS --------------------------------------------------------------------------------
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -1482,87 +1483,137 @@ async def card_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         data = json.load(file)
         team = data[str(chat_id)]["team"]
 
-    # Image dimensions
-    image_width = 700
-    image_height = 1000
-    image = Image.new('RGB', (image_width, image_height), color='white')
-    draw = ImageDraw.Draw(image)
+    beta_card = True
+    if beta_card == False:
+        # Image dimensions
+        image_width = 700
+        image_height = 1000
+        image = Image.new('RGB', (image_width, image_height), color='white')
+        draw = ImageDraw.Draw(image)
 
-    # Calculate cell dimensions
-    cell_width = image_width // 3
-    cell_height = image_height // 3
+        # Calculate cell dimensions
+        cell_width = image_width // 3
+        cell_height = image_height // 3
 
-    # Load fonts
-    title_font = ImageFont.load_default()
-    text_font = ImageFont.load_default()
+        # Load fonts
+        font, font_small, font_big = load_fonts()
 
-    try:
-        font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 20)
-    except IOError:
-        try: 
-            font = ImageFont.truetype(ENV_PATH+'/arialbd.ttf',20)
-        except:
-            font = ImageFont.load_default()
-    try:
-        font_small = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 17)
-    except IOError:
-        try: 
-            font_small = ImageFont.truetype(ENV_PATH+'/arialbd.ttf',17)
-        except:
-            font_small = ImageFont.load_default()
+        # Draw grid
+        for i in range(1, 3):
+            draw.line([(i * cell_width, 0), (i * cell_width, image_height)], fill='black', width=4)
+            draw.line([(0, i * cell_height), (image_width, i * cell_height)], fill='black', width=4)
 
-    # Draw grid
-    for i in range(1, 3):
-        draw.line([(i * cell_width, 0), (i * cell_width, image_height)], fill='black', width=4)
-        draw.line([(0, i * cell_height), (image_width, i * cell_height)], fill='black', width=4)
+        # Fill each cell
+        for i in range(min(9, len(team))):
+            row = i // 3
+            col = i % 3
+            x = col * cell_width
+            y = row * cell_height
 
-    # Fill each cell
-    for i in range(min(9, len(team))):
-        row = i // 3
-        col = i % 3
-        x = col * cell_width
-        y = row * cell_height
+            # Get Pokemon name and image path
+            pokemon_name = team[i][0]
+            pokemon_image_path = get_pokemon_image_path(pokemon_name)
+            if pokemon_name:
+                # Draw title
+                draw.text((x + 10, y + 5), pokemon_name, fill='black', font=font)
 
-        # Get Pokemon name and image path
-        pokemon_name = team[i][0]
-        pokemon_image_path = get_pokemon_image_path(pokemon_name)
-        if pokemon_name:
+                # Draw separator line
+                draw.line([(x, y + 30), (x + cell_width, y + 30)], fill='black', width=2)
+
+                # Load and draw Pokemon image
+                try:
+                    pokemon_image = Image.open(pokemon_image_path)
+                    resized_pokemon = pokemon_image.resize((cell_width - 20, cell_height - 140))
+                    image.paste(resized_pokemon, (x + 10, y + 40), resized_pokemon.convert('RGBA'))
+                except Exception as e:
+                    #print(f"Error loading image for {pokemon_name}: {e}")
+                    placeholder = Image.new('RGB', (cell_width - 20, cell_height - 140), color='lightgray')
+                    draw.text((x + 15, y + 45), f"No image for {pokemon_name}", fill='black', font=font)
+                    image.paste(placeholder, (x + 10, y + 40))
+
+                # Draw bottom text
+                texts = [["Tipo:",50,f'{format_types_emoji(poke.get(name = pokemon_name).types)}'], ["Potenza:",90,f"{get_power(team[i][0],team[i][1])}"], ["Livello:",80,f"{team[i][1]}"], ["Livello Evo:",110,f"{poke_evo_level(chat_id,pokemon_name)}"]]
+                for j, text in enumerate(texts):
+                    text_y = y + cell_height - 108 + j * 22
+                    text_y_text = y + cell_height - 108 + j * 23
+                    # Draw line above each text, including "Tipo"
+                    draw.line([(x, text_y + 15), (x + cell_width, text_y + 15)], fill='black', width=1)
+                    draw.text((x + 10, text_y_text + 15), text[0], fill='black', font=font_small)
+                    draw.text((x + text[1], text_y_text + 14), text[2], fill='black', font=font)
+
+        # Save the image
+        os.makedirs('./images', exist_ok=True)
+        image_path = f'./images/{chat_id}_card.png'
+        image.save(image_path)
+
+    else:
+        template_path = ENV_PATH + '/images/templates/Empty_Template.jpg'
+        image = Image.open(template_path)
+        draw = ImageDraw.Draw(image)
+
+        font, font_small, font_big = load_fonts('/Cursed.ttf', font_size = 50, font_size_small = 30, font_size_big = 70)
+
+        for i in range(min(9, len(team))):
+            row = i // 3
+            col = i % 3
+
+            x = col * 346
+            y = row * 614
+            offset_x = 598
+            offset_y = 50
+            cell_width = 333
+            cell_height = 333
+
             # Draw title
-            draw.text((x + 10, y + 5), pokemon_name, fill='black', font=font)
+            draw.text((20,8), update.effective_chat.username, fill='black', font=font_big)
 
-            # Draw separator line
-            draw.line([(x, y + 30), (x + cell_width, y + 30)], fill='black', width=2)
+            # Get Pokemon name and image path
+            pokemon_name = team[i][0]
+            pokemon_image_path = get_pokemon_image_path(pokemon_name)
+            if pokemon_name:
 
-            # Load and draw Pokemon image
-            try:
-                pokemon_image = Image.open(pokemon_image_path)
-                resized_pokemon = pokemon_image.resize((cell_width - 20, cell_height - 140))
-                image.paste(resized_pokemon, (x + 10, y + 40), resized_pokemon.convert('RGBA'))
-            except Exception as e:
-                #print(f"Error loading image for {pokemon_name}: {e}")
-                placeholder = Image.new('RGB', (cell_width - 20, cell_height - 140), color='lightgray')
-                draw.text((x + 15, y + 45), f"No image for {pokemon_name}", fill='black', font=font)
-                image.paste(placeholder, (x + 10, y + 40))
+                # Draw pokemon names
+                draw.text((x+offset_x, y+offset_y), pokemon_name.capitalize(), fill='black', font=font)
 
-            # Draw bottom text
-            texts = [["Tipo:",50,f'{format_types_emoji(poke.get(name = pokemon_name).types)}'], ["Potenza:",90,f"{get_power(team[i][0],team[i][1])}"], ["Livello:",80,f"{team[i][1]}"], ["Livello Evo:",110,f"{poke_evo_level(chat_id,pokemon_name)}"]]
-            for j, text in enumerate(texts):
-                text_y = y + cell_height - 108 + j * 22
-                text_y_text = y + cell_height - 108 + j * 23
-                # Draw line above each text, including "Tipo"
-                draw.line([(x, text_y + 15), (x + cell_width, text_y + 15)], fill='black', width=1)
-                draw.text((x + 10, text_y_text + 15), text[0], fill='black', font=font_small)
-                draw.text((x + text[1], text_y_text + 14), text[2], fill='black', font=font)
+                # Load and draw Pokemon image
+                pokemon_offset_y = 65
+                try:
+                    pokemon_image = Image.open(pokemon_image_path)
+                    resized_pokemon = pokemon_image.resize((cell_width, cell_height))
+                    image.paste(resized_pokemon, (x+offset_x, y+offset_y+pokemon_offset_y), resized_pokemon.convert('RGBA'))
+                except Exception as e:
+                    #print(f"Error loading image for {pokemon_name}: {e}")
+                    placeholder = Image.new('RGB', (cell_width, cell_height), color='lightgray')
+                    draw.text((x + 15, y + 45), f"No image for {pokemon_name}", fill='black', font=font)
+                    image.paste(placeholder, (x+offset_x, y+offset_y+pokemon_offset_y))
 
-    # Save the image
-    os.makedirs('./images', exist_ok=True)
-    image_path = f'./images/{chat_id}_card.png'
-    image.save(image_path)
+                # Draw tipo:
+                types = poke.get(name = pokemon_name).types
+                for j, type in enumerate(types):
+                    type_image = Image.open(ENV_PATH + '/images/types/'+type.capitalize()+'.png')
+                    type_image = type_image.resize((48*2, 16*2))
+                    image.paste(type_image, (x + offset_x+115+ 100*j, y + offset_y+cell_height+81), type_image.convert('RGBA'))
+                # Draw potenza:
+                text = f"{get_power(team[i][0],team[i][1])}"
+                draw.text((x + offset_x+170, y + offset_y+cell_height+119), str(text), fill='black', font=font)
+                # Draw Livello:
+                text = f"{team[i][1]}"
+                draw.text((x + offset_x+145, y + offset_y+cell_height+168), str(text), fill='black', font=font)
+                # Draw livello-evo:
+                text = f"{poke_evo_level(chat_id,pokemon_name)}"
+                draw.text((x + offset_x+220, y + offset_y+cell_height+220), str(text), fill='black', font=font)
+
+                    # Draw line above each text, including "Tipo"
+
+        os.makedirs(ENV_PATH + '/images/', exist_ok=True)
+        image_path = ENV_PATH + f'/images/{chat_id}_card.png'
+        image.save(image_path)
 
     with open(image_path, 'rb') as image_file:
         await context.bot.send_photo(
             chat_id=chat_id,
             photo=image_file,
+            caption = "Ecco la tua card aggiornata..."
         )
 
 # --------------------------------------------------------------------------- AUTOMATIC TEAM UPDATE -------------------------------------------------------------------------------------------
