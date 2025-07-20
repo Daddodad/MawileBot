@@ -48,7 +48,7 @@
 
     "grass": {
         "team": ["every type combo"],
-        "actual_team": []
+        "actual_team":  ["Sawsbuck","Cacturne","Deerling","Deerling", "Lileep","Cradily"]
     },
 
     "normal": {

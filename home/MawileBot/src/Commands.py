@@ -1754,3 +1754,45 @@ def auto_team_update():   # prende solo le immagini (spero)
         ],
         per_message = False
     )
+
+
+
+# --------------------------------------------------------------------------- AUTOMATIC TEXT ANSWER -------------------------------------------------------------------------------------------
+
+
+def auto_text_update():
+    return ConversationHandler(
+        entry_points=[
+            MessageHandler(filters.TEXT & ~filters.COMMAND, text_answer)
+        ],
+        states={},
+        fallbacks=[
+            CommandHandler("cancel", cancel),
+            MessageHandler(filters.COMMAND, end_conversation),
+        ],
+        per_message=False
+    )
+
+async def text_answer(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    await id_check(update)
+    message = update.message
+    text = message.text or ""
+
+    print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') sent plain text')
+
+    answers = [
+            "Adularmi non serve a nulla...",
+            "Cos'è, ci stai provando con me?",
+            "Eheheh, come se lo facessi per gentilezza... Come pensi che le vinca Claudio le pvp?"
+            "Sei fortunato che sia ancora gratuito...",
+            "Aww...",
+            "Grazie a te! 😊"
+        ]
+
+    if "grazie" in text.lower() or "thx" in text.lower() or "thanks" in text.lower():
+        await message.reply_text(random.choice(answers))
+
+    if "tank" in text.lower():
+        await message.reply_text("Ma che hai, la prima elementare?")
+
+    return ConversationHandler.END  # or keep conversation going if needed

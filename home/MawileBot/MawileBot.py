@@ -21,7 +21,7 @@ from src.Commands import get_cell_handlers
 from src.Commands import lega_command, get_lega_conversation_handler
 from src.Commands import get_fight_conversation_handler
 from src.Commands import card_command
-from src.Commands import auto_team_update
+from src.Commands import auto_team_update, auto_text_update
 
 #from src.Commands import
 # ------------------------------------------------------------------- LISTA COMANDI ----------------------------------------------------------------
@@ -47,6 +47,8 @@ def main() -> None:
 
     # Add photo answer
     application.add_handler(auto_team_update(), group = 666)
+    application.add_handler(auto_text_update(), group = 667)
+
 
     application.add_handler(get_start_conversation_handler(), group = 1 )
 
