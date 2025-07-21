@@ -1601,21 +1601,26 @@ async def card_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         image = Image.open(template_path)
         draw = ImageDraw.Draw(image)
 
-        font, font_small, font_big = load_fonts('/Cursed.ttf', font_size = 50, font_size_small = 30, font_size_big = 70)
+        font, font_small, font_big = load_fonts('/Drip.ttf', font_size = 50, font_size_small = 30, font_size_big = 70)
 
         for i in range(min(9, len(team))):
             row = i // 3
             col = i % 3
 
+            def randomshift():
+                return random.uniform(-15, 15)
+
             x = col * 346
             y = row * 614
-            offset_x = 598
-            offset_y = 50
+            #### DA CAMBIARE IN BASE AL FONT USATO:
+            font_color = '#731FA4'
+            offset_x = 603 #(598 per Cursed)(603 per Drip)
+            offset_y = 55 # (50 per Cursed)(55 per Drip)
             cell_width = 333
             cell_height = 333
 
             # Draw title
-            draw.text((20,8), update.effective_chat.username, fill='black', font=font_big)
+            draw.text((20,8), update.effective_chat.username, fill=font_color, font=font_big)
 
             # Get Pokemon name and image path
             pokemon_name = team[i][0]
@@ -1623,7 +1628,7 @@ async def card_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
             if pokemon_name:
 
                 # Draw pokemon names
-                draw.text((x+offset_x, y+offset_y), pokemon_name.capitalize(), fill='black', font=font)
+                draw.text((x+offset_x+randomshift(), y+offset_y+randomshift()), pokemon_name.capitalize(), fill=font_color, font=font)
 
                 # Load and draw Pokemon image
                 pokemon_offset_y = 65
@@ -1635,7 +1640,7 @@ async def card_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                     except Exception as e:
                         #print(f"Error loading image for {pokemon_name}: {e}")
                         placeholder = Image.new('RGB', (cell_width, cell_height), color='lightgray')
-                        draw.text((x + 15, y + 45), f"No image for {pokemon_name}", fill='black', font=font)
+                        draw.text((x + 15, y + 45), f"No image for {pokemon_name}", fill=font_color, font=font)
                         image.paste(placeholder, (x+offset_x, y+offset_y+pokemon_offset_y))
                 else:
                     try:
@@ -1653,7 +1658,7 @@ async def card_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                         except Exception as e:
                             #print(f"Error loading image for {pokemon_name}: {e}")
                             placeholder = Image.new('RGB', (cell_width, cell_height), color='lightgray')
-                            draw.text((x + 15, y + 45), f"No sprite for {pokemon_name}", fill='black', font=font)
+                            draw.text((x + 15, y + 45), f"No sprite for {pokemon_name}", fill=font_color, font=font)
                             image.paste(placeholder, (x+offset_x, y+offset_y+pokemon_offset_y))
 
                 # Draw tipo:
@@ -1670,13 +1675,13 @@ async def card_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                     print('ERrorreeeeeee ',e)
                 # Draw potenza:
                 text = f"{get_power(team[i][0],team[i][1])}"
-                draw.text((x + offset_x+170, y + offset_y+cell_height+119), str(text), fill='black', font=font)
+                draw.text((x + offset_x+170+randomshift(), y + offset_y+cell_height+119+randomshift()), str(text), fill=font_color, font=font)
                 # Draw Livello:
                 text = f"{team[i][1]}"
-                draw.text((x + offset_x+145, y + offset_y+cell_height+168), str(text), fill='black', font=font)
+                draw.text((x + offset_x+145+randomshift(), y + offset_y+cell_height+168+randomshift()), str(text), fill=font_color, font=font)
                 # Draw livello-evo:
                 text = f"{poke_evo_level(chat_id,pokemon_name)}"
-                draw.text((x + offset_x+220, y + offset_y+cell_height+220), str(text), fill='black', font=font)
+                draw.text((x + offset_x+220+randomshift(), y + offset_y+cell_height+220+randomshift()), str(text), fill=font_color, font=font)
 
                     # Draw line above each text, including "Tipo"
 
