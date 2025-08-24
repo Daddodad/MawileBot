@@ -204,7 +204,10 @@ def get_poke_bst(pokemon):
         else:
             return 580
     if bst == 580:
-        return 570
+        if pokemon.lower() in  ["entei", "raikou", "suicune"]:
+            return 560
+        else:
+            return 570
     if bst == 570:
         return 555
     non_leg_w_550_bst = ["florges", "arcanine", "arcanine-hisui","ursaluna-bloodmoon","silvally","palafin","palafin-hero","Slaking", ]
@@ -388,7 +391,7 @@ def extract_first_number(cell):
         return float(str(cell).split()[0])
     except:
         return None
-    
+
 def poke_lega_team_team(chat_id, enemies):
     with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
         priv_data = json.load(file)
@@ -407,7 +410,7 @@ def poke_lega_team_team(chat_id, enemies):
     dfs_data = [df for df in dfs]  # Extract data from DataFrames
     dfs_data[1:] = [df.iloc[:, 2:] for df in dfs_data[1:]]  # Keep only the third column from subsequent DataFrames
     concat_data = pd.concat(dfs_data, axis=1)
-    new_column_names = list(concat_data.columns[:2]) 
+    new_column_names = list(concat_data.columns[:2])
     new_column_names += [f"{col} ({potenze[k-2]})" for k, col in enumerate(concat_data.columns[2:], start=2)]
     concat_data.columns = new_column_names
 
@@ -440,7 +443,7 @@ def poke_gym(chat_id, gym):
             if gym_data[gym]["team"] == ["every type combo"]:
                 enemy = ["every type combo", gym] # enemy potrebbe essere ["every type combo"] e questo fa cose in match_prevision->match_table
             else:
-                enemy = gym_data[gym]["team"]   
+                enemy = gym_data[gym]["team"]
     else:
         enemy = gym_data[gym]["actual_team"]
 
