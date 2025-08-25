@@ -27,6 +27,19 @@ else:
     sys.path.insert(0,ENV_PATH) # MawileBot
     sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
+import logging
+# Configure logging
+
+# rimuovo tutta la roba della libreria di telegram, che spara troppi messaggi
+logging.getLogger("telegram").setLevel(logging.WARNING)
+logging.getLogger("telegram.ext").setLevel(logging.WARNING)
+
+logging.basicConfig(
+    level=logging.INFO,  # Options: DEBUG, INFO, WARNING, ERROR, CRITICAL
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    filename='Sableye.log',  # Optional: logs to a file
+    filemode='a'  # Append mode; use 'w' to overwrite
+)
 
 
 from poke_lib import calculate_bonus_answer, random_pokemon, random_player, get_power, poke_evo_level,format_types_emoji
@@ -156,6 +169,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
     try:
         print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /start')
+        logging.info(f'{update.effective_chat.username} ({update.effective_chat.id},{update.effective_user.first_name}) called /start')
     except:
         pass
     added = add_new_player(update) # IMPORTANTE, anche se non usiamo added
@@ -304,6 +318,7 @@ async def bonus(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     await curse_player(update, context)
     try:
         print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /bonus')
+        logging.info(f'{update.effective_chat.username} ({update.effective_chat.id},{update.effective_user.first_name}) called /bonus')
     except:
         pass
     context.user_data.clear()
@@ -390,6 +405,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     await id_check(update)
     try:
         print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /help')
+        logging.info(f'{update.effective_chat.username} ({update.effective_chat.id},{update.effective_user.first_name}) called /help')
     except:
         pass
     await show_main_help_menu(update, context)
@@ -513,6 +529,7 @@ async def gym(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await curse_player(update, context)
     try:
         print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /gym')
+        logging.info(f'{update.effective_chat.username} ({update.effective_chat.id},{update.effective_user.first_name}) called /gym')
     except:
         pass
 
@@ -698,6 +715,7 @@ async def team_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     await curse_player(update, context)
     try:
         print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /team')
+        logging.info(f'{update.effective_chat.username} ({update.effective_chat.id},{update.effective_user.first_name}) called /team')
     except:
         pass
     chat_id = update.effective_chat.id
@@ -883,6 +901,7 @@ async def ping_all_start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     await id_check(update)
     try:
         print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /ping_all')
+        logging.info(f'{update.effective_chat.username} ({update.effective_chat.id},{update.effective_user.first_name}) called /ping_all')  
     except:
         pass
     chat_id = update.effective_chat.id
@@ -944,6 +963,7 @@ async def spy(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await id_check(update)
     try:
         print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /spy')
+        logging.info(f'{update.effective_chat.username} ({update.effective_chat.id},{update.effective_user.first_name}) called /spy')
     except:
         pass
     chat_id = update.effective_chat.id
@@ -985,6 +1005,7 @@ async def dex_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     await curse_player(update, context)
     try:
         print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /dex')
+        logging.info(f'{update.effective_chat.username} ({update.effective_chat.id},{update.effective_user.first_name}) called /dex')
     except:
         pass
     if not context.args:
@@ -1008,6 +1029,7 @@ async def cell_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     await curse_player(update, context)
     try:
         print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /cell')
+        logging.info(f'{update.effective_chat.username} ({update.effective_chat.id},{update.effective_user.first_name}) called /cell')
     except:
         pass
     keyboard = [
@@ -1120,6 +1142,7 @@ async def lega_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await curse_player(update, context)
     try:
         print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /lega')
+        logging.info(f'{update.effective_chat.username} ({update.effective_chat.id},{update.effective_user.first_name}) called /lega')
     except:
         pass
     keyboard = [
@@ -1356,6 +1379,7 @@ async def fight_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await curse_player(update, context)
     try:
         print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /fight')
+        logging.info(f'{update.effective_chat.username} ({update.effective_chat.id},{update.effective_user.first_name}) called /fight')
     except:
         pass
 
@@ -1447,55 +1471,6 @@ def get_fight_conversation_handler():
     )
 
 # --------------------------------------------------------------------------- CARD -------------------------------------------------------------------------------------------
-def get_vqd(query):
-    url = 'https://duckduckgo.com/'
-    params = {'q': query}
-    headers = {'User-Agent': 'Mozilla/5.0'}
-
-    res = requests.get(url, params=params, headers=headers)
-    if res.status_code != 200:
-        print("Failed to get DuckDuckGo homepage")
-        return None
-
-    # Look for the vqd token in the page
-    match = re.search(r'vqd=\'([^\']+)\'', res.text)
-    if match:
-        return match.group(1)
-    else:
-        print("Could not find vqd token")
-        return None
-
-
-def search_image_duckduckgo(query):
-    vqd = get_vqd(query)
-    if not vqd:
-        return None
-
-    search_url = 'https://duckduckgo.com/i.js'
-    params = {
-        'q': query,
-        'vqd': vqd,
-        'o': 'json',
-        'f': ',,,',
-        'p': '1',
-        'l': 'us-en',
-        'v7exp': 'a',
-    }
-    headers = {
-        'User-Agent': 'Mozilla/5.0',
-        'Referer': 'https://duckduckgo.com/',
-    }
-
-    try:
-        resp = requests.get(search_url, headers=headers, params=params)
-        data = resp.json()
-        if 'results' in data and len(data['results']) > 0:
-            return data['results'][0]['image']
-        else:
-            print("No image results found")
-    except Exception as e:
-        print("Error fetching images:", e)
-    return None
 
 def get_pokemon_image_path(pokemon_name):
 
@@ -1524,6 +1499,7 @@ async def card_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     await id_check(update)
     try:
         print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /card')
+        logging.info(f'{update.effective_chat.username} ({update.effective_chat.id},{update.effective_user.first_name}) called /card')
     except:
         pass
     text = "Nah, hai sbagliato bot... Però posso provare..."
@@ -1708,6 +1684,7 @@ async def team_update(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
     if photo:
         try:
             print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') sent a photo')
+            logging.info(f'{update.effective_chat.username} ({update.effective_chat.id},{update.effective_user.first_name}) sent a photo')
             await update.message.reply_text("👓 Ricevuto! Dammi un secondo... 👓")
             photo_file = photo[-1] # Get the last photo.
             file = await context.bot.get_file(photo_file.file_id)
@@ -1785,7 +1762,7 @@ async def text_answer(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
     text = message.text or ""
 
     print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') sent plain text')
-
+    logging.info(f'{update.effective_chat.username} ({update.effective_chat.id},{update.effective_user.first_name}) sent plain text')
     answers = [
             "Adularmi non serve a nulla...",
             "Cos'è, ci stai provando con me?",

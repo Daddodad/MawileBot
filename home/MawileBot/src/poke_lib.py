@@ -249,7 +249,7 @@ def has_a_team(chat_id):
     return False
 
 def poke_lega_test(pokemon, level, name, multiplier ,only_perc = False):
-
+    print('00000')
     message = f'Trainer: {name} '
     if name == 'generic' or name == 'Generic':
         message+= '(310 Pokémon con bst superiore a 500)'
@@ -265,6 +265,7 @@ def poke_lega_test(pokemon, level, name, multiplier ,only_perc = False):
     n_pareggi = 0
     n_vittorie = 0
     for enemy in enemies[name]:
+        print(enemy)
         n_total +=1
         message += f"{enemy:<10}"
 
@@ -382,7 +383,7 @@ def poke_dex2(pokemon_name: str) -> str:
     message = ''
     message += f' Tipo: {format_types(poke.get(name = pokemon_name).types)}\n\n'
     message += f'BST: {get_poke_bst(pokemon_name)}\n'
-    message += '\nAttendi il prossimo messaggio...'
+    message += '\nAttendi il prossimo messaggio (ogni tanto va in time-out e non arriva, ci stiamo lavorando)...'
     return message
 
 def get_power(pokemon, lvl):
