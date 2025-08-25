@@ -995,9 +995,8 @@ async def dex_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     dex_entry = poke_dex2(pokemon_name)
     await update.message.reply_text(dex_entry)
 
-    # manutenzione
-    # dex_entry = poke_dex1(pokemon_name)
-    # await update.message.reply_text(dex_entry)
+    dex_entry = poke_dex1(pokemon_name)
+    await update.message.reply_text(dex_entry)
 
 
 # -------------------------------------------------------------------------- CELL --------------------------------------------------------

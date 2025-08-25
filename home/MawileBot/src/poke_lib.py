@@ -250,7 +250,10 @@ def has_a_team(chat_id):
 
 def poke_lega_test(pokemon, level, name, multiplier ,only_perc = False):
 
-    message = f'Trainer: {name}\n'
+    message = f'Trainer: {name} '
+    if name == 'generic' or name == 'Generic':
+        message+= '(310 Pokémon con bst superiore a 500)'
+    message +='\n'
 
     with open(ENV_PATH+'/public_player_data.json', 'r') as file:
         enemies = json.load(file)
