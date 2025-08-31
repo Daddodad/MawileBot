@@ -199,18 +199,17 @@ def get_poke_bst(pokemon):
     if bst >= 680:
         return 620
     if bst == 600:
-        if 'regi' in pokemon.lower():
-            return 570
-        else:
-            return 580
+        return 580
     if bst == 580:
         if pokemon.lower() in  ["entei", "raikou", "suicune"]:
+            return 560
+        if 'regi' in pokemon.lower():
             return 560
         else:
             return 570
     if bst == 570:
         return 555
-    non_leg_w_550_bst = ["florges", "arcanine", "arcanine-hisui","ursaluna-bloodmoon","silvally","palafin","palafin-hero","Slaking", ]
+    non_leg_w_550_bst = ["florges", "arcanine", "arcanine-hisui","ursaluna-bloodmoon","silvally","palafin","palafin-hero","slaking", ]
     if pokemon.lower() in non_leg_w_550_bst:
         return 550
     if pokemon.lower() == 'archeops':
