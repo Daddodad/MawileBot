@@ -33,7 +33,7 @@ coeff = [3, 3.5, 4, 4.5, 5, 5.5]
 
 STARTING_DATE = date(2025,7,7)  # Data di inizio della lega, da cambiare ogni lega
 
-EVENTUALE_PAUSA = 0  # Giorni di pausa in una lega
+EVENTUALE_PAUSA = 3  # Giorni di pausa in una lega (in cui è disattiva)
 
 
 ###############################################################################################
