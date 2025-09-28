@@ -33,7 +33,7 @@ coeff = [3, 3.5, 4, 4.5, 5, 5.5]
 
 STARTING_DATE = date(2025,7,7)  # Data di inizio della lega, da cambiare ogni lega
 
-EVENTUALE_PAUSA = 3  # Giorni di pausa in una lega (in cui è disattiva)
+EVENTUALE_PAUSA = 3  # Giorni di pausa in una lega (mettili quando inizia la pausa)
 
 
 ###############################################################################################
@@ -196,7 +196,7 @@ def get_poke_bst(pokemon):
     bst = sum(poke.get(name=pokemon).base_stats)
     if pokemon.lower() == "archeops":
         return 495
-    if bst >= 680:
+    if bst >= 670:
         return 620
     if bst == 600:
         return 580
@@ -462,7 +462,7 @@ def poke_gym(chat_id, gym):
             necessary_lvls[p[0]] = get_gym_results(gym, gym_data, p[0], p[1], chat_id)[-1]
         except:
             necessary_lvls[p[0]] = None # Da fixare
-    
+
     #print(f"Team: {team_with_level}\nEnemy: {enemy}\nEnemy Powers: {enemy_powers}\nMultiplier: {multiplier}\nNecessary Levels: {necessary_lvls}")
 
     tab, limits = match_prevision(team, enemy, enemy_powers, multiplier, necessary_lvls)
@@ -658,7 +658,7 @@ def poke_check_if_evo_not_async(chat_id,pokemon,lvl):
 
     with open(ENV_PATH+f"/{route}_evo_file.json", 'r') as ef:
         evo_dict = json.load(ef)
-        
+
     pokemon = pokemon.lower()
     if pokemon in evo_dict:
         if evo_dict[pokemon][0]=="base":
@@ -953,7 +953,7 @@ def poke_gym_test(chat_id, pokemon, livello=0, next=4):
 
     for gym in gym_types()[offset:end]:
         results.append(get_gym_results(gym, gym_data, pokemon, livello, chat_id))
-    
+
     return results
 
 def get_gym_results(gym, gym_data, pokemon, livello, chat_id):
@@ -964,7 +964,7 @@ def get_gym_results(gym, gym_data, pokemon, livello, chat_id):
         if gym_data[gym]["team"] == ["every type combo"]:
             enemy = ["every type combo", gym] # enemy potrebbe essere ["every type combo"] e questo fa cose in match_prevision->match_table
         else:
-            enemy = gym_data[gym]["team"]   
+            enemy = gym_data[gym]["team"]
     else:
         enemy = gym_data[gym]["actual_team"]
 
@@ -1069,7 +1069,7 @@ def create_pokemon_name_image(pokemon_name, front = True, shiny_or_default = 'de
 
     sprite_image = sprite_image.resize((96, 96)) # Resize sprite if needed to fit the blank image (optional)
     blank_image.paste(sprite_image, (1, 1), sprite_image) # Paste the sprite on the left side of the blank image (use alpha for transparency)
-   
+
     draw = ImageDraw.Draw(blank_image)  # Prepare to add text
     try:
         if len(pokemon_name) > 12:
@@ -1214,11 +1214,11 @@ def randomly_shiny():
         return "shiny"
     else:
         return "default"
-        
+
 def create_pokemon_collage(df, type = 'gym', path=None, enemy_powers=None):
 
 
-        
+
     image_width = 250 # Assuming all images have the same size (250x98)
     image_height = 98
 
@@ -1226,7 +1226,7 @@ def create_pokemon_collage(df, type = 'gym', path=None, enemy_powers=None):
     collage_width = (num_cols-1) * image_width
     collage_height = (num_rows+1) * image_height
     collage_image = Image.new('RGB', (collage_width, collage_height), (255, 255, 255))  # White background
-    
+
     # Crea prima colonna, squadra.
     name_image = create_text_image(f'{type.title()} →',(255,255,255),(False,False,True,True))
     collage_image.paste(name_image, (0,0))
@@ -1303,7 +1303,7 @@ def create_pokemon_collage(df, type = 'gym', path=None, enemy_powers=None):
 
                 text_image = create_text_image(df[column_name][index], bg,(False,False,False,False))  # White text on blue
                 collage_image.paste(text_image, position)
-        
+
     # Save or return the final collage image
     if path:
         collage_image.save(path)
@@ -1420,16 +1420,16 @@ def find_vertical_black_lines(image):
         column = img_array[:, x]
         if np.all(column == 0):  # All pixels are black
             vertical_lines.append(x)
-    
+
     return vertical_lines
 
 def find_horizontal_black_lines(image):
     # Convert to binary array (0 = black, 255 = white)
     img_array = np.array(image)
     height, width = img_array.shape
-    
+
     horizontal_lines = []
-    
+
     # Check from top (y=0) going down
     for y in range(height):
         row = img_array[y, :]
@@ -1437,7 +1437,7 @@ def find_horizontal_black_lines(image):
             horizontal_lines.append(y)
         else:
             break  # Stop at first non-black row
-    
+
     # Check from bottom (y=height-1) going up
     for y in range(height - 1, -1, -1):
         if y in horizontal_lines:
@@ -1447,7 +1447,7 @@ def find_horizontal_black_lines(image):
             horizontal_lines.append(y)
         else:
             break  # Stop at first non-black row
-    
+
     return sorted(horizontal_lines)
 
 def split_image_by_vertical_lines(image, vertical_lines):
@@ -1479,7 +1479,7 @@ def split_image_by_vertical_lines(image, vertical_lines):
 
 def remove_black_lines_from_image(image):
     vertical_lines = find_vertical_black_lines(image)
-    horizontal_lines = find_horizontal_black_lines(image)  
+    horizontal_lines = find_horizontal_black_lines(image)
     if not vertical_lines and not horizontal_lines:
         return image
     width, height = image.size
@@ -1499,7 +1499,7 @@ def process_image_to_remove_black(image):
     vertical_lines = find_vertical_black_lines(image)
     sub_images = split_image_by_vertical_lines(image, vertical_lines)
     cleaned_images = []
-    for i, sub_img in enumerate(sub_images):    
+    for i, sub_img in enumerate(sub_images):
         cleaned_img = remove_black_lines_from_image(sub_img)
         if cleaned_img and cleaned_img.size != (1, 1):
             # Padding step
@@ -1550,7 +1550,7 @@ def compare_with_saved_data_json(splits, json_name='alphabet.json'):
         img_bytes = base64.b64decode(img_str)
         img = Image.open(BytesIO(img_bytes))
         alphabet[key] = img
-    
+
     pokemon_probable_name = []
     for sp in splits:
         alph_likeness = [calculate_ssim(sp, alphabet[k]) for k in alphabet.keys()]
@@ -1567,7 +1567,7 @@ def compare_with_saved_data_json(splits, json_name='alphabet.json'):
 def most_similar(query, choices):
     matches = difflib.get_close_matches(query, choices, n=1, cutoff=0.0)
     return matches[0] if matches else None
-         
+
 async def automatic_card_reader(image):
     # Estrai i nomi e i livelli:
     secret_data =[]
@@ -1583,9 +1583,9 @@ async def automatic_card_reader(image):
             lower = upper + box_height
             name_crop = image.crop((left, upper, right, lower))
             binary_img = crop_to_binary(name_crop)
-            
+
             splits = process_image_to_remove_black(binary_img)
-            
+
             pokemon_probable_name = compare_with_saved_data_json(splits)
 
             box_width = 120
@@ -1596,7 +1596,7 @@ async def automatic_card_reader(image):
             lower = upper + box_height
             name_crop = image.crop((left, upper, right, lower))
             binary_img = crop_to_binary(name_crop)
-            
+
             splits = process_image_to_remove_black(binary_img)
 
             pokemon_probable_level = compare_with_saved_data_json(splits)
@@ -1609,7 +1609,7 @@ async def automatic_card_reader(image):
             lower = upper + box_height
             name_crop = image.crop((left, upper, right, lower))
             binary_img = crop_to_binary(name_crop)
-            
+
             splits = process_image_to_remove_black(binary_img)
 
             pokemon_probable_power = compare_with_saved_data_json(splits)
@@ -1639,15 +1639,15 @@ async def automatic_card_reader(image):
     return secret_data,errors
 
 def load_fonts(font_path = '/arialbd.ttf', font_size = 20, font_size_small = 17, font_size_big = 24):
-    try: 
+    try:
         font = ImageFont.truetype(ENV_PATH+font_path,font_size)
     except:
         font = ImageFont.load_default()
-    try: 
+    try:
         font_small = ImageFont.truetype(ENV_PATH+font_path,font_size_small)
     except:
         font_small = ImageFont.load_default()
-    try: 
+    try:
         font_big = ImageFont.truetype(ENV_PATH+font_path,font_size_big)
     except:
         font_big = ImageFont.load_default()
