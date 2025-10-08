@@ -1585,7 +1585,8 @@ async def card_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
             col = i % 3
 
             def randomshift():
-                return random.uniform(-15, 15)
+                return 0
+                return random.uniform(-5, 5)
 
             x = col * 346
             y = row * 614
