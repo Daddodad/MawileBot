@@ -52,13 +52,6 @@
  jupyter-lab
  ```
 
- **NEW PC:**
- Per qualche motivo, prova pure cd 
- ```bash 
- D:\Desktop_fake\MawileBot\home\MawileBot
- python -m src.MawileBot
- ```
-
  Lanciare da dentro MawileBot con Python:
  ```bash
  python .\home\MawileBot\MawileBot.py

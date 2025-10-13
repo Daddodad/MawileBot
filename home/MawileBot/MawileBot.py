@@ -22,6 +22,7 @@ from src.Commands import lega_command, get_lega_conversation_handler
 from src.Commands import get_fight_conversation_handler
 from src.Commands import card_command
 from src.Commands import auto_team_update, auto_text_update
+from src.Commands import get_meme_conversation_handler
 
 #from src.Commands import
 # ------------------------------------------------------------------- LISTA COMANDI ----------------------------------------------------------------
@@ -85,6 +86,8 @@ def main() -> None:
     application.add_handler(get_fight_conversation_handler(),group = 13)
 
     application.add_handler(CommandHandler("card", card_command) ,group = 99)
+    application.add_handler(get_meme_conversation_handler(),group = 100)
+
 
 
     application.run_polling(allowed_updates=Update.ALL_TYPES)
