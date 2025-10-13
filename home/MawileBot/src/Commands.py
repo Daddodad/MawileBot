@@ -1574,8 +1574,11 @@ async def card_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         # image_path = f'./images/{chat_id}_card.png'
         # image.save(image_path)
     else:
-        template_path = ENV_PATH + '/images/templates/Empty_Template.jpg'
-        image = Image.open(template_path)
+        try:
+            PendingDeprecationWarning
+        except:
+            template_path = ENV_PATH + '/images/templates/Empty_Template.jpg'
+            image = Image.open(template_path)
         draw = ImageDraw.Draw(image)
 
         font, font_small, font_big = load_fonts('/Drip.ttf', font_size = 50, font_size_small = 30, font_size_big = 70)
@@ -1691,7 +1694,10 @@ async def team_update(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
             file = await context.bot.get_file(photo_file.file_id)
             photo_bytes = await file.download_as_bytearray()
             pil_image = Image.open(BytesIO(photo_bytes))
-            
+
+            save_path = f"{ENV_PATH}/images/{update.effective_chat.id}.png"
+            pil_image.save(save_path)
+
             secret_data,errors = await automatic_card_reader(pil_image)
 
             if secret_data == [None, None, None, None, None, None, None, None, None]: 

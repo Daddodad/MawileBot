@@ -45,11 +45,18 @@
 
  ## NOTA PER DAVIDE
 
- **NEW PC:**  
+ **NEW PC:**  APRI IL TERMINAL CORRETTO
  Per il `.venv` + jupyter-lab:
  ```bash
  ./..\CNR\av-anomaly-detection\av-anomaly-detection\.venv\Scripts\activate 
  jupyter-lab
+ ```
+
+ **NEW PC:**
+ Per qualche motivo, prova pure cd 
+ ```bash 
+ D:\Desktop_fake\MawileBot\home\MawileBot
+ python -m src.MawileBot
  ```
 
  Lanciare da dentro MawileBot con Python:
