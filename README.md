@@ -48,7 +48,7 @@
  **NEW PC:**  APRI IL TERMINAL CORRETTO
  Per il `.venv` + jupyter-lab:
  ```bash
- ./..\CNR\av-anomaly-detection\av-anomaly-detection\.venv\Scripts\activate 
+ ..\.daddodad_env\Scripts\Activate.ps1
  jupyter-lab
  ```
 
