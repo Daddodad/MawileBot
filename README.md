@@ -49,7 +49,7 @@
  Per il `.venv` + jupyter-lab:
  ```bash
  ..\.daddodad_env\Scripts\Activate.ps1
- jupyter-lab
+ jupyter-lab (o prova da vscode)
  ```
 
  Lanciare da dentro MawileBot con Python:
