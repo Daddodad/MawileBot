@@ -1426,7 +1426,7 @@ async def enter_pokemons(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 caption=cap
             )
     except Exception as e:
-        print(f"Errore durante la lotta: {e}")
+        print(f"Errore durante la lotta: {e} (99% dei casi, se è requested pokemon not found, controlla l'even_evo_file)")
         await update.message.reply_text("Qualcosa è andato storto... ti chiedo di ricominciare chiamando /fight.")
     return ConversationHandler.END
 
