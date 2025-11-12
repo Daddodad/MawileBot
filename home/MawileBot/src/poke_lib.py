@@ -29,7 +29,12 @@ from datetime import datetime, date
 # coeff = [3, 3.5, 4, 4.5, 5, 5.5]
 # NUM_CASELLE_PER_RIGA = 7
 
-LvL = [5, 6, 7, 8, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 27, 29, 30, 31, 33, 36, 38, 41, 43, 45, 46, 49, 51, 54, 56, 58, 61, 62]
+LvL = [ 5,  6,  7,  8,  10, 12, 
+        13, 14, 15, 16, 17, 18, 
+        19, 21, 22, 23, 24, 25, 
+        27, 29, 30, 31, 33, 36, 
+        38, 41, 43, 45, 46, 49, 
+        51, 54, 56, 58, 61, 62]
 coeff = [3, 3.5, 4, 4.5, 5, 5.5]
 NUM_CASELLE_PER_RIGA = 6
 
@@ -79,6 +84,12 @@ def poke_exist(pokea):
         return False
     return False
 
+def similar_pokemon_name(pokemon_probable_name):
+    with open(ENV_PATH+'/pokemon_list.json', 'r', encoding="utf-8") as f:
+        choices = json.load(f)
+
+    return most_similar(pokemon_probable_name, choices)
+    
 def random_pokemon():
     r = int(random.randrange(1025))+1
     return poke.get(dex = r).name.capitalize()
@@ -564,13 +575,14 @@ def match_table(team,enemy,multiplier,limits = None, necessary_lvls=None):
     return(bonus_netti,tab)
 
 def poke_cell_gym(casella):
-    multiplier = 5 + 3*int(casella/NUM_CASELLE_PER_RIGA)
+    multiplier = 5 + 3 * int((casella) / NUM_CASELLE_PER_RIGA)
+
     if casella < 42:
-        aumento = int(casella/14) + 2
-        low_power = int((LvL[casella]-aumento)*coeff[int(casella/NUM_CASELLE_PER_RIGA)])
-        mid_power = int((LvL[casella])*coeff[int(casella/NUM_CASELLE_PER_RIGA)])
-        high_power = int((LvL[casella]+aumento)*coeff[int(casella/NUM_CASELLE_PER_RIGA)])
-        super_power = int((LvL[casella]+2*aumento)*coeff[int(casella/NUM_CASELLE_PER_RIGA)])
+        aumento = int(casella/(NUM_CASELLE_PER_RIGA*2)) + 2
+        low_power = int((LvL[casella]-aumento)*coeff[int((casella)/NUM_CASELLE_PER_RIGA)])
+        mid_power = int((LvL[casella])*coeff[int((casella)/NUM_CASELLE_PER_RIGA)])
+        high_power = int((LvL[casella]+aumento)*coeff[int((casella)/NUM_CASELLE_PER_RIGA)])
+        super_power = int((LvL[casella]+2*aumento)*coeff[int((casella)/NUM_CASELLE_PER_RIGA)])
         trainer_power = [low_power,mid_power,high_power]
         gym_power = [mid_power,mid_power,high_power,high_power,super_power,super_power]
         return True, trainer_power, gym_power, multiplier, LvL[casella]
@@ -584,20 +596,21 @@ def poke_cell(cell):
     offset = cell
     pausa = EVENTUALE_PAUSA
     casella = int(((today-start).days-pausa)/2) + offset
-    multiplier = 5 + 3*int(casella/NUM_CASELLE_PER_RIGA)
+    multiplier = 5 + 3 * int((casella) / NUM_CASELLE_PER_RIGA)
+
     if casella < 42:
-        aumento = int(casella/14) + 2
-        low_power = int((LvL[casella]-aumento)*coeff[int(casella/NUM_CASELLE_PER_RIGA)])
-        mid_power = int((LvL[casella])*coeff[int(casella/NUM_CASELLE_PER_RIGA)])
-        high_power = int((LvL[casella]+aumento)*coeff[int(casella/NUM_CASELLE_PER_RIGA)])
-        super_power = int((LvL[casella]+2*aumento)*coeff[int(casella/NUM_CASELLE_PER_RIGA)])
+        aumento = int(casella/(NUM_CASELLE_PER_RIGA*2)) + 2
+        low_power = int((LvL[casella]-aumento)*coeff[int((casella)/NUM_CASELLE_PER_RIGA)])
+        mid_power = int((LvL[casella])*coeff[int((casella)/NUM_CASELLE_PER_RIGA)])
+        high_power = int((LvL[casella]+aumento)*coeff[int((casella)/NUM_CASELLE_PER_RIGA)])
+        super_power = int((LvL[casella]+2*aumento)*coeff[int((casella)/NUM_CASELLE_PER_RIGA)])
         if casella+1 in gym_cell():
             trainer_power = [low_power,mid_power,high_power]
             gym_power = [mid_power,mid_power,high_power,high_power,super_power,super_power]
             return True, trainer_power, gym_power, multiplier, LvL[casella]
         else:
             encounter_power = [low_power,mid_power]
-            boss_power = [int((LvL[casella]+aumento)*coeff[int(casella/NUM_CASELLE_PER_RIGA)]),int((LvL[casella]+aumento+10)*coeff[int(casella/NUM_CASELLE_PER_RIGA)]),int((LvL[casella]+aumento+18)*coeff[int(casella/NUM_CASELLE_PER_RIGA)])]
+            boss_power = [int((LvL[casella]+aumento)*coeff[int((casella)/NUM_CASELLE_PER_RIGA)]),int((LvL[casella]+aumento+10)*coeff[int((casella)/NUM_CASELLE_PER_RIGA)]),int((LvL[casella]+aumento+18)*coeff[int((casella)/NUM_CASELLE_PER_RIGA)])]
             return False, encounter_power, boss_power, multiplier
     else:
         return None
@@ -728,21 +741,26 @@ def poke_cell_specific(route,cell,encounters):
     offset = cell
     pausa = EVENTUALE_PAUSA
     casella = int(((today-start).days-pausa)/2) + offset
-    multiplier = 5 + 3*int(casella/NUM_CASELLE_PER_RIGA)
+    multiplier = 5 + 3 * int((casella) / NUM_CASELLE_PER_RIGA)
+
 
     with open(ENV_PATH+f"/{route}_evo_file.json", 'r') as ef:
         evo_dict = json.load(ef)
 
     if casella < 42:
-        aumento = int(casella/14) + 2
-        low_power = int((LvL[casella]-aumento)*coeff[int(casella/NUM_CASELLE_PER_RIGA)])
-        mid_power = int((LvL[casella])*coeff[int(casella/NUM_CASELLE_PER_RIGA)])
+        aumento = int(casella/(NUM_CASELLE_PER_RIGA*2)) + 2
+        low_power = int((LvL[casella]-aumento)*coeff[int((casella)/NUM_CASELLE_PER_RIGA)])
+        mid_power = int((LvL[casella])*coeff[int((casella)/NUM_CASELLE_PER_RIGA)])
         encounter_power = [low_power,mid_power]
         for pokemon in encounters:
             if pokemon in evo_dict:
                 pokemon = evo_dict[pokemon][-1][1]
+                pokemon_name = similar_pokemon_name(pokemon)
+                if pokemon_name.lower()!=pokemon.lower():
+                    print(f"Assumo che con {pokemon} si intenda {pokemon_name}...")
+                    pokemon = pokemon_name
             stats = get_poke_bst(pokemon)
-            boss_power = max(mid_power,int((LvL[casella]+aumento+int((stats-500)/10))*coeff[int(casella/NUM_CASELLE_PER_RIGA)]))
+            boss_power = max(mid_power,int((LvL[casella]+aumento+int((stats-500)/10))*coeff[int((casella)/NUM_CASELLE_PER_RIGA)]))
             encounter_power.append(boss_power)
         return encounter_power, multiplier
     else:
@@ -1572,7 +1590,7 @@ def compare_with_saved_data_json(splits, json_name='alphabet.json'):
 
 def most_similar(query, choices):
     if query == 'Morpeko':
-        return 'morpeko-full-belly'
+        return random.choice(['morpeko-full-belly','morpeko-hangry'])
     matches = difflib.get_close_matches(query, choices, n=1, cutoff=0.0)
     return matches[0] if matches else None
 

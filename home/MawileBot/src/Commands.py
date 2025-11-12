@@ -30,7 +30,7 @@ else:
 from poke_lib import calculate_bonus_answer, random_pokemon, random_player, get_power, poke_evo_level,format_types_emoji
 from poke_lib import add_new_player, poke_lega_single, poke_lega_all, poke_gym, poke_exist, poke_dex1, poke_dex2, poke_cell
 from poke_lib import add_route,check_route, poke_check_if_evo, poke_fight, poke_counter, has_a_team, poke_gym_test, poke_lega_team_team
-from poke_lib import automatic_card_reader, gym_types, gym_cell, poke_cell_gym, load_fonts,randomly_shiny
+from poke_lib import automatic_card_reader, gym_types, gym_cell, poke_cell_gym, load_fonts,randomly_shiny, similar_pokemon_name
 # ----------------------------------------------------------------- GENERIC COMMANDS --------------------------------------------------------------------------------
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -583,8 +583,12 @@ async def gym_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         return ConversationHandler.END
 
 async def choose_pokemon_gym(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-    pokemon_name = update.message.text.strip().capitalize()
+    old_pokemon_name = update.message.text.strip().capitalize()
     #print('Pokémon received:', pokemon_name)
+    pokemon_name = similar_pokemon_name(old_pokemon_name)
+    if old_pokemon_name.lower()!=pokemon_name.lower():
+            await update.message.reply_text(f"Assumo che con {old_pokemon_name} intendessi {pokemon_name}...")
+
     if " " not in pokemon_name:
         if poke_exist(pokemon_name):
             await update.message.reply_text("Assumerò il livello sia 0...")
@@ -734,7 +738,11 @@ def create_team_keyboard(team):
     return keyboard
 
 async def choose_pokemon(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-    pokemon_name = update.message.text
+    old_pokemon_name = update.message.text
+    #print('Pokémon received:', pokemon_name)
+    pokemon_name = similar_pokemon_name(old_pokemon_name)
+    if old_pokemon_name.lower()!=pokemon_name.lower():
+            await update.message.reply_text(f"Assumo che con {old_pokemon_name} intendessi {pokemon_name}...")
     if poke_exist(pokemon_name) == True:
         index = context.user_data['editing_index']
         #current_team[index][0] = pokemon_name
@@ -1386,12 +1394,18 @@ async def fight_type_callback(update: Update, context: ContextTypes.DEFAULT_TYPE
 async def enter_pokemons(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message_text = update.message.text
     poke_list = message_text.split()
+    new_poke_list = []
     for p in poke_list:
-        if poke_exist(p) == False:
+        #print('Pokémon received:', pokemon_name)
+        new_p = similar_pokemon_name(p)
+        if new_p.lower()!=p.lower():
+                await update.message.reply_text(f"Assumo che con {p} intendessi {new_p}...")
+        if poke_exist(new_p) == False:
             await update.message.reply_text(f'Mhh... Non mi risulta nessun "{p}"... Riprova a dirmi la lista.')
             return ENTER_POKEMONS
+        new_poke_list.append(new_p)
         
-    poke_list = [p.lower() for p in poke_list]  # Convert all Pokémon names to lowercase
+    poke_list = [p.lower() for p in new_poke_list]  # Convert all Pokémon names to lowercase
     
     # Call the poke_Fight function
     await update.message.reply_text("Attendi un attimo per l'immagine...")
