@@ -1,34 +1,19 @@
 {
 
-    "order_of_gym_types" : ["rock",
-                        "fighting",
-                        "grass",
-                        "fairy",
-                        "flying",
-                        "ice",
-                        "dark",
-                        "fire",
-                        "steel",
-                        "electric",
-                        "dark",
-                        "ground",
-                        "bug",
-                        "normal",
-                        "poison",
-                        "psychic",
-                        "dragon",
-                        "water"],
+    "order_of_gym_types" : ["dark","fighting","poison","bug","rock","ground","fire","ice",
+    "flying","water","fairy","ghost",
+    "psychic","grass","dragon","normal","electric","steel"],
 
-    "gym_cell" : [4,5,7,13,14,18,19,21,23,25,28,29,31,34,35,38,40,42],
+    "gym_cell" : [4,5,7,8,11,12,14,16,17,19,22,23,25,28,31,32,34,36],
 
     "rock": {
         "team": ["every type combo"],
-        "actual_team": ["anorith", "anorith", "armaldo", "bonsly", "bonsly", "sudowoodo"]
+        "actual_team": []
     },
 
     "fighting": {
         "team": ["every type combo"],
-        "actual_team": ["Pancham","Pangoro","Pangoro","Pangoro","Pangoro","Mienfoo"]
+        "actual_team": []
     },
 
     "dark": {
@@ -48,7 +33,7 @@
 
     "grass": {
         "team": ["every type combo"],
-        "actual_team":  ["Sawsbuck","Cacturne","Deerling","Deerling", "Lileep","Cradily"]
+        "actual_team":  []
     },
 
     "normal": {
