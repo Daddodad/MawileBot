@@ -56,3 +56,8 @@
  ```bash
  python .\home\MawileBot\MawileBot.py
  ```
+
+ **MAC** 
+ ```bash
+ python3 ./home/MawileBot/MawileBot.py
+ ```

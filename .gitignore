@@ -11,3 +11,6 @@ home/output_splits/temp/
 # Ignore the whole images folder
 /images/
 images/
+
+# Ignore temp in MAC
+.DS*
