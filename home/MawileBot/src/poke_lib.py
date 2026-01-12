@@ -172,6 +172,14 @@ def get_casella():
     casella = int(((today-start).days-pausa)/2)
     return casella
 
+def has_lega_ended():
+    casella = get_casella()
+    print(casella)
+    print(len(LvL))
+    if casella>=len(LvL):
+        return True
+    return
+
 async def add_route(chat_id, route):
 
     jsonFile = open(ENV_PATH+"/secret_player_data.json", "r") # Open the JSON file for reading
