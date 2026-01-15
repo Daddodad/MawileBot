@@ -88,8 +88,6 @@ def main() -> None:
     application.add_handler(CommandHandler("card", card_command) ,group = 99)
     application.add_handler(get_meme_conversation_handler(),group = 100)
 
-
-
     application.run_polling(allowed_updates=Update.ALL_TYPES)
 
 if __name__ == "__main__":

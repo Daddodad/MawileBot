@@ -30,11 +30,11 @@ from datetime import datetime, date
 # NUM_CASELLE_PER_RIGA = 7
 
 LvL = [ 5,  6,  7,  8,  10, 12, 
-        12, 14, 16, 17, 18, 20, 
-        21, 22, 24, 25, 27, 29,
-        30, 33, 35, 37, 40, 42,
-        42, 45, 47, 49, 52, 54, 
-        54, 57, 60, 62, 65, 67]
+        13, 14, 15, 16, 17, 18, 
+        19, 21, 22, 23, 24, 25, 
+        27, 29, 30, 31, 33, 36, 
+        38, 41, 43, 45, 46, 49, 
+        51, 54, 56, 58, 61, 62]
 coeff = [3, 3.5, 4, 4.5, 5, 5.5]
 NUM_CASELLE_PER_RIGA = 6
 
@@ -44,7 +44,7 @@ NUM_CASELLE_PER_RIGA = 6
 
 STARTING_DATE = date(2025,10,29)  # Data di inizio della lega, da cambiare ogni lega (metti il giorno prima, la prima casella dura solo 1)
 
-EVENTUALE_PAUSA = 0  # Giorni di pausa in una lega (mettili quando inizia la pausa)
+EVENTUALE_PAUSA = 2  # Giorni di pausa in una lega (mettili quando inizia la pausa)
 
 
 ###############################################################################################
@@ -89,7 +89,7 @@ def similar_pokemon_name(pokemon_probable_name):
         choices = json.load(f)
 
     return most_similar(pokemon_probable_name, choices)
-    
+
 def random_pokemon():
     r = int(random.randrange(1025))+1
     return poke.get(dex = r).name.capitalize()
@@ -172,6 +172,14 @@ def get_casella():
     casella = int(((today-start).days-pausa)/2)
     return casella
 
+def has_lega_ended():
+    casella = get_casella()
+    print(casella)
+    print(len(LvL))
+    if casella>=len(LvL):
+        return True
+    return
+
 async def add_route(chat_id, route):
 
     jsonFile = open(ENV_PATH+"/secret_player_data.json", "r") # Open the JSON file for reading
@@ -221,6 +229,8 @@ def get_poke_bst(pokemon):
         if pokemon.lower() in  ["entei", "raikou", "suicune"]:
             return 560
         if 'regi' in pokemon.lower():
+            return 560
+        if pokemon.lower() in  ["spectrier", "glastrier"]:
             return 560
         else:
             return 570

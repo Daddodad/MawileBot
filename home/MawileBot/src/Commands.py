@@ -31,6 +31,7 @@ from poke_lib import calculate_bonus_answer, random_pokemon, random_player, get_
 from poke_lib import add_new_player, poke_lega_single, poke_lega_all, poke_gym, poke_exist, poke_dex1, poke_dex2, poke_cell
 from poke_lib import add_route,check_route, poke_check_if_evo, poke_fight, poke_counter, has_a_team, poke_gym_test, poke_lega_team_team
 from poke_lib import automatic_card_reader, gym_types, gym_cell, poke_cell_gym, load_fonts,randomly_shiny, similar_pokemon_name
+from poke_lib import has_lega_ended
 # ----------------------------------------------------------------- GENERIC COMMANDS --------------------------------------------------------------------------------
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -1367,8 +1368,11 @@ async def fight_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         pass
 
     chat_id=str(update.effective_chat.id)
-    if has_a_team(chat_id):
 
+    if has_lega_ended():
+        await update.message.reply_text("La lega è finita... usa il comando /lega!")
+
+    elif has_a_team(chat_id):
         keyboard = [
             [InlineKeyboardButton("Selvatici", callback_data=WILD)],
             [InlineKeyboardButton("Allenatore", callback_data=TRAINER)]
@@ -1376,6 +1380,7 @@ async def fight_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup = InlineKeyboardMarkup(keyboard)
         await update.message.reply_text("Dimmi il tipo di incontro", reply_markup=reply_markup)
         return CHOOSE_FIGHT_TYPE
+
     else:
         if random.random()>0.05:
             await update.message.reply_text("Non hai un team... contro chi pensi di combattere!")
