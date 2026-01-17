@@ -1,6 +1,13 @@
 # main.py
+import os
 from telethon import TelegramClient
-from BeatlesBoy_handlers import register_handlers
+import sys
+if os.path.exists('/home/SableyeBot/src_BB'):
+    sys.path.insert(0,'/home/SableyeBot/src_BB') # SableyeBot
+else:
+    sys.path.insert(0,'home/MawileBot/src_BB') # MawileBot
+    
+from src_BB.BeatlesBoy_handlers import register_handlers, scheduled_job
 
 api_id = 32734550
 api_hash = '18742bc7269a1e306dce108908ae5291'
@@ -17,8 +24,12 @@ async def main():
     # Register all event handlers
     register_handlers(client)
 
+    asyncio.create_task(scheduled_job(client))
+
     print("Press Ctrl+C to stop...")
     await client.run_until_disconnected()
+
+
 
 if __name__ == '__main__':
     import asyncio
