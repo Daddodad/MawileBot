@@ -2,12 +2,12 @@
 import os
 from telethon import TelegramClient
 import sys
-if os.path.exists('/home/SableyeBot/src_BB'):
-    sys.path.insert(0,'/home/SableyeBot/src_BB') # SableyeBot
+if os.path.exists('/home/SableyeBot/src'):
+    sys.path.insert(0,'/home/SableyeBot/src') # SableyeBot
 else:
-    sys.path.insert(0,'home/MawileBot/src_BB') # MawileBot
+    sys.path.insert(0,'home/MawileBot/src') # MawileBot
     
-from src_BB.BeatlesBoy_handlers import register_handlers, scheduled_job
+from src.BeatlesBoy_handlers import register_handlers, scheduled_job
 
 api_id = 32734550
 api_hash = '18742bc7269a1e306dce108908ae5291'
