@@ -42,7 +42,7 @@ NUM_CASELLE_PER_RIGA = 6
 #################################   VARIABILI GLOBALI DA CAMBIARE OGNI LEGA ##################
 ##############################################################################################
 
-STARTING_DATE = date(2025,10,29)  # Data di inizio della lega, da cambiare ogni lega (metti il giorno prima, la prima casella dura solo 1)
+STARTING_DATE = date(2026,1,24)  # Data di inizio della lega, da cambiare ogni lega (metti il giorno prima, la prima casella dura solo 1)
 
 EVENTUALE_PAUSA = 2  # Giorni di pausa in una lega (mettili quando inizia la pausa)
 
