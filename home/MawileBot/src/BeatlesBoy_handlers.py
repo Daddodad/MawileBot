@@ -37,51 +37,90 @@ TARGET_TIMES = [
 ]
 
 async def scheduled_job(client):
+
+    print("[Scheduler] started")
+
+    local_times = TARGET_TIMES.copy()
+
+    now = datetime.now() + timedelta(seconds=20)
+    injected_time = dtime(now.hour, now.minute, now.second)
+
+    if injected_time not in local_times:
+        local_times.append(injected_time)
+        local_times.sort()
+        print(f"[Scheduler] injected start time: {injected_time}")
+
     while True:
         now = datetime.now()
+        print(f"\n[Scheduler] now = {now.time()}")
 
-        # find the next target time today or tomorrow
         next_run = None
-        for t in TARGET_TIMES:
+
+        # Cerca il prossimo orario valido oggi
+        for t in local_times:
             candidate = now.replace(
                 hour=t.hour,
                 minute=t.minute,
-                second=0,
+                second=t.second,  
                 microsecond=0,
             )
+
+            print(f"[Scheduler] checking candidate {candidate.time()}")
+
             if candidate > now:
                 next_run = candidate
+                print(f"[Scheduler] selected next_run = {next_run.time()}")
                 break
+            else:
+                print(f"[Scheduler] skipped {candidate.time()} (already passed)")
 
+        # Se oggi non c'è nulla, vai a domani
         if next_run is None:
-            # all times passed → first time tomorrow
-            next_run = (now + timedelta(days=1)).replace(
-                hour=TARGET_TIMES[0].hour,
-                minute=TARGET_TIMES[0].minute,
-                second=0,
+            tomorrow = now + timedelta(days=1)
+            t = local_times[0]
+
+            next_run = tomorrow.replace(
+                hour=t.hour,
+                minute=t.minute,
+                second=t.second, 
                 microsecond=0,
             )
 
+            print(f"[Scheduler] no slots left today → next_run tomorrow at {next_run.time()}")
+
         delay = (next_run - now).total_seconds()
+        print(f"[Scheduler] sleeping for {int(delay)} seconds")
+
         await asyncio.sleep(delay)
 
-        # 🔍 get last message
-        messages = await client.get_messages(ALLOWED_CHAT_ID, limit=1)
-        if not messages:
-            continue
-        last_message: Message = messages[0]
-        last_message_text = last_message.text or ""
+        print(
+            f"\n[Scheduler] 🔔 TRIGGERED "
+            f"(target={next_run.time()}, now={datetime.now().time()})"
+        )
 
-        if "Ottimo, hai completato tutte le sfide odierne!" in last_message_text:
-            await last_message.reply("Finito. Ora posso riposare! 😴💤")
-        else:
-            answered = False
-            try: 
-                answered = await reply_to_text(last_message, last_message_text)
-            except Exception as e:
-                await last_message.reply(f"❗❗ ERRORE ❗❗\n{e}")
-            if not answered:
-                await last_message.reply("⏰⏰ NON HO FINITO DI LAVORARE! ⏰⏰")
+        try:
+            messages = await client.get_messages(ALLOWED_CHAT_ID, limit=1)
+            if not messages:
+                continue
+            last_message: Message = messages[0]
+            last_message_text = last_message.text or ""
+
+            if last_message.photo:
+                print("The last message is an image")
+
+            if "Ottimo, hai completato tutte le sfide odierne!" in last_message_text:
+                await last_message.reply("Finito. Ora posso riposare! 😴💤")
+            else:
+                answered = False
+                try: 
+                    answered = await reply_to_text(last_message, last_message_text,client)
+                except Exception as e:
+                    await last_message.reply(f"❗❗ ERRORE ❗❗\n{e}")
+                if not answered:
+                    await last_message.reply("⏰⏰ NON HO FINITO DI LAVORARE! ⏰⏰")
+
+        except Exception as e:
+            print(f"[Scheduler] ❌ ERROR: {e}")
 
 def register_handlers(client):
 
