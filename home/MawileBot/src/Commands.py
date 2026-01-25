@@ -1812,7 +1812,8 @@ async def team_update(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
                 jsonFile = open(ENV_PATH+"/secret_player_data.json", "w+")
                 jsonFile.write(json.dumps(data))
                 jsonFile.close()
-        except: 
+        except Exception as e:
+            print(e)
             await update.message.reply_text("Ma che roba mi hai mandato? Non riesco a leggere questa immagine...")
     return ConversationHandler.END  # Fallback
 

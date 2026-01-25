@@ -76,6 +76,31 @@ damage_array = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1/2, 0, 1, 1, 1/2,
                     [1, 1/2, 1/2, 1/2, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1/2, 2],
                     [1, 1/2, 1, 1, 1, 1, 2, 1/2, 1, 1, 1, 1, 1, 1, 2, 2, 1/2, 1]])
 
+typing_as_triple = {
+    "normal" : [188 ,193, 199], 
+    "fire": [250, 190, 135],
+    "water" : [132, 189, 231], 
+    "electric" : [249, 224 , 84], 
+    "grass": [139, 216, 151], 
+    "ice": [143, 225 , 214], 
+    "fighting" : [233, 137, 171], 
+    "poison": [213, 170, 225], 
+    "ground": [238, 169, 131], 
+    "flying" : [187, 206, 237], 
+    "psychic" : [248, 158, 168],
+    "bug": [182, 218, 106], 
+    "rock" : [224, 214, 188], 
+    "ghost": [167, 182, 215], 
+    "dragon": [107, 169, 220], 
+    "dark": [159, 155 , 165], 
+    "steel": [159, 190, 201],  
+    "fairy" : [249 ,183, 240],
+    'empty' : [255, 255, 255]
+}
+
+TYPE_COLORS = list(typing_as_triple.keys())
+COLORS_TYPE = np.array(list(typing_as_triple.values()), dtype=np.float32)
+
 def poke_exist(pokea):
     try:
         poke.get(name=pokea)
@@ -1650,8 +1675,27 @@ async def automatic_card_reader(image):
 
             pokemon_probable_power = compare_with_saved_data_json(splits)
 
+            box_width = 45
+            box_height = 45
+            left = 695 + col * 345
+            upper = 458 + row * 613
+            right = left + box_width
+            lower = upper + box_height
+            type1_crop = image.crop((left, upper, right, lower))
+
+            box_width = 45
+            box_height = 45
+            left = 747 + col * 345
+            upper = 458 + row * 613
+            right = left + box_width
+            lower = upper + box_height
+            type2_crop = image.crop((left, upper, right, lower))
+
+            typing = (typing_from_avg_colors(type1_crop),typing_from_avg_colors(type2_crop))
+
             if pokemon_probable_name != '':
                 if poke_exist(pokemon_probable_name.lower()):
+                    pokemon_probable_name = check_alt_forms(pokemon_probable_name.lower(),*typing)
                     secret_data.append([pokemon_probable_name,int(pokemon_probable_level)])
                     if round(get_poke_bst(pokemon_probable_name.lower())*int(pokemon_probable_level)/100) != int(pokemon_probable_power):
                         errors.append('01')
@@ -1663,6 +1707,8 @@ async def automatic_card_reader(image):
                         choices = json.load(f)
 
                     pokemon_name = most_similar(pokemon_probable_name, choices)
+                    pokemon_name = check_alt_forms(pokemon_name.lower(),*typing)
+
                     if round(get_poke_bst(pokemon_name)*int(pokemon_probable_level)/100) != int(pokemon_probable_power):
                         errors.append('11')
                     else:
@@ -1671,8 +1717,75 @@ async def automatic_card_reader(image):
             else:
                 secret_data.append([None,1])
                 errors.append('00')
-
+    image.save('test.png')
     return secret_data,errors
+
+def typing_from_avg_colors(img):
+    avg_rgb = np.asarray(img).mean(axis=(0, 1))
+    
+    diff = COLORS_TYPE - avg_rgb           # (N,3)
+    dist = np.sum(diff * diff, axis=1)  # squared Euclidean
+    
+    idx = np.argmin(dist)
+    return TYPE_COLORS[idx] if TYPE_COLORS[idx] != 'empty' else None
+
+ALT_FORMS = {
+    # Alola
+    ('meowth', 'dark'): 'meowth-alola',
+    ('raichu', 'electric', 'psychic'): 'raichu-alola',
+    ('ninetales', 'ice', 'fairy'): 'ninetales-alola',
+    ('sandshrew', 'ice', 'steel'): 'sandshrew-alola',
+    ('vulpix', 'ice'): 'vulpix-alola',
+    ('marowak', 'fire', 'ghost'): 'marowak-alola',
+    ('exeggutor', 'grass', 'dragon'): 'exeggutor-alola',
+    ('rattata', 'dark', 'normal'): 'rattata-alola',
+    ('raticate', 'dark', 'normal'): 'raticate-alola',
+    ('diglett', 'ground', 'steel'): 'diglett-alola',
+    ('dugtrio', 'ground', 'steel'): 'dugtrio-alola',
+    ('geodude', 'rock', 'electric'): 'geodude-alola',
+    ('graveler', 'rock', 'electric'): 'graveler-alola',
+    ('golem', 'rock', 'electric'): 'golem-alola',
+    ('grimer', 'poison', 'dark'): 'grimer-alola',
+    ('muk', 'poison', 'dark'): 'muk-alola',
+
+    # Galar
+    ('meowth', 'steel'): 'meowth-galar',
+    ('ponyta', 'psychic'): 'ponyta-galar',
+    ('rapidash', 'psychic', 'fairy'): 'rapidash-galar',
+    ('farfetchd', 'fighting'): 'farfetchd-galar',
+    ('weezing', 'poison', 'fairy'): 'weezing-galar',
+    ('corsola', 'ghost'): 'corsola-galar',
+    ('zigzagoon', 'dark', 'normal'): 'zigzagoon-galar',
+    ('linoone', 'dark', 'normal'): 'linoone-galar',
+    ('darumaka', 'ice'): 'darumaka-galar',
+    ('darmanitan', 'ice'): 'darmanitan-galar',
+    ('slowpoke', 'psychic'): 'slowpoke-galar',
+    ('slowbro', 'poison', 'psychic'): 'slowbro-galar',
+    ('slowking', 'poison', 'psychic'): 'slowking-galar',
+
+    # Hisui
+    ('growlithe', 'fire', 'rock'): 'growlithe-hisui',
+    ('arcanine', 'fire', 'rock'): 'arcanine-hisui',
+    ('voltorb', 'electric', 'grass'): 'voltorb-hisui',
+    ('electrode', 'electric', 'grass'): 'electrode-hisui',
+    ('zorua', 'normal', 'ghost'): 'zorua-hisui',
+    ('zoroark', 'normal', 'ghost'): 'zoroark-hisui',
+    ('sneasel', 'fighting', 'poison'): 'sneasel-hisui',
+    ('qwilfish', 'dark', 'poison'): 'qwilfish-hisui',
+    ('basculin', 'water', 'ghost'): 'basculin-hisui',
+}
+
+def check_alt_forms(name, type1=None, type2=None):
+    key2 = (name, type1)
+    key3 = (name, type1, type2)
+    key3r = (name, type2, type1)
+
+    return (
+        ALT_FORMS.get(key3)
+        or ALT_FORMS.get(key3r)
+        or ALT_FORMS.get(key2)
+        or name
+    )
 
 def load_fonts(font_path = '/arialbd.ttf', font_size = 20, font_size_small = 17, font_size_big = 24):
     try:
