@@ -1773,6 +1773,20 @@ ALT_FORMS = {
     ('sneasel', 'fighting', 'poison'): 'sneasel-hisui',
     ('qwilfish', 'dark', 'poison'): 'qwilfish-hisui',
     ('basculin', 'water', 'ghost'): 'basculin-hisui',
+    ('typhlosion', 'fire', 'ghost'): 'typhlosion-hisui',
+    ('samurott', 'water', 'dark'): 'samurott-hisui',
+    ('decidueye', 'grass', 'fighting'): 'decidueye-hisui',
+    ('lilligant', 'grass', 'fighting'): 'lilligant-hisui',
+    ('sliggoo', 'steel', 'dragon'): 'sliggoo-hisui',
+    ('goodra', 'steel', 'dragon'): 'goodra-hisui',
+    ('avalugg', 'ice', 'rock'): 'avalugg-hisui',
+    ('braviary', 'psychic', 'flying'): 'braviary-hisui',
+
+    # Paldea
+    ('tauros', 'fighting'): 'tauros-paldea-combat-breed',
+    ('tauros', 'fighting', 'fire'): 'tauros-paldea-blaze-breed',
+    ('tauros', 'fighting', 'water'): 'tauros-paldea-aqua-breed',
+    ('wooper', 'poison', 'ground'): 'wooper-paldea'
 }
 
 def check_alt_forms(name, type1=None, type2=None):
