@@ -1,3 +1,4 @@
 1) always git pull
 2) docker-compose up -d
+2.1) docker-compose up -d --force-recreate
 3) docker-compose down

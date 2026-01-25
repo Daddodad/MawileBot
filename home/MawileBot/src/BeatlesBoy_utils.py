@@ -1,12 +1,14 @@
 import re
 import os
 import sys
-print(sys.path[0])
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-SRC_PATH = os.path.abspath(os.path.join(BASE_DIR, '..', 'src'))
-sys.path.insert(0, SRC_PATH)
+if os.path.exists('/home/SableyeBot/src'):
+    ENV_PATH = '/home/SableyeBot/src'
+    sys.path.insert(0,ENV_PATH) # SableyeBot
+else:
+    ENV_PATH = './home/MawileBot/src'
+    sys.path.insert(0,ENV_PATH) # MawileBot
+    sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from poke_lib import automatic_card_reader
 
@@ -33,3 +35,5 @@ async def aggiorna_team_da_foto(pil_image):
     secret_data,errors = await automatic_card_reader(pil_image)
     print("Dati segreti estratti:", secret_data)
     print("Errori durante l'estrazione:", errors)
+    team = {}
+    return team

@@ -7,12 +7,7 @@ from random import randrange
 from PIL import Image
 from telethon import events
 import asyncio
-from src.BeatlesBoy_utils import (
-    calculate_winning_options,
-    extract_pokemon_and_pl,
-    calculate_winning_options,
-    aggiorna_team_da_foto,
-)
+
 from telethon.tl.types import Message
 
 if os.path.exists('/home/SableyeBot/src'):
@@ -23,6 +18,22 @@ else:
     sys.path.insert(0,ENV_PATH) # MawileBot
     sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
+from BeatlesBoy_utils import (
+    calculate_winning_options,
+    extract_pokemon_and_pl,
+    calculate_winning_options,
+    aggiorna_team_da_foto,
+)
+
+# if os.path.exists('/home/SableyeBot/src'):
+#     ENV_PATH = '/home/SableyeBot/src'
+#     sys.path.insert(0,ENV_PATH) # SableyeBot
+# else:
+#     ENV_PATH = './home/MawileBot/src'
+#     sys.path.insert(0,ENV_PATH) # MawileBot
+#     sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+TESTING = True
 
 ALLOWED_CHAT_ID = -4998491045
 DAVIDE_CHAT_ID = 454010613
@@ -31,9 +42,14 @@ TARGET_TIMES = [
     dtime(15, 0),
     dtime(16, 0),
     dtime(17, 0),
+    dtime(17, 30),
+    dtime(18, 0),
+    dtime(18, 30),
     dtime(19, 0),
     dtime(20, 0),
     dtime(21, 0),
+    dtime(22, 0),
+    dtime(22, 30),
 ]
 
 async def scheduled_job(client):
@@ -42,13 +58,14 @@ async def scheduled_job(client):
 
     local_times = TARGET_TIMES.copy()
 
-    now = datetime.now() + timedelta(seconds=20)
-    injected_time = dtime(now.hour, now.minute, now.second)
+    if TESTING:
+        now = datetime.now() + timedelta(seconds=20)
+        injected_time = dtime(now.hour, now.minute, now.second)
 
-    if injected_time not in local_times:
-        local_times.append(injected_time)
-        local_times.sort()
-        print(f"[Scheduler] injected start time: {injected_time}")
+        if injected_time not in local_times:
+            local_times.append(injected_time)
+            local_times.sort()
+            print(f"[Scheduler] injected start time: {injected_time}")
 
     while True:
         now = datetime.now()
@@ -99,13 +116,15 @@ async def scheduled_job(client):
         )
 
         try:
-            messages = await client.get_messages(ALLOWED_CHAT_ID, limit=1)
+            messages = await client.get_messages(ALLOWED_CHAT_ID, limit=2)
             if not messages:
                 continue
             last_message: Message = messages[0]
             last_message_text = last_message.text or ""
 
-            if last_message.photo:
+            if last_message.photo and TESTING:
+                last_message: Message = messages[1]
+                last_message_text = last_message.text or ""
                 print("The last message is an image")
 
             if "Ottimo, hai completato tutte le sfide odierne!" in last_message_text:
@@ -131,8 +150,8 @@ def register_handlers(client):
             return
 
         # Ignore your own outgoing messages (VERY important)
-        # if event.out:
-        #     return
+        if event.out:
+            return
 
         # ---- TEXT HANDLING ----
         if event.text:
@@ -159,14 +178,24 @@ async def replies_to_wild_pokemon(event, text, client):
     pokemon, pl = await extract_pokemon_and_pl(text)
     await event.reply(f"Ho incontrato {pokemon} di PL {pl}.")
 
-    with open(ENV_PATH+"/BeatlesBoy_team.json", "r", encoding="utf-8") as f:
+    ENV_PATH = os.path.join(os.getcwd(), "src")  # or wherever your folder is
+
+    json_path = os.path.join(ENV_PATH, "BeatlesBoy_team.json")
+    print("Loading JSON from:", json_path)
+
+    with open(json_path, "r", encoding="utf-8") as f:
         team = json.load(f)
 
     await event.reply("Aspettando la FOTO del team... 2 minuti massimo ⏳")
     await asyncio.sleep(120)  # aspetta 2 minuti
 
     # recupera l'ultimo messaggio della chat
-    messages = await client.get_messages(event.chat_id, limit=1)
+    messages = await client.get_messages(
+        event.chat_id,
+        min_id=event.id,  # messages with id > event.id
+        limit=1
+    )
+
     if not messages:
         await event.reply("Non ci sono messaggi recenti.")
         last_message = None
@@ -176,13 +205,13 @@ async def replies_to_wild_pokemon(event, text, client):
             await event.reply("Ho ricevuto la foto, la elaboro...")
             photo_bytes = await last_message.download_media(bytes)
             pil_image = Image.open(BytesIO(photo_bytes))
-            await aggiorna_team_da_foto(pil_image)
+            team = await aggiorna_team_da_foto(pil_image)
         else:
             await event.reply("Non è arrivata nessuna foto... continuo comunque.")
 
     winning_options = await calculate_winning_options(pokemon, pl, team)
     winning_option = winning_options[0] if winning_options else None
     if not winning_option:
-        return randrange(1, 10)  # random 1-9
+        return 1  # random 1-9
     else:
         return winning_option

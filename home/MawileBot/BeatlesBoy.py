@@ -2,6 +2,7 @@
 import os
 from telethon import TelegramClient
 import sys
+
 if os.path.exists('/home/SableyeBot/src'):
     sys.path.insert(0,'/home/SableyeBot/src') # SableyeBot
 else:
