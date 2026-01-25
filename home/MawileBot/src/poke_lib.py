@@ -503,7 +503,7 @@ def poke_gym(chat_id, gym):
     create_pokemon_collage(tab, type = 'gym', path=path, enemy_powers = limits)
 
     #save_dataframe_as_image(tab, path)  # OLD IMAGE METHOD
-    return path
+    return path, len(team)
 
 
 def match_prevision(team, enemy, enemy_powers, multiplier, necessary_lvls=None):

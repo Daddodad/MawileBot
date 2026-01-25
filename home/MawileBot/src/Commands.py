@@ -556,7 +556,7 @@ async def gym_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
         await query.edit_message_text(f"Il moltiplicatore della palestra sarà {temp_multi}\n\nAttendi per la foto...")
         # Call the poke_gym function
-        image_path = poke_gym(str(chat_id), gym_type)
+        image_path, numero_pokemon = poke_gym(str(chat_id), gym_type)
         # Open the image file
         try:
             cap = f"Ecco il risultato del tuo team contro la palestra {gym_type.capitalize()}.\n\n🔴: batte la fascia bassa ({enemy_powers[0]})\n🟡: batte la fascia media ({enemy_powers[2]})\n🟢: batte la fascia alta ({enemy_powers[4]})"
@@ -571,7 +571,7 @@ async def gym_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
             with open(image_path, 'rb') as image_file:
                 image = Image.open(image_file)
                 width, height = image.size
-                if (width,height) == (4250,196):
+                if numero_pokemon == 1:
                     await context.bot.send_message(
                         chat_id=chat_id,
                         text=f"Hai un solo pokémon in squadra... L'immagine è troppo piccola per essere visualizzata correttamente."
