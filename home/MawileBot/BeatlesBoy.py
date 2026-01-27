@@ -30,8 +30,6 @@ async def main():
     print("Press Ctrl+C to stop...")
     await client.run_until_disconnected()
 
-
-
 if __name__ == '__main__':
     import asyncio
     asyncio.run(main())

@@ -33,7 +33,6 @@ from BeatlesBoy_utils import (
 #     sys.path.insert(0,ENV_PATH) # MawileBot
 #     sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-TESTING = True
 
 ALLOWED_CHAT_ID = -4998491045
 DAVIDE_CHAT_ID = 454010613
@@ -58,14 +57,14 @@ async def scheduled_job(client):
 
     local_times = TARGET_TIMES.copy()
 
-    if TESTING:
-        now = datetime.now() + timedelta(seconds=20)
-        injected_time = dtime(now.hour, now.minute, now.second)
+    # if TESTING:
+    #     now = datetime.now() + timedelta(seconds=20)
+    #     injected_time = dtime(now.hour, now.minute, now.second)
 
-        if injected_time not in local_times:
-            local_times.append(injected_time)
-            local_times.sort()
-            print(f"[Scheduler] injected start time: {injected_time}")
+    #     if injected_time not in local_times:
+    #         local_times.append(injected_time)
+    #         local_times.sort()
+    #         print(f"[Scheduler] injected start time: {injected_time}")
 
     while True:
         now = datetime.now()
@@ -122,21 +121,19 @@ async def scheduled_job(client):
             last_message: Message = messages[0]
             last_message_text = last_message.text or ""
 
-            if last_message.photo and TESTING:
-                last_message: Message = messages[1]
-                last_message_text = last_message.text or ""
-                print("The last message is an image")
+            # if last_message.photo and TESTING:
+            #     last_message: Message = messages[1]
+            #     last_message_text = last_message.text or ""
+            #     print("The last message is an image")
 
             if "Ottimo, hai completato tutte le sfide odierne!" in last_message_text:
                 await last_message.reply("Finito. Ora posso riposare! 😴💤")
             else:
-                answered = False
-                try: 
-                    answered = await reply_to_text(last_message, last_message_text,client)
-                except Exception as e:
-                    await last_message.reply(f"❗❗ ERRORE ❗❗\n{e}")
-                if not answered:
-                    await last_message.reply("⏰⏰ NON HO FINITO DI LAVORARE! ⏰⏰")
+                # try: 
+                #     answered = await reply_to_text(last_message, last_message_text,client)
+                # except Exception as e:
+                #     await last_message.reply(f"❗❗ ERRORE ❗❗\n{e}")
+                await last_message.reply("⏰⏰ NON HO FINITO DI LAVORARE! ⏰⏰")
 
         except Exception as e:
             print(f"[Scheduler] ❌ ERROR: {e}")
@@ -150,8 +147,8 @@ def register_handlers(client):
             return
 
         # Ignore your own outgoing messages (VERY important)
-        if event.out:
-            return
+        # if event.out:
+        #     return
 
         # ---- TEXT HANDLING ----
         if event.text:
@@ -212,6 +209,6 @@ async def replies_to_wild_pokemon(event, text, client):
     winning_options = await calculate_winning_options(pokemon, pl, team)
     winning_option = winning_options[0] if winning_options else None
     if not winning_option:
-        return 1  # random 1-9
+        return 'Avrei schierato a caso 1'  # random 1-9
     else:
-        return winning_option
+        return f"avrei schierato {winning_option}"
