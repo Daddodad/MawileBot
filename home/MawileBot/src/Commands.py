@@ -1653,7 +1653,7 @@ async def card_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                 draw.text((x+offset_x+randomshift(), y+offset_y+randomshift()), pokemon_name.capitalize(), fill=font_color, font=font)
 
                 # Load and draw Pokemon image
-                pokemon_offset_y = 65
+                pokemon_offset_y = 71 #(65 per Cursed)(68 per Drip)
                 if "Missing" not in pokemon_image_path:
                     try:
                         pokemon_image = Image.open(pokemon_image_path)

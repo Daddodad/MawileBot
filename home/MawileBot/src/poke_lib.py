@@ -1277,8 +1277,6 @@ def randomly_shiny():
 
 def create_pokemon_collage(df, type = 'gym', path=None, enemy_powers=None):
 
-
-
     image_width = 250 # Assuming all images have the same size (250x98)
     image_height = 98
 
