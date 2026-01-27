@@ -1,6 +1,6 @@
 {
 
-    "order_of_gym_types" : ["grass", "earth", "fighting", "psychic",
+    "order_of_gym_types" : ["grass", "ground", "fighting", "psychic",
         "bug", "steel", "water", "rock", "fire", "flying", "ice", "fairy",
         "poison","electric", "normal" , "dark",  "dragon", "ghost"],
 

@@ -1605,7 +1605,7 @@ async def card_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
             image = Image.open(template_path)
         draw = ImageDraw.Draw(image)
 
-        font, font_small, font_big = load_fonts('/Drip.ttf', font_size = 50, font_size_small = 30, font_size_big = 70)
+        font, font_small, font_big = load_fonts('/SuperCursed.ttf', font_size = 50, font_size_small = 30, font_size_big = 70)
 
         for i in range(min(9, len(team))):
             row = i // 3
@@ -1618,7 +1618,7 @@ async def card_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
             x = col * 346
             y = row * 614
             #### DA CAMBIARE IN BASE AL FONT USATO:
-            font_color = '#731FA4'
+            font_color = '#360f5a'
             offset_x = 603 #(598 per Cursed)(603 per Drip)
             offset_y = 55 # (50 per Cursed)(55 per Drip)
             cell_width = 333

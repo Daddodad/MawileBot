@@ -29,11 +29,11 @@ from datetime import datetime, date
 # coeff = [3, 3.5, 4, 4.5, 5, 5.5]
 # NUM_CASELLE_PER_RIGA = 7
 
-LvL = [ 5,  6,  7,  8,  10, 12, 
-        13, 14, 15, 16, 17, 18, 
-        19, 21, 22, 23, 24, 25, 
-        27, 29, 30, 31, 33, 36, 
-        38, 41, 43, 45, 46, 49, 
+LvL = [ 5,  6,  7,  8,  10, 12,
+        13, 14, 15, 16, 17, 18,
+        19, 21, 22, 23, 24, 25,
+        27, 29, 30, 31, 33, 36,
+        38, 41, 43, 45, 46, 49,
         51, 54, 56, 58, 61, 62]
 coeff = [3, 3.5, 4, 4.5, 5, 5.5]
 NUM_CASELLE_PER_RIGA = 6
@@ -44,7 +44,7 @@ NUM_CASELLE_PER_RIGA = 6
 
 STARTING_DATE = date(2026,1,24)  # Data di inizio della lega, da cambiare ogni lega (metti il giorno prima, la prima casella dura solo 1)
 
-EVENTUALE_PAUSA = 2  # Giorni di pausa in una lega (mettili quando inizia la pausa)
+EVENTUALE_PAUSA = 0  # Giorni di pausa in una lega (mettili quando inizia la pausa)
 
 
 ###############################################################################################
@@ -77,23 +77,23 @@ damage_array = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1/2, 0, 1, 1, 1/2,
                     [1, 1/2, 1, 1, 1, 1, 2, 1/2, 1, 1, 1, 1, 1, 1, 2, 2, 1/2, 1]])
 
 typing_as_triple = {
-    "normal" : [188 ,193, 199], 
+    "normal" : [188 ,193, 199],
     "fire": [250, 190, 135],
-    "water" : [132, 189, 231], 
-    "electric" : [249, 224 , 84], 
-    "grass": [139, 216, 151], 
-    "ice": [143, 225 , 214], 
-    "fighting" : [233, 137, 171], 
-    "poison": [213, 170, 225], 
-    "ground": [238, 169, 131], 
-    "flying" : [187, 206, 237], 
+    "water" : [132, 189, 231],
+    "electric" : [249, 224 , 84],
+    "grass": [139, 216, 151],
+    "ice": [143, 225 , 214],
+    "fighting" : [233, 137, 171],
+    "poison": [213, 170, 225],
+    "ground": [238, 169, 131],
+    "flying" : [187, 206, 237],
     "psychic" : [248, 158, 168],
-    "bug": [182, 218, 106], 
-    "rock" : [224, 214, 188], 
-    "ghost": [167, 182, 215], 
-    "dragon": [107, 169, 220], 
-    "dark": [159, 155 , 165], 
-    "steel": [159, 190, 201],  
+    "bug": [182, 218, 106],
+    "rock" : [224, 214, 188],
+    "ghost": [167, 182, 215],
+    "dragon": [107, 169, 220],
+    "dark": [159, 155 , 165],
+    "steel": [159, 190, 201],
     "fairy" : [249 ,183, 240],
     'empty' : [255, 255, 255]
 }
@@ -1722,10 +1722,10 @@ async def automatic_card_reader(image):
 
 def typing_from_avg_colors(img):
     avg_rgb = np.asarray(img).mean(axis=(0, 1))
-    
+
     diff = COLORS_TYPE - avg_rgb           # (N,3)
     dist = np.sum(diff * diff, axis=1)  # squared Euclidean
-    
+
     idx = np.argmin(dist)
     return TYPE_COLORS[idx] if TYPE_COLORS[idx] != 'empty' else None
 
