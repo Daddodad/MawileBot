@@ -102,6 +102,7 @@ TYPE_COLORS = list(typing_as_triple.keys())
 COLORS_TYPE = np.array(list(typing_as_triple.values()), dtype=np.float32)
 
 def poke_exist(pokea):
+    print('Esiste il Pokémon:', pokea)
     try:
         poke.get(name=pokea)
         return True

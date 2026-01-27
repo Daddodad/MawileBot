@@ -584,20 +584,31 @@ async def gym_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         return ConversationHandler.END
 
 async def choose_pokemon_gym(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-    old_pokemon_name = update.message.text.strip().capitalize()
-    #print('Pokémon received:', pokemon_name)
-    pokemon_name = similar_pokemon_name(old_pokemon_name)
-    if old_pokemon_name.lower()!=pokemon_name.lower():
-            await update.message.reply_text(f"Assumo che con {old_pokemon_name} intendessi {pokemon_name}...")
+    old_pokemon_name = update.message.text.strip().lower()
 
-    if " " not in pokemon_name:
-        if poke_exist(pokemon_name):
-            await update.message.reply_text("Assumerò il livello sia 0...")
-            pokemon_name += ' 0'
+    #print('Pokémon received:', pokemon_name)
+    parts = old_pokemon_name.split()
+    if len(parts) == 1:
+        if poke_exist(old_pokemon_name):
+            pokemon_name = old_pokemon_name + ' 0'
         else:
-            await update.message.reply_text("Ignori le istruzioni, e sbagli pure a scrivere il Pokémon? Riprova.")
-            return CHOOSING_POKEMON_GYM
-    if poke_exist(pokemon_name.split(" ")[0]):
+            pokemon_name = similar_pokemon_name(old_pokemon_name.lower())
+            if old_pokemon_name.lower()!=pokemon_name.lower():
+                await update.message.reply_text(f"Assumo che con {old_pokemon_name} intendessi {pokemon_name.capitalize()}...")
+            pokemon_name = pokemon_name + ' 0'
+        await update.message.reply_text(f"Assumerò il livello di {old_pokemon_name} sia 0...")
+    elif len(parts) == 2 and parts[1].isdigit():
+        if not poke_exist(old_pokemon_name.split()[0]):
+            new_pokemon_name = similar_pokemon_name(old_pokemon_name.split()[0].lower())
+            if old_pokemon_name.split()[0].lower()!=new_pokemon_name.lower():
+                await update.message.reply_text(f"Assumo che con {old_pokemon_name.split()[0]} intendessi {new_pokemon_name.capitalize()}...")
+            pokemon_name = new_pokemon_name + ' ' + old_pokemon_name.split()[1]
+        else:
+            pokemon_name = old_pokemon_name
+    else: 
+        await update.message.reply_text("Ma che hai scritto?? Segui le istruzioni... Riprova.")
+        return CHOOSING_POKEMON_GYM
+    try:
         context.user_data['test_pokemon'] = pokemon_name
         keyboard = [
             [InlineKeyboardButton("Bastano 4", callback_data="gggg_test_4")],
@@ -609,9 +620,11 @@ async def choose_pokemon_gym(update: Update, context: ContextTypes.DEFAULT_TYPE)
             reply_markup=reply_markup
         )
         return CHOOSING_GYM_COUNT
-    else:
-        await update.message.reply_text("Non conosco questo Pokémon... Riprova.")
+    except Exception as e:
+        print('Errore in gym test:', e)
+        await update.message.reply_text("Qualcosa è andato storto con i nomi dei pokemon... Riprova.")
         return CHOOSING_POKEMON_GYM
+
 
 async def handle_gym_count_choice(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     query = update.callback_query
@@ -741,9 +754,9 @@ def create_team_keyboard(team):
 async def choose_pokemon(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     old_pokemon_name = update.message.text
     #print('Pokémon received:', pokemon_name)
-    pokemon_name = similar_pokemon_name(old_pokemon_name)
+    pokemon_name = similar_pokemon_name(old_pokemon_name.lower())
     if old_pokemon_name.lower()!=pokemon_name.lower():
-            await update.message.reply_text(f"Assumo che con {old_pokemon_name} intendessi {pokemon_name}...")
+            await update.message.reply_text(f"Assumo che con {old_pokemon_name} intendessi {pokemon_name.capitalize()}...")
     if poke_exist(pokemon_name) == True:
         index = context.user_data['editing_index']
         #current_team[index][0] = pokemon_name
@@ -1401,14 +1414,18 @@ async def enter_pokemons(update: Update, context: ContextTypes.DEFAULT_TYPE):
     poke_list = message_text.split()
     new_poke_list = []
     for p in poke_list:
-        #print('Pokémon received:', pokemon_name)
-        new_p = similar_pokemon_name(p)
-        if new_p.lower()!=p.lower():
-                await update.message.reply_text(f"Assumo che con {p} intendessi {new_p}...")
-        if poke_exist(new_p) == False:
-            await update.message.reply_text(f'Mhh... Non mi risulta nessun "{p}"... Riprova a dirmi la lista.')
-            return ENTER_POKEMONS
-        new_poke_list.append(new_p)
+        #print('Pokémon received:', p)
+        if poke_exist(p):
+            new_poke_list.append(p)
+        else:
+            new_p = similar_pokemon_name(p.lower())
+            if new_p.lower()!=p.lower():
+                if poke_exist(new_p) == False:
+                    await update.message.reply_text(f'Mhh... Non mi risulta nessun "{p}"... Riprova a dirmi la lista.')
+                    return ENTER_POKEMONS
+                else:
+                    await update.message.reply_text(f"Assumo che con {p} intendessi {new_p.capitalize()}...")
+                    new_poke_list.append(new_p)
         
     poke_list = [p.lower() for p in new_poke_list]  # Convert all Pokémon names to lowercase
     
