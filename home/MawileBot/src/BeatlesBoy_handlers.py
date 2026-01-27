@@ -173,9 +173,7 @@ async def reply_to_text(event, text, client):
 
 async def replies_to_wild_pokemon(event, text, client):
     pokemon, pl = await extract_pokemon_and_pl(text)
-    await event.reply(f"Ho incontrato {pokemon} di PL {pl}.")
 
-    ENV_PATH = os.path.join(os.getcwd(), "src")  # or wherever your folder is
 
     json_path = os.path.join(ENV_PATH, "BeatlesBoy_team.json")
     print("Loading JSON from:", json_path)
@@ -183,7 +181,7 @@ async def replies_to_wild_pokemon(event, text, client):
     with open(json_path, "r", encoding="utf-8") as f:
         team = json.load(f)
 
-    await event.reply("Aspettando la FOTO del team... 2 minuti massimo ⏳")
+    await event.reply(f"Ho incontrato {pokemon} di PL {pl}.\n Aspettando la FOTO del team... 2 minuti massimo ⏳")
     await asyncio.sleep(120)  # aspetta 2 minuti
 
     # recupera l'ultimo messaggio della chat
@@ -199,7 +197,7 @@ async def replies_to_wild_pokemon(event, text, client):
     else:
         last_message: Message = messages[0]
         if last_message.photo:
-            await event.reply("Ho ricevuto la foto, la elaboro...")
+            await last_message.reply("Ho ricevuto la foto, la elaboro...")  # ✅
             photo_bytes = await last_message.download_media(bytes)
             pil_image = Image.open(BytesIO(photo_bytes))
             team = await aggiorna_team_da_foto(pil_image)

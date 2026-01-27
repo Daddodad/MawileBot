@@ -1,7 +1,6 @@
 import re
 import os
 import sys
-
 if os.path.exists('/home/SableyeBot/src'):
     ENV_PATH = '/home/SableyeBot/src'
     sys.path.insert(0,ENV_PATH) # SableyeBot
@@ -9,7 +8,7 @@ else:
     ENV_PATH = './home/MawileBot/src'
     sys.path.insert(0,ENV_PATH) # MawileBot
     sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
+    
 from poke_lib import automatic_card_reader
 
 async def extract_pokemon_and_pl(text):
