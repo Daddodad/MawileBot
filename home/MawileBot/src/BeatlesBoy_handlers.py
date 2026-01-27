@@ -181,7 +181,7 @@ async def replies_to_wild_pokemon(event, text, client):
     with open(json_path, "r", encoding="utf-8") as f:
         team = json.load(f)
 
-    await event.reply(f"Ho incontrato {pokemon} di PL {pl}.\n Aspettando la FOTO del team... 2 minuti massimo ⏳")
+    await event.reply(f"Ho incontrato {pokemon} di PL {pl}.\nAspettando la FOTO del team... 2 minuti massimo ⏳")
     await asyncio.sleep(120)  # aspetta 2 minuti
 
     # recupera l'ultimo messaggio della chat
