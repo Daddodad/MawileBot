@@ -8,4 +8,4 @@ RUN pip install -r requirements.txt
 # Step 2: copy the rest of your code
 COPY . .
 
-CMD ["python", "home/MawileBot/BeatlesBoy.py"]
+CMD ["python", "-u", "home/MawileBot/BeatlesBoy.py"]

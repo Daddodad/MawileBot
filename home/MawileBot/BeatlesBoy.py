@@ -14,7 +14,7 @@ from src.BeatlesBoy_handlers import register_handlers, scheduled_job
 api_id = 32734550
 api_hash = '18742bc7269a1e306dce108908ae5291'
 
-client = TelegramClient('userbot', api_id, api_hash)
+client = TelegramClient('sessions/userbot', api_id, api_hash)
 
 async def main():
     await client.start()
