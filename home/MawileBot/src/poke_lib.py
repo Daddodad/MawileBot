@@ -102,7 +102,7 @@ TYPE_COLORS = list(typing_as_triple.keys())
 COLORS_TYPE = np.array(list(typing_as_triple.values()), dtype=np.float32)
 
 def poke_exist(pokea):
-    print('Esiste il Pokémon:', pokea)
+    #print('Esiste il Pokémon:', pokea,'?')
     try:
         poke.get(name=pokea)
         return True
@@ -169,8 +169,17 @@ def type_interaction(type_att,type_def):
     return (damage_array[type_att,type_def])
 
 def calculate_bonus_answer(bonus_pokemon, moltiplicatore):
+    print(bonus_pokemon, moltiplicatore)
     try:
         poke1,poke2 = bonus_pokemon.split(" ")
+        with open(ENV_PATH+'/pokemon_list.json', 'r', encoding="utf-8") as f:
+            choices = json.load(f)
+        if not poke_exist(poke1):
+            poke1 = most_similar(poke1, choices).capitalize()
+            #manda messaggio
+        if not poke_exist(poke2):
+            poke2 = most_similar(poke2, choices).capitalize()
+            #manda messaggio
         try:
             [b1,b2] = calculate_bonus(poke1, poke2, moltiplicatore)
             text = f"Moltiplicatore: {moltiplicatore}\n\n{poke1}: {b1}\n{poke2}: {b2}\n\n"
@@ -182,7 +191,7 @@ def calculate_bonus_answer(bonus_pokemon, moltiplicatore):
             text = 'Ku ku ku... Non conosco questi Pokémon...? Riprova.'
     except:
         text = 'Non hai seguito bene le mie istruzioni... Riprova...'
-    return text
+    return poke1, poke2, text
 
 async def check_route(chat_id):
     jsonFile = open(ENV_PATH+"/secret_player_data.json", "r") # Open the JSON file for reading
@@ -200,8 +209,8 @@ def get_casella():
 
 def has_lega_ended():
     casella = get_casella()
-    print(casella)
-    print(len(LvL))
+    #print(casella)
+    #print(len(LvL))
     if casella>=len(LvL):
         return True
     return
@@ -301,7 +310,7 @@ def has_a_team(chat_id):
     return False
 
 def poke_lega_test(pokemon, level, name, multiplier ,only_perc = False):
-    print('00000')
+    #print('00000')
     message = f'Trainer: {name} '
     if name == 'generic' or name == 'Generic':
         message+= '(310 Pokémon con bst superiore a 500)'
@@ -628,7 +637,7 @@ def poke_cell_gym(casella):
 def poke_cell(cell):
     start = STARTING_DATE
     today = datetime.now().date()
-    print(today, start)
+    #print(today, start)
     offset = cell
     pausa = EVENTUALE_PAUSA
     casella = int(((today-start).days-pausa)/2) + offset
@@ -803,15 +812,15 @@ def poke_cell_specific(route,cell,encounters):
         return None
 
 
-async def poke_fight(chat_id,trainer,pokemons):
+async def poke_fight(chat_id,trainer,pokemons,is_capopalestra = False):
     if trainer == True:
-        path, enemy_powers = await poke_trainer(chat_id,pokemons)
+        path, enemy_powers = await poke_trainer(chat_id,pokemons,is_capopalestra = is_capopalestra)
     else:
         path, enemy_powers = await poke_encounter(chat_id,pokemons)
     return path, enemy_powers
 
 
-async def poke_trainer(chat_id,pokemons):
+async def poke_trainer(chat_id,pokemons, is_capopalestra = False):
     with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
         priv_data = json.load(file)
     team = [[pokemon[0], get_power(pokemon[0], pokemon[1])] for pokemon in priv_data[chat_id]["team"] if pokemon[0]]
@@ -823,6 +832,8 @@ async def poke_trainer(chat_id,pokemons):
         offset += 1
     #print(casella, offset)
 
+    if is_capopalestra:
+        offset += 1
     _, enemy_powers, _, multiplier, _ = poke_cell(offset)
 
     tab, limits = match_prevision(team, pokemons, enemy_powers, multiplier)

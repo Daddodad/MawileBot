@@ -312,15 +312,22 @@ async def bonus(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     return BONUS_READ_POKEMONS
 
 async def show_main_bonus_menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    MULT = 20
+    MULT = poke_cell(0)[3]
     if  context.user_data.get('bonus_fallito') == True:      # Se ho già fallito a dire pokemon, rileggi
         context.user_data['moltiplicatore'] = MULT
         context.user_data['bonus_pokemon'] = update.message.text
     elif 'bonus_pokemon' not in context.user_data.keys():   # Se non sto cambiando moltiplicatore, leggi:
         context.user_data['moltiplicatore'] = MULT
         context.user_data['bonus_pokemon'] = update.message.text
-    text = calculate_bonus_answer(context.user_data.get('bonus_pokemon'), context.user_data.get('moltiplicatore') )
-    if text[0] == 'M': # Da fixare
+    np1, np2, text = calculate_bonus_answer(context.user_data.get('bonus_pokemon'), context.user_data.get('moltiplicatore') )
+    try:
+        if np1.lower() != context.user_data.get('bonus_pokemon').split(" ")[0].lower():
+            await update.message.reply_text(text="Ho assunto che con "+context.user_data.get('bonus_pokemon').split(" ")[0]+" tu intendessi "+np1)
+        if np2.lower() != context.user_data.get('bonus_pokemon').split(" ")[1].lower():
+            await update.message.reply_text(text="Ho assunto che con "+context.user_data.get('bonus_pokemon').split(" ")[1]+" tu intendessi "+np2)
+    except:
+        pass
+    if text[0] == 'M': # Da fixare # Perchè? è bellissimo così
         context.user_data['bonus_fallito'] = False
         keyboard = [
         [InlineKeyboardButton("Cambia Moltiplicatore", callback_data=BONUS_CHANGE_MULT)],
@@ -460,7 +467,7 @@ async def show_command_help(update: Update, context: ContextTypes.DEFAULT_TYPE) 
         '\n\nSableyeBot ha 3 comandi segreti\. Alcuni possono usarli solo chi voglio io\. Però magari ci sono delle sorprese\.\.\.'\
         '\nUpdate: Sono /spy, /ping\_all, /card e /add\_meme\. Me li scordo, quindi li scrivo qui dove non li vedrà mai nessuno\.'\
         "\n\n\n*FAQ*\n\n"\
-        "*Q: Gli sviluppatori hanno accesso in chiaro alle informazioni della mia squadra?*\n*A:* Sì\n\n"\
+        "*Q: Come si chiamano Pokèmon regionali e forme alternative?*\n*A:* Pokèmon\-forma; Per esempio, Arcanine\-hisui, Morpeko\-hangry o Tauros\-paldea\-aqua\-breed\. Usate sempre i nomi inglesi\.\n\n"\
         "*Q: Come si chiama Farfetch\'d?*\n*A:* Farfetchd\n\n"\
         "*Q: Come si chiama Mega Sableye? E Mega Sableye Y?*\n*A:* Sableye\-mega e Sableye\-mega\-y\n\n"
 
@@ -1371,6 +1378,7 @@ def get_lega_conversation_handler():
 CHOOSE_FIGHT_TYPE, ENTER_POKEMONS = range(2)
 WILD = 'wild'
 TRAINER = 'trainer'
+CAPOPALESTRA = 'capopalestra'
 
 async def fight_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await id_check(update)
@@ -1386,12 +1394,18 @@ async def fight_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("La lega è finita... usa il comando /lega!")
 
     elif has_a_team(chat_id):
-        keyboard = [
-            [InlineKeyboardButton("Selvatici", callback_data=WILD)],
-            [InlineKeyboardButton("Allenatore", callback_data=TRAINER)]
-        ]
+        if poke_cell(0)[0] == True:
+            keyboard = [
+                [InlineKeyboardButton("Allenatore", callback_data=TRAINER)],
+                [InlineKeyboardButton("Capopalestra", callback_data=CAPOPALESTRA)]
+            ]
+        else:
+            keyboard = [
+                [InlineKeyboardButton("Selvatici", callback_data=WILD)],
+                #[InlineKeyboardButton("Allenatore", callback_data=TRAINER)]
+            ]            
         reply_markup = InlineKeyboardMarkup(keyboard)
-        await update.message.reply_text("Dimmi il tipo di incontro", reply_markup=reply_markup)
+        await update.message.reply_text("Dimmi il tipo di incontro:", reply_markup=reply_markup)
         return CHOOSE_FIGHT_TYPE
 
     else:
@@ -1438,6 +1452,13 @@ async def enter_pokemons(update: Update, context: ContextTypes.DEFAULT_TYPE):
                                   poke_list
                                   )
             cap = f"Ecco il risultato del tuo team contro questo allenatore.\n\n🔴: batte la fascia bassa ({e_p[0]})\n🟡: batte la fascia media ({e_p[1]})\n🟢: batte la fascia alta ({e_p[2]})"
+        elif context.user_data['fight_type'] == 'capopalestra':
+            image_path,e_p = await poke_fight(str(update.effective_chat.id),
+                                  True,
+                                  poke_list,
+                                  is_capopalestra=True
+                                  )
+            cap = f"Ecco il risultato del tuo team contro questo capopalestra.\n\n🔴: batte la fascia bassa ({e_p[0]})\n🟡: batte la fascia media ({e_p[1]})\n🟢: batte la fascia alta ({e_p[2]})"
         else:
             image_path,e_p = await poke_fight(str(update.effective_chat.id),
                                   False,
@@ -1485,26 +1506,17 @@ def get_fight_conversation_handler():
 
 def get_pokemon_image_path(pokemon_name):
 
-    """
-    Returns the path for the Pokemon image based on the Pokemon name.
-    Searches for the image in the /images/pokemons folder.
-    Returns 'Missing.png' if the specific Pokemon image is not found.
-    """
-    base_path = ENV_PATH+"/images/pokemons"
-    pokemon_image = f"{pokemon_name}.png"
-    full_path = os.path.join(base_path, pokemon_image)
+    base_path = ENV_PATH + "/images/pokemons"
+    target = f"{pokemon_name}.png".lower()
 
     try:
         for file in os.listdir(base_path):
-            if file.lower() == f"{pokemon_name.lower()}.png":
-                full_path = os.path.join(base_path, file)
+            if file.lower() == target:
+                return os.path.join(base_path, file)
     except Exception as e:
         print(f"card error: {e}")
 
-    if os.path.exists(full_path):
-        return full_path
-    else:
-        return os.path.join(base_path, "Missing.png")
+    return os.path.join(base_path, "Missing.png")
 
 async def card_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await id_check(update)
@@ -1811,6 +1823,10 @@ async def team_update(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
                 message = 'Team aggiornato:\n\n'
                 for x,y in zip(secret_data,errors):
                     if x[0] != None:
+                        try:
+                            x[0] = x[0].capitalize()
+                        except:
+                            pass
                         message+=f'{x[0]}'
                         if y == '10':
                             message += " (⚠️)"   
