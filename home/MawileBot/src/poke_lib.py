@@ -189,8 +189,10 @@ def calculate_bonus_answer(bonus_pokemon, moltiplicatore):
                 text = text + f"{poke2} ha un vantaggio netto di {b2-b1}"
         except:
             text = 'Ku ku ku... Non conosco questi Pokémon...? Riprova.'
+            return None, None, text
     except:
         text = 'Non hai seguito bene le mie istruzioni... Riprova...'
+        return None, None, text
     return poke1, poke2, text
 
 async def check_route(chat_id):
