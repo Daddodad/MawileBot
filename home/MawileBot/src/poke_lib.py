@@ -557,7 +557,7 @@ def match_prevision(team, enemy, enemy_powers, multiplier, necessary_lvls=None):
         #print('1v1')
         limits = [enemy_powers[0],enemy_powers[0],enemy_powers[0]]
 
-    print('LIMITS:', limits)
+    #print('LIMITS:', limits)
 
     bonus_netti,tab = match_table(team,enemy,multiplier,limits = limits, necessary_lvls=necessary_lvls)
 
@@ -839,8 +839,6 @@ async def poke_trainer(chat_id,pokemons, is_capopalestra = False):
     #print(casella, offset)
 
     _, enemy_powers, capopalestra_power, multiplier, _ = poke_cell(offset)
-
-    print('eee',enemy_powers, capopalestra_power)
 
     if not is_capopalestra:
         tab, limits = match_prevision(team, pokemons, enemy_powers, multiplier)
