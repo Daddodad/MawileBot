@@ -831,17 +831,18 @@ async def poke_trainer(chat_id,pokemons, is_capopalestra = False):
     casella = get_casella()
 
     offset = 0
-    while casella+1+offset not in gym_cell():
-        offset += 1
+
+    # while casella+1+offset not in gym_cell():
+    #     offset += 1
     #print(casella, offset)
 
-    if is_capopalestra:
-        offset += 1
+    _, enemy_powers, capopalestra_power, multiplier, _ = poke_cell(offset)
 
-    _, enemy_powers, _, multiplier, _ = poke_cell(offset)
-
-    tab, limits = match_prevision(team, pokemons, enemy_powers, multiplier)
-
+    if not is_capopalestra:
+        tab, limits = match_prevision(team, pokemons, enemy_powers, multiplier)
+    else:
+        tab, limits = match_prevision(team, pokemons, capopalestra_power, multiplier)
+        
     # If tab is a DataFrame and has a 'style' attribute, it means style.apply was used
     #if isinstance(tab, pd.DataFrame) and hasattr(tab, 'style'):  # OLD IMAGE METHOD
         #tab = tab.style.apply(highlight_max, subset=tab.columns[2:], args=enemy_powers)
