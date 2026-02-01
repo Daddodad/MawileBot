@@ -557,6 +557,8 @@ def match_prevision(team, enemy, enemy_powers, multiplier, necessary_lvls=None):
         #print('1v1')
         limits = [enemy_powers[0],enemy_powers[0],enemy_powers[0]]
 
+    print('LIMITS:', limits)
+
     bonus_netti,tab = match_table(team,enemy,multiplier,limits = limits, necessary_lvls=necessary_lvls)
 
     return tab, limits
@@ -838,21 +840,23 @@ async def poke_trainer(chat_id,pokemons, is_capopalestra = False):
 
     _, enemy_powers, capopalestra_power, multiplier, _ = poke_cell(offset)
 
+    print('eee',enemy_powers, capopalestra_power)
+
     if not is_capopalestra:
         tab, limits = match_prevision(team, pokemons, enemy_powers, multiplier)
     else:
         tab, limits = match_prevision(team, pokemons, capopalestra_power, multiplier)
-        
+
     # If tab is a DataFrame and has a 'style' attribute, it means style.apply was used
     #if isinstance(tab, pd.DataFrame) and hasattr(tab, 'style'):  # OLD IMAGE METHOD
         #tab = tab.style.apply(highlight_max, subset=tab.columns[2:], args=enemy_powers)
 
 
     path = ENV_PATH+f"/images/{chat_id}.png"
-    create_pokemon_collage(tab, type = 'trainer', path=path, enemy_powers = enemy_powers)
+    create_pokemon_collage(tab, type = 'trainer', path=path, enemy_powers = limits)
 
     #save_dataframe_as_image(tab, path) # OLD IMAGE METHOD
-    return path, enemy_powers
+    return path, limits
 
 
 async def poke_encounter(chat_id,encounter):
