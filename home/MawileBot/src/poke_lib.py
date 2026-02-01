@@ -35,6 +35,7 @@ LvL = [ 5,  6,  7,  8,  10, 12,
         27, 29, 30, 31, 33, 36,
         38, 41, 43, 45, 46, 49,
         51, 54, 56, 58, 61, 62]
+
 coeff = [3, 3.5, 4, 4.5, 5, 5.5]
 NUM_CASELLE_PER_RIGA = 6
 
@@ -658,7 +659,7 @@ def poke_cell(cell):
         else:
             encounter_power = [low_power,mid_power]
             boss_power = [int((LvL[casella]+aumento)*coeff[int((casella)/NUM_CASELLE_PER_RIGA)]),int((LvL[casella]+aumento+10)*coeff[int((casella)/NUM_CASELLE_PER_RIGA)]),int((LvL[casella]+aumento+18)*coeff[int((casella)/NUM_CASELLE_PER_RIGA)])]
-            return False, encounter_power, boss_power, multiplier
+            return False, encounter_power, boss_power, multiplier, None
     else:
         return None
 
@@ -836,6 +837,7 @@ async def poke_trainer(chat_id,pokemons, is_capopalestra = False):
 
     if is_capopalestra:
         offset += 1
+
     _, enemy_powers, _, multiplier, _ = poke_cell(offset)
 
     tab, limits = match_prevision(team, pokemons, enemy_powers, multiplier)
