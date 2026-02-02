@@ -30,11 +30,11 @@ from datetime import datetime, date
 # NUM_CASELLE_PER_RIGA = 7
 
 LvL = [ 5,  6,  7,  8,  10, 12,
-        13, 14, 15, 16, 17, 18,
-        19, 21, 22, 23, 24, 25,
-        27, 29, 30, 31, 33, 36,
-        38, 41, 43, 45, 46, 49,
-        51, 54, 56, 58, 61, 62]
+        12, 14, 15, 17, 18, 20,
+        20, 22, 24, 25, 27, 28,
+        29, 31, 33, 36, 39, 41,
+        41, 44, 46, 49, 51, 54,
+        54, 57, 59, 62, 65, 67]
 
 coeff = [3, 3.5, 4, 4.5, 5, 5.5]
 NUM_CASELLE_PER_RIGA = 6
@@ -1734,7 +1734,7 @@ async def automatic_card_reader(image):
             else:
                 secret_data.append([None,1])
                 errors.append('00')
-    image.save('test.png')
+    #image.save('test.png')
     return secret_data,errors
 
 def typing_from_avg_colors(img):
