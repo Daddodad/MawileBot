@@ -9,8 +9,7 @@ home/MawileBot/src/__pycache__/
 home/output_splits/temp/
 
 # Ignore the whole sessions folder
-home/MawileBot/sessions/
-home/MawileBot/sessions/userbot.sessions
+home/MawileBot/sessions/userbot.session
 
 # Ignore the whole images folder
 /images/
