@@ -2,6 +2,7 @@ from datetime import datetime, time as dtime, timedelta
 from io import BytesIO
 import json
 import os
+from pyexpat.errors import messages
 import sys
 from random import randrange
 from PIL import Image
@@ -34,7 +35,7 @@ from BeatlesBoy_utils import (
 #     sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 
-ALLOWED_CHAT_ID = -4998491045
+ALLOWED_CHAT_IDs = [-4998491045, -5272320132]
 DAVIDE_CHAT_ID = 454010613
 
 TARGET_TIMES = [
@@ -115,7 +116,7 @@ async def scheduled_job(client):
         )
 
         try:
-            messages = await client.get_messages(ALLOWED_CHAT_ID, limit=2)
+            messages = await client.get_messages(ALLOWED_CHAT_IDs[0], limit=2)
             if not messages:
                 continue
             last_message: Message = messages[0]
@@ -128,6 +129,12 @@ async def scheduled_job(client):
 
             if "Ottimo, hai completato tutte le sfide odierne!" in last_message_text:
                 await last_message.reply("Finito. Ora posso riposare! 😴💤")
+            elif "Finito. Ora posso riposare!" in last_message_text:
+                pass
+            elif "Giornata di gioco conclusa!" in last_message_text:
+                pass
+            elif "NON HO FINITO DI LAVORARE!" in last_message_text:
+                pass
             else:
                 # try: 
                 #     answered = await reply_to_text(last_message, last_message_text,client)
@@ -143,7 +150,7 @@ def register_handlers(client):
     @client.on(events.NewMessage)
     async def message_handler(event):
         # Ignore messages not from the desired chat
-        if event.chat_id != ALLOWED_CHAT_ID:
+        if event.chat_id not in ALLOWED_CHAT_IDs:
             return
 
         # Ignore your own outgoing messages (VERY important)
@@ -181,32 +188,50 @@ async def replies_to_wild_pokemon(event, text, client):
     with open(json_path, "r", encoding="utf-8") as f:
         team = json.load(f)
 
-    await event.reply(f"Ho incontrato {pokemon} con PL {pl}.\nAspettando la FOTO del team... 2 minuti massimo ⏳")
+    await event.reply(f"Ho incontrato {pokemon} con PL {pl}.\n\nspettando la FOTO del team... 2 minuti massimo ⏳")
     await asyncio.sleep(120)  # aspetta 2 minuti
 
     # recupera l'ultimo messaggio della chat
     messages = await client.get_messages(
         event.chat_id,
-        min_id=event.id,  # messages with id > event.id
-        limit=1
+        min_id=event.id,
+        limit=5
     )
 
-    if not messages:
-        await event.reply("Non ci sono messaggi recenti.")
-        last_message = None
-    else:
-        last_message: Message = messages[0]
-        if last_message.photo:
-            await last_message.reply("Ho ricevuto la foto, la elaboro...")  # ✅
-            photo_bytes = await last_message.download_media(bytes)
-            pil_image = Image.open(BytesIO(photo_bytes))
-            team = await aggiorna_team_da_foto(pil_image)
-        else:
-            await event.reply("Non è arrivata nessuna foto... continuo comunque.")
+    team = None
+    success = False
 
-    winning_options = await calculate_winning_options(pokemon, pl, team)
-    winning_option = winning_options[0] if winning_options else None
+    for msg in messages:
+        if not msg.photo:
+            continue
+        #await msg.reply("Questa è una foto")
+        try:
+            await msg.reply("Ho ricevuto la foto della squadra, la aggiorno...")  # opzionale
+            photo_bytes = await msg.download_media(bytes)
+            pil_image = Image.open(BytesIO(photo_bytes))
+
+            team = await aggiorna_team_da_foto(pil_image)
+            success = True
+            with open(json_path, "w", encoding="utf-8") as f:
+                json.dump(team, f, indent=2)
+            break  # stop at first successful photo
+        except Exception as e:
+            continue
+    if not success:
+        await event.reply("Non ho trovato la foto della squadra... continuo comunque.")
+
+    
+
+    try:
+        winning_options = await calculate_winning_options(pokemon, pl, team)
+        print("Winning options:", winning_options)
+        winning_option = winning_options[0]
+    except Exception as e:
+        winning_option = None
+    
+    print("Winning option:", winning_option)
+
     if not winning_option:
         return 'Avrei schierato a caso 1'  # random 1-9
     else:
-        return f"avrei schierato {winning_option}"
+        return f"avrei schierato {winning_option[3]} ({winning_option[0]}, bonus {winning_option[2]})"
