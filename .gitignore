@@ -10,6 +10,7 @@ home/output_splits/temp/
 
 # Ignore the whole sessions folder
 home/MawileBot/sessions/userbot.session
+home/MawileBot/sessions/userbot.session-journal
 
 # Ignore the whole images folder
 /images/
