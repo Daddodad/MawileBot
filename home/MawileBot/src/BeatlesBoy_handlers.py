@@ -24,6 +24,8 @@ from BeatlesBoy_utils import (
     extract_pokemon_and_pl,
     calculate_winning_options,
     aggiorna_team_da_foto,
+    extract_types,
+    calculate_potenziabili,
 )
 
 # if os.path.exists('/home/SableyeBot/src'):
@@ -170,26 +172,31 @@ async def reply_to_text(event, text, client):
         da_schierare = await replies_to_wild_pokemon(event, text, client)
         await event.reply(str(da_schierare))
         return True
+    elif "Allenatore, sei in una zona potenziament" in text:
+        da_allenare = await replies_to_potenziamento(event, text, client)
+        await event.reply(str(da_allenare))
+        return True
     elif "Buongiorno Allenatore, e benvenuto in questo viaggio nel mondo dei Pokèmon!" in text:
         await event.reply('0')
         return True
+    elif "Ottimo, hai completato tutte le sfide odierne!" in text:
+        await event.reply("Finito. Ora posso riposare! 😴💤")
+        return True
+    elif " è salito al livello " in text:
+        pass
     else: 
         await event.reply("❓​❓​MA CHE STA DICENDO?​❓​❓​")
     return False
     
 
-async def replies_to_wild_pokemon(event, text, client):
-    pokemon, pl = await extract_pokemon_and_pl(text)
-
+async def load_team_from_json(event, client):
+    await asyncio.sleep(10)  # aspetta 2 minuti
 
     json_path = os.path.join(ENV_PATH, "BeatlesBoy_team.json")
     print("Loading JSON from:", json_path)
 
     with open(json_path, "r", encoding="utf-8") as f:
         team = json.load(f)
-
-    await event.reply(f"Ho incontrato {pokemon} con PL {pl}.\n\nspettando la FOTO del team... 2 minuti massimo ⏳")
-    await asyncio.sleep(120)  # aspetta 2 minuti
 
     # recupera l'ultimo messaggio della chat
     messages = await client.get_messages(
@@ -219,8 +226,13 @@ async def replies_to_wild_pokemon(event, text, client):
             continue
     if not success:
         await event.reply("Non ho trovato la foto della squadra... continuo comunque.")
+    return team
 
-    
+async def replies_to_wild_pokemon(event, text, client):
+    pokemon, pl = await extract_pokemon_and_pl(text)
+    await event.reply(f"Ho incontrato {pokemon} con PL {pl}.\n\nAspettando la FOTO del team... 2 minuti massimo ⏳")
+
+    team = await load_team_from_json(event, client)
 
     try:
         winning_options = await calculate_winning_options(pokemon, pl, team)
@@ -232,6 +244,26 @@ async def replies_to_wild_pokemon(event, text, client):
     print("Winning option:", winning_option)
 
     if not winning_option:
-        return 'Avrei schierato a caso 1'  # random 1-9
+        return 'Avrei schierato a caso 1' 
     else:
-        return f"avrei schierato {winning_option[3]} ({winning_option[0]}, bonus {winning_option[2]})"
+        #return f"avrei schierato {winning_option[3]} ({winning_option[0]}, bonus {winning_option[2]})"
+        return winning_option[3]
+    
+async def replies_to_potenziamento(event, text, client):
+    tipi = await extract_types(text)
+    await event.reply(f"Ho incontrato potenziamento coi tipi {tipi}.\n\nAspettando la FOTO del team... 2 minuti massimo ⏳")
+
+    team = await load_team_from_json(event, client)    
+
+    try:
+        potenziabili = await calculate_potenziabili(tipi, team)
+        print("Potenziabili:", potenziabili)
+    except Exception as e:
+        print("Errore nel calcolo dei potenziabili:", e)
+        potenziabili = None
+
+    if not potenziabili:
+        return 'Avrei schierato a caso 1' 
+    else:
+        #return f"avrei schierato {potenziabili[3]} ({potenziabili[0]}, bonus {potenziabili[2]})"
+        return potenziabili[0][3]
