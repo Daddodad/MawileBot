@@ -94,22 +94,20 @@ async def calculate_winning_options(enemy_poke, enemy_pl, team):
 async def calculate_potenziabili(tipi, team):
     potenziabili = []
 
-    for index, poke_and_lvl in enumerate(team):
-        if None not in poke_and_lvl:
-            your_poke, pl = poke_and_lvl[0], get_power( poke_and_lvl[0],  poke_and_lvl[1])
+    for your_poke, lvl, utility, pl, index in team:
+        if your_poke is not None:
 
             types1 = poke.get(name = your_poke).types
 
             for tipo in tipi:
                 if tipi_to_types[tipo].lower() in [t.lower() for t in types1]:
-                    potenziabili.append((your_poke, pl, tipo, index+1))
+                    potenziabili.append((your_poke, pl, tipo, index))
                     break
 
     if potenziabili == []:
-        for index, poke_and_lvl in enumerate(team):
-            if None not in poke_and_lvl:
-                your_poke, pl = poke_and_lvl[0], get_power( poke_and_lvl[0],  poke_and_lvl[1])
-                potenziabili.append((your_poke, pl, "nessun tipo", index+1))
+        for your_poke, lvl, utility, pl, index in team:
+            if your_poke is not None:
+                potenziabili.append((your_poke, pl, "nessun tipo", index))
 
     potenziabili.sort(key=lambda x: x[1], reverse=False) # ordina per PL crescente
     return potenziabili

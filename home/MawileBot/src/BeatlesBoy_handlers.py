@@ -315,6 +315,10 @@ async def replies_to_potenziamento(event, text, client):
 
     try:
         potenziabili = await calculate_potenziabili(tipi, useful)
+        if potenziabili is None or len(potenziabili) == 0:
+            potenziabili = await calculate_potenziabili(tipi, useless)
+        if potenziabili is None or len(potenziabili) == 0:
+            potenziabili = await calculate_potenziabili(tipi, lvl_100)
         print("Potenziabili:", potenziabili)
     except Exception as e:
         print("Errore nel calcolo dei potenziabili:", e)
