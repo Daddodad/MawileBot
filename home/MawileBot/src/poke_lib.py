@@ -451,7 +451,10 @@ def poke_dex2(pokemon_name: str) -> str:
     return message
 
 def get_power(pokemon, lvl):
-    return round(lvl*get_poke_bst(pokemon)/100)
+    if pokemon is not None:
+        return round(lvl*get_poke_bst(pokemon)/100)
+    else:
+        return 0
 
 def extract_first_number(cell):
     try:

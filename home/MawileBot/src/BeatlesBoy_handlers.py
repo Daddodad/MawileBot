@@ -22,10 +22,11 @@ else:
 from BeatlesBoy_utils import (
     calculate_winning_options,
     extract_pokemon_and_pl,
-    calculate_winning_options,
     aggiorna_team_da_foto,
     extract_types,
     calculate_potenziabili,
+    extract_number_of_pvp_choices,
+    filter_team
 )
 
 # if os.path.exists('/home/SableyeBot/src'):
@@ -182,10 +183,16 @@ async def reply_to_text(event, text, client):
     elif "Ottimo, hai completato tutte le sfide odierne!" in text:
         await event.reply("Finito. Ora posso riposare! 😴💤")
         return True
+    elif "Allenatore, sfiderai ⚔ un altro Giocatore;" in text:
+        da_schierare = await replies_to_pvp(event, text, client)
+        await event.reply(str(da_schierare))
+        return True
     elif " è salito al livello " in text:
         pass
+    elif "Schieramento ricevuto! Attendi che il tuo avversario faccia lo stesso per visualizzare i risultati" in text:
+        pass
     else: 
-        await event.reply("❓​❓​MA CHE STA DICENDO?​❓​❓​")
+        await event.reply("❓")
     return False
     
 
@@ -233,12 +240,18 @@ async def replies_to_wild_pokemon(event, text, client):
     await event.reply(f"Ho incontrato {pokemon} con PL {pl}.\n\nAspettando la FOTO del team... 2 minuti massimo ⏳")
 
     team = await load_team_from_json(event, client)
+    useful, useless, lvl_100 = await filter_team(team, remove_100 = True)
 
     try:
-        winning_options = await calculate_winning_options(pokemon, pl, team)
+        winning_options = await calculate_winning_options(pokemon, pl, useful)
+        if winning_options is None or len(winning_options) == 0:
+            winning_options = await calculate_winning_options(pokemon, pl, useless)
+        if winning_options is None or len(winning_options) == 0:
+            winning_options = await calculate_winning_options(pokemon, pl, lvl_100)    
         print("Winning options:", winning_options)
-        winning_option = winning_options[0]
+        winning_option = winning_options[0]            
     except Exception as e:
+        print("Errore nel calcolo delle opzioni vincenti:", e)
         winning_option = None
     
     print("Winning option:", winning_option)
@@ -249,14 +262,59 @@ async def replies_to_wild_pokemon(event, text, client):
         #return f"avrei schierato {winning_option[3]} ({winning_option[0]}, bonus {winning_option[2]})"
         return winning_option[3]
     
+async def replies_to_pvp(event, text, client):
+    await event.reply(f"Una PvP! Pronto a schierare i migliori!\n\nAspettando la FOTO del team... 2 minuti massimo ⏳")
+
+    n_schierabili = await extract_number_of_pvp_choices(text)
+
+    team = await load_team_from_json(event, client)
+    useful, useless, lvl_100 = await filter_team(team, remove_100 = True)
+    useful.sort( key = lambda x: x[3], reverse=True )  # ordina per power decrescente
+    lvl_100.sort( key = lambda x: x[3], reverse=True )  # ordina per power decrescente
+    useless.sort( key = lambda x: x[3], reverse=True )  # ordina per power decrescente
+    # print("Useful:", useful)
+    # print("Useless:", useless)
+    # print('Lvl 100:', lvl_100)
+
+    da_schierare = ''
+
+    for i in range(len(useful)):
+        if len(da_schierare) < n_schierabili:
+            if useful[i][0] is not None:
+                da_schierare += str(useful[i][4])
+        else: 
+            return da_schierare
+        
+    for i in range(len(useless)):
+        if len(da_schierare) < n_schierabili: 
+            if useless[i][0] is not None:
+                da_schierare += str(useless[i][4])
+        else:
+            return da_schierare
+        
+    for i in range(len(lvl_100)):
+        if len(da_schierare) < n_schierabili: 
+            if lvl_100[i][0] is not None:
+                da_schierare += str(lvl_100[i][4])
+        else:
+            return da_schierare
+     
+    while len(da_schierare) < n_schierabili:
+        n = randrange(1,10)
+        if n not in [int(x) for x in da_schierare]:
+            da_schierare += str(n)
+
+    return da_schierare
+    
 async def replies_to_potenziamento(event, text, client):
     tipi = await extract_types(text)
     await event.reply(f"Ho incontrato potenziamento coi tipi {tipi}.\n\nAspettando la FOTO del team... 2 minuti massimo ⏳")
 
     team = await load_team_from_json(event, client)    
+    useful, useless, lvl_100 = await filter_team(team, remove_100 = True)
 
     try:
-        potenziabili = await calculate_potenziabili(tipi, team)
+        potenziabili = await calculate_potenziabili(tipi, useful)
         print("Potenziabili:", potenziabili)
     except Exception as e:
         print("Errore nel calcolo dei potenziabili:", e)

@@ -1,3 +1,5 @@
+from email.mime import text
+import random
 import re
 import os
 import sys
@@ -12,13 +14,31 @@ else:
     
 from poke_lib import automatic_card_reader, calculate_bonus_via_types, get_power, poke_cell
 
-async def pokemon_utility(pokemon):
-    return 400
 
 tipi_to_types = {
     'Normale': 'Normal','Fuoco': 'Fire','Acqua': 'Water','Erba': 'Grass','Elettro': 'Electric','Ghiaccio': 'Ice','Lotta': 'Fighting','Veleno': 'Poison',
     'Terra': 'Ground','Volante': 'Flying','Psico': 'Psychic','Coleottero': 'Bug','Roccia': 'Rock','Spettro': 'Ghost','Drago': 'Dragon','Buio': 'Dark','Acciaio': 'Steel','Folletto': 'Fairy'
 }
+
+async def pokemon_utility(pokemon,lvl):
+    #TODO: implement a better utility function
+    randran = random.randint(0, 100)
+    return 400+ randran if pokemon is not None else 0
+
+async def filter_team(team, remove_100=False):
+    if team:
+        utilities = []
+        lvl_100 = []
+        for index, (poke, lvl) in enumerate(team):
+            u = await pokemon_utility(poke,lvl)
+            if remove_100 and lvl == 100:
+                lvl_100.append((poke, lvl, u, get_power(poke, lvl), index+1))
+            else:
+                utilities.append((poke, lvl, u, get_power(poke, lvl), index+1))
+        utilities.sort(key=lambda x: x[2], reverse=True)
+        return utilities[:6], utilities[6:], lvl_100
+    else:
+        return [], [], []
 
 async def extract_pokemon_and_pl(text):
     # Pokémon name: after "hai incontrato", before "selvatico" or comma
@@ -36,30 +56,36 @@ async def extract_pokemon_and_pl(text):
 
     return pokemon, pl
 
+async def extract_number_of_pvp_choices(text):
+    clean = text.replace("\n", " ")
+    words = clean.split()
+    i = words.index("schiera")
+    num_pokemon = int(words[i + 1])
+    return num_pokemon
+
 async def calculate_winning_options(enemy_poke, enemy_pl, team):
     _, _, _, multiplier, _ = poke_cell(0)
     winning_options = []
 
     print(' il mio team:', team )
     print("Calcolo delle opzioni vincenti contro", enemy_poke, "PL", enemy_pl)
-    for index, poke_and_lvl in enumerate(team):
-        print("Valutazione del Pokémon:", poke_and_lvl)
+    for your_poke, lvl, utility, pl, index in team:
+        print("Valutazione del Pokémon:", your_poke, "livello", lvl, "utility", utility)
 
-        if None not in poke_and_lvl:
-            your_poke, pl = poke_and_lvl[0], get_power( poke_and_lvl[0],  poke_and_lvl[1])
+        if your_poke is not None:
 
             types1 = poke.get(name = your_poke).types
             types2 = poke.get(name = enemy_poke).types
 
-            print("Tipi del Pokémon:", types1)
-            print("Tipi del nemico:", types2)
+            # print("Tipi del Pokémon:", types1)
+            # print("Tipi del nemico:", types2)
             bonus = calculate_bonus_via_types(types1, types2 ,multiplier)
 
-            bonus_netto = -bonus[0]+bonus[1]
+            bonus_netto = bonus[0]-bonus[1]
 
-            print("Bonus calcolato:", bonus_netto)
+            # print("Bonus calcolato:", bonus_netto)
             if pl + bonus_netto > enemy_pl:
-                winning_options.append((your_poke, pl, bonus_netto, index+1))
+                winning_options.append((your_poke, pl, bonus_netto, index))
 
     print("Opzioni vincenti calcolate:", winning_options)
     winning_options.sort(key=lambda x: x[1], reverse=False) # ordina per PL crescente
