@@ -697,8 +697,6 @@ def generate_all_types_combo(type):
     return all_types
 
 
-
-
 async def poke_check_if_evo(chat_id,pokemon,lvl):
     with open(ENV_PATH+"/secret_player_data.json", 'r') as f:
         secret = json.load(f)
@@ -777,6 +775,9 @@ def poke_evo_level(chat_id,pokemon):
     with open(ENV_PATH+f"/{route}_evo_file.json", 'r') as ef:
         evo_dict = json.load(ef)
 
+    if pokemon.lower() in evo_dict:
+        pokemon = pokemon.lower()
+        
     lvl = '-'
     if pokemon in evo_dict:
         if evo_dict[pokemon][0]=="base":
@@ -1643,9 +1644,96 @@ def compare_with_saved_data_json(splits, json_name='alphabet.json'):
     except:
         return ''.join(str(x) for x in pokemon_probable_name)
 
-def most_similar(query, choices):
-    if query == 'Morpeko':
-        return random.choice(['morpeko-full-belly','morpeko-hangry'])
+most_similar_cache = {  'morpeko': ['morpeko-full-belly','morpeko-hangry'],
+                        'nidoranfemmina': 'nidoran-f',
+                        'nidoranmaschio': 'nidoran-m',
+                        'oddishvileplume': 'oddish',
+                        'gloomvileplume': 'gloom',
+                        'oddishbellossom': 'oddish',
+                        'gloombellossom': 'gloom',
+                        'poliwagpoliwrath': 'poliwag',
+                        'poliwhirlpoliwrath': 'poliwhirl',
+                        'poliwagpolitoed': 'poliwag',
+                        'poliwhirlpolitoed': 'poliwhirl',
+                        "tyroguehitmonlee": "tyrogue",
+                        "tyroguehitmonchan": "tyrogue",
+                        "tyroguehitmontop": "tyrogue",
+                        "eeveevaporeon": "eevee",
+                        "eeveejolteon": "eevee",
+                        "eeveeflareon": "eevee",
+                        "eeveeespeon": "eevee",
+                        "eeveeumbreon": "eevee",
+                        "eeveeleafeon": "eevee",
+                        "eeveeglaceon": "eevee",
+                        "eeveesylveon": "eevee",
+                        "dudunsparce": ["dudunsparce-three-segment", "dudunsparce-two-segment"],
+                        "wurmplebeautifly": "wurmple",
+                        "wurmpledustox": "wurmple",
+                        "raltsgardevoir": "ralts",
+                        "kirliagardevoir": "kirlia",
+                        "raltsgallade": "ralts",
+                        "kirliagallade": "kirlia",
+                        "snoruntglalie": "snorunt",
+                        "snoruntfroslass": "snorunt",
+                        "clamperlhuntail": "clamperl",
+                        "clamperlgorebyss": "clamperl",
+                        "wormadamscarti": "wormadam-trash",
+                        "burmymaschio": "burmy",
+                        "basculin" : ["basculin-red-striped","basculin-white-striped","basculin-blue-striped"],
+                        "basculegion" :["basculegion-male","basculegion-female"],
+                        "darmanitan" : "darmanitan-standard",
+                        "darmanitangalar" : "darmanitan-galar-standard",
+                        "kyuremb" : "kyurem",
+                        "kyuremn" : "kyurem",
+                        "kyurembianco" : "kyurem-white",
+                        "kyuremnero" : "kyurem-black",
+                        "meowstic" :["meowstic-female","meowstic-male"],
+                        "aegislash" : ["aegislash-shield","aegislash-blade"],
+                        "pumpkaboo" : ["pumpkaboo-average","pumpkaboo-small","pumpkaboo-large","pumpkaboo-super"],
+                        "gourgeists" : ["gourgeist-average","gourgeist-small","gourgeist-large","gourgeist-super"],
+                        "lycanroc" : ["lycanroc-midday","lycanroc-midnight","lycanroc-dusk"],
+                        "tipo-zero" : "type-null",
+                        "cosmogsolgaleo" : "cosmog",
+                        "cosmoemsolgaleo" : "cosmoem",
+                        "cosmoglunala" : "cosmog",
+                        "cosmoemlunala" : "cosmoem",
+                        "necrozmav" : "necrozma",
+                        "necrozmavespro" : "necrozma-dusk",
+                        "necrozmaa" : "necrozma",
+                        "necrozmaaurora" : "necrozma-dawn",
+                        "applinflapple" : "applin",
+                        "applinappletun" : "applin",
+                        "applindipplin" : "applin",
+                        "toxtricity" : ["toxtricity-amped","toxtricity-low-key"],
+                        "zacianeroe" : "zacian",
+                        "zacianre" : "zacian-crowned",
+                        "zamazentaeroe" : "zamazenta",
+                        "zamazentare" : "zamazenta-crowned",
+                        "urshifupluricolpo" : "urshifu-rapid-strike",
+                        "urshifusingolcolpo" : "urshifu-single-strike",
+                        "calyrexglaciale" : "calyrex",
+                        "calyrexcavaliereglaciale" : "calyrex-ice",
+                        "calyrexspettrale" : "calyrex",
+                        "calyrexcavalierespettrale" : "calyrex-shadow",
+                        "oinkologne" :["oinkologne-male","oinkologne-female"],
+                        "maushold" : ["maushold-family-of-four","maushold-family-of-three"],
+                        "palafiningenua" : "palafin-zero",
+                        "palafinpossente" : "palafin-hero",
+                        "terapagosastrale" : "terapagos-terastal",
+                        "rowlethisui" : "rowlet-hisui",
+                        "pikachualola" : "pikachu",}
+
+def most_similar(query, choices, r = True):
+    if query.lower() in most_similar_cache:
+        cached_result = most_similar_cache[query.lower()]
+        if isinstance(cached_result, list):
+            if r:
+                return random.choice(cached_result)
+            else:
+                return cached_result[0]
+        else:
+            return cached_result
+        
     matches = difflib.get_close_matches(query, choices, n=1, cutoff=0.0)
     return matches[0] if matches else None
 
