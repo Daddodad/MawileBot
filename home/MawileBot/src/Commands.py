@@ -1020,10 +1020,18 @@ async def dex_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         return
 
     pokemon_name = ' '.join(context.args)
-    dex_entry = poke_dex2(pokemon_name)
+    if poke_exist(pokemon_name):
+        pass
+    else:
+        pokemon = similar_pokemon_name(pokemon_name.lower())
+        if pokemon.lower()!=pokemon_name.lower():
+            await update.message.reply_text(f"Assumo che con {pokemon_name} intendessi {pokemon.capitalize()}...")
+        pokemon_name = pokemon
+
+    dex_entry = await poke_dex2(pokemon_name)
     await update.message.reply_text(dex_entry)
 
-    dex_entry = poke_dex1(pokemon_name)
+    dex_entry = await poke_dex1(pokemon_name)
     await update.message.reply_text(dex_entry)
 
 
@@ -1397,7 +1405,8 @@ async def fight_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if poke_cell(0)[0] == True:
             keyboard = [
                 [InlineKeyboardButton("Allenatore", callback_data=TRAINER)],
-                [InlineKeyboardButton("Capopalestra", callback_data=CAPOPALESTRA)]
+                [InlineKeyboardButton("Capopalestra", callback_data=CAPOPALESTRA)],
+                [InlineKeyboardButton("Selvatici", callback_data=WILD)],
             ]
         else:
             keyboard = [

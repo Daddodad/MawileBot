@@ -256,31 +256,35 @@ def add_new_player(update: Update):
     return False
 
 def get_poke_bst(pokemon):
+    bst_bonus = 0
+    if "-mega" in pokemon:
+        pokemon = pokemon.split('-')[0]
+        bst_bonus = 50
     bst = sum(poke.get(name=pokemon).base_stats)
     if pokemon.lower() == "archeops":
-        return 495
+        return 495 + bst_bonus
     if bst >= 670:
-        return 620
+        return 620 + bst_bonus
     if bst == 600:
-        return 580
+        return 580 + bst_bonus
     if bst == 580:
         if pokemon.lower() in  ["entei", "raikou", "suicune"]:
-            return 560
+            return 560 + bst_bonus
         if 'regi' in pokemon.lower():
-            return 560
+            return 560 + bst_bonus
         if pokemon.lower() in  ["spectrier", "glastrier"]:
-            return 560
+            return 560 + bst_bonus
         else:
-            return 570
+            return 570 + bst_bonus
     if bst == 570:
-        return 555
+        return 555 + bst_bonus
     non_leg_w_550_bst = ["florges", "arcanine", "arcanine-hisui","ursaluna-bloodmoon","silvally","palafin","palafin-hero","slaking", ]
     if pokemon.lower() in non_leg_w_550_bst:
-        return 550
+        return 550 + bst_bonus
     if pokemon.lower() == 'archeops':
-        return 495
+        return 495 + bst_bonus
     else:
-        return bst
+        return bst + bst_bonus
     return bst
 
 def poke_lega_single(poke_liv, name,molt):
@@ -329,7 +333,7 @@ def poke_lega_test(pokemon, level, name, multiplier ,only_perc = False):
     n_pareggi = 0
     n_vittorie = 0
     for enemy in enemies[name]:
-        print(enemy)
+        #print(enemy)
         n_total +=1
         message += f"{enemy:<10}"
 
@@ -437,13 +441,13 @@ def format_types_emoji(types):
     formatted_types = [f"{get_type_emoji(t.capitalize())}" for t in types]
     return " ".join(formatted_types)
 
-def poke_dex1(pokemon_name: str) -> str:
+async def poke_dex1(pokemon_name: str) -> str:
     # This function should return the Pokédex entry for the given Pokémon
     message = ''
     message += poke_lega_test(pokemon_name, level = 100, name = "generic", multiplier = 20 ,only_perc = True)
     return message
 
-def poke_dex2(pokemon_name: str) -> str:
+async def poke_dex2(pokemon_name: str) -> str:
     message = ''
     message += f' Tipo: {format_types(poke.get(name = pokemon_name).types)}\n\n'
     message += f'BST: {get_poke_bst(pokemon_name)}\n'
@@ -808,10 +812,12 @@ def poke_cell_specific(route,cell,encounters):
         encounter_power = [low_power,mid_power]
         for pokemon in encounters:
             if pokemon in evo_dict:
-                pokemon = evo_dict[pokemon][-1][1]
+                old_poke = pokemon
+                if evo_dict[pokemon][0] != 'last':
+                    pokemon = evo_dict[pokemon][-1][1]
                 pokemon_name = similar_pokemon_name(pokemon)
                 if pokemon_name.lower()!=pokemon.lower():
-                    print(f"Assumo che con {pokemon} si intenda {pokemon_name}...")
+                    print(f"La forma finale di {old_poke} è {pokemon_name}? A me risulta {pokemon}... Boh...")
                     pokemon = pokemon_name
             stats = get_poke_bst(pokemon)
             boss_power = max(mid_power,int((LvL[casella]+aumento+int((stats-500)/10))*coeff[int((casella)/NUM_CASELLE_PER_RIGA)]))
