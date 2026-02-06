@@ -3,6 +3,7 @@ import random
 import re
 import os
 import sys
+import json
 import pypokedex as poke
 if os.path.exists('/home/SableyeBot/src'):
     ENV_PATH = '/home/SableyeBot/src'
@@ -12,7 +13,7 @@ else:
     sys.path.insert(0,ENV_PATH) # MawileBot
     sys.path.append(os.path.dirname(os.path.abspath(__file__)))
     
-from poke_lib import automatic_card_reader, calculate_bonus_via_types, get_power, poke_cell
+from poke_lib import automatic_card_reader, calculate_bonus_via_types, get_power, poke_cell, most_similar,get_poke_bst
 
 
 tipi_to_types = {
@@ -21,9 +22,60 @@ tipi_to_types = {
 }
 
 async def pokemon_utility(pokemon,lvl):
+    if pokemon is  None:
+        return 0
     #TODO: implement a better utility function
-    randran = random.randint(0, 100)
-    return 400+ randran if pokemon is not None else 0
+
+    with open(ENV_PATH+f"/even_evo_file.json", 'r') as ef:
+        evo_dict = json.load(ef)
+
+    with open(ENV_PATH+'/pokemon_list.json', 'r', encoding="utf-8") as f:
+        choices = json.load(f)   
+        
+    pokemon = most_similar(pokemon.lower(), choices)
+
+    pokemon15 = pokemon
+    pokemon30 = pokemon
+    lvl15 = min(100,lvl+15)
+    lvl30 = min(100,lvl+30)
+    if pokemon in evo_dict:
+        if evo_dict[pokemon][0] != 'last':
+            pokemon15 = pokemon
+            if evo_dict[pokemon][0]=="base":
+                if lvl15 >= evo_dict[pokemon][1][0]:
+                    pokemon15 = evo_dict[pokemon][1][1]
+            elif evo_dict[pokemon][0]=="mid":
+                if lvl15 <= evo_dict[pokemon][1][0]:
+                    pokemon15 = evo_dict[pokemon][1][1]
+                elif lvl15 >= evo_dict[pokemon][2][0]:
+                    pokemon15 = evo_dict[pokemon][2][1]
+        pokemon30 = pokemon15
+        if pokemon15 == pokemon:
+            if evo_dict[pokemon][0]=="base":
+                if lvl30 >= evo_dict[pokemon][1][0]:
+                    pokemon30 = evo_dict[pokemon][1][1]
+            elif evo_dict[pokemon][0]=="mid":
+                if lvl30 <= evo_dict[pokemon][1][0]:
+                    pokemon30 = evo_dict[pokemon][1][1]
+                elif lvl30 >= evo_dict[pokemon][2][0]:
+                    pokemon30 = evo_dict[pokemon][2][1]
+        else:
+            if evo_dict[pokemon15][0]=="base":
+                if lvl30 >= evo_dict[pokemon15][1][0]:
+                    pokemon30 = evo_dict[pokemon15][1][1]
+            elif evo_dict[pokemon15][0]=="mid":
+                if lvl30 <= evo_dict[pokemon15][1][0]:
+                    pokemon30 = evo_dict[pokemon15][1][1]
+                elif lvl30 >= evo_dict[pokemon15][2][0]:
+                    pokemon30 = evo_dict[pokemon15][2][1] 
+            else:
+                pokemon30 = pokemon15 
+
+    potenza_attuale = get_poke_bst(pokemon)*int(lvl)/100
+    potenza_tra_15 = get_poke_bst(pokemon15)*int(lvl15)/100
+    potenza_tra_30 = get_poke_bst(pokemon30)*int(lvl30)/100
+
+    return potenza_attuale + potenza_tra_15 + potenza_tra_30
 
 async def filter_team(team, remove_100=False):
     if team:

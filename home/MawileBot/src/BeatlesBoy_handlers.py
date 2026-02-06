@@ -8,6 +8,7 @@ from random import randrange
 from PIL import Image
 from telethon import events
 import asyncio
+import random
 
 from telethon.tl.types import Message
 
@@ -26,7 +27,8 @@ from BeatlesBoy_utils import (
     extract_types,
     calculate_potenziabili,
     extract_number_of_pvp_choices,
-    filter_team
+    filter_team,
+    pokemon_utility
 )
 
 # if os.path.exists('/home/SableyeBot/src'):
@@ -187,12 +189,16 @@ async def reply_to_text(event, text, client):
         da_schierare = await replies_to_pvp(event, text, client)
         await event.reply(str(da_schierare))
         return True
+    elif "vuoi aggiungerlo in squadra?" in text:
+        dopo_cattura = await replies_to_vittoria(event,text,client)
+        await event.reply(str(dopo_cattura))
+        return True       
     elif " è salito al livello " in text:
         pass
     elif "Schieramento ricevuto! Attendi che il tuo avversario faccia lo stesso per visualizzare i risultati" in text:
         pass
     else: 
-        await event.reply("❓")
+        await event.reply("❓❓")
     return False
     
 
@@ -212,7 +218,6 @@ async def load_team_from_json(event, client):
         limit=5
     )
 
-    team = None
     success = False
 
     for msg in messages:
@@ -329,3 +334,102 @@ async def replies_to_potenziamento(event, text, client):
     else:
         #return f"avrei schierato {potenziabili[3]} ({potenziabili[0]}, bonus {potenziabili[2]})"
         return potenziabili[0][3]
+
+async def drop_the_useless(us, usl, lvl_100):
+    occupied_slot = []
+
+    for u in us:
+        if u[0] is not None:
+            occupied_slot.append(u[4])
+    for ul in usl:
+        if ul[0] is not None:
+            occupied_slot.append(ul[4])
+    for l100 in lvl_100:
+        if l100[0] is not None:
+            occupied_slot.append(l100[4])
+
+    print(occupied_slot)
+
+    if len(occupied_slot) < 9:
+        for i in range(1, 10):
+            if i not in occupied_slot:
+                print("returning", i)
+                return i
+    else:  # HO OGNI SLOT FULL? WOW
+        if len(usl) > 0:
+            return usl[-1][4]
+        if len(us) > 0:
+            return us[-1][4]
+        return lvl_100[-1][4] # Avevo solo livello 100?!
+
+
+
+async def extract_name_and_level_from_vittoria(msg: str):
+    lines = msg.splitlines()
+    name = None
+    level = None
+    for line in lines:
+        line = line.strip()
+        if line.startswith("-Nome:"):
+            name = line.split(":", 1)[1].strip()
+        elif line.startswith("-Livello:"):
+            level = int(line.split(":", 1)[1].strip())
+        if name is not None and level is not None:
+            break
+    return name, level
+
+async def replies_to_vittoria(event, text, client):
+    name, level = await extract_name_and_level_from_vittoria(text)
+
+    await event.reply(f"Vittoria! Catturo o no {name} di livello {level}? Decidiamo...")
+    #TODO: aggiustare team = await load_team_from_json(event, client)
+
+    await asyncio.sleep(10)  # aspetta 2 minuti
+
+    json_path = os.path.join(ENV_PATH, "BeatlesBoy_team.json")
+    print("Loading JSON from:", json_path)
+
+    with open(json_path, "r", encoding="utf-8") as f:
+        team = json.load(f)
+
+    print(team)
+
+    useful, useless, lvl_100 = await filter_team(team, remove_100 = True)
+
+    dopo_cattura = "Non ho capito se catturarlo o no.. Aiuto..."
+    print(useful)
+    print(useless)
+    print(lvl_100)
+
+    if useful:
+        less_useful = next(
+            (u for u in reversed(useful) if u[0] is not None),
+            None
+        )
+    else: # Ho solo pokemon al 100?
+        less_useful = lvl_100[-1]
+
+    count = 0
+    for p in team:
+        if p[0] is not None:
+            count+=1
+
+    print('Less useful', less_useful)
+    print('trovato', await pokemon_utility(name, level))
+
+    if less_useful[0] is not None:
+        if less_useful[2]*1.1< await pokemon_utility(name, level):
+            await event.reply(f"È chiaramente più utile di {less_useful[0].capitalize()}, lo prendo!")
+            return await drop_the_useless(useful,useless,lvl_100)        
+
+    # Non ho nemmeno 6 pokemon...
+    if count<6:
+        if random.random() >0.5:
+            await event.reply(f"Non ho nemmeno 6 pokémon... ma non mi sembra così utile questo...")
+            return 0
+        else:
+            await event.reply('Non ho nemmeno 6 pokémon... e lui mi piace un sacco!')
+            dopo_cattura = await drop_the_useless(useful,useless,lvl_100)
+        return dopo_cattura 
+    
+    return 0
