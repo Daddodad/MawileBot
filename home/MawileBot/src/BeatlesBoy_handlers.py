@@ -355,14 +355,21 @@ async def drop_the_useless(us, usl, lvl_100):
             if i not in occupied_slot:
                 print("returning", i)
                 return i
-    else:  # HO OGNI SLOT FULL? WOW
-        if len(usl) > 0:
-            return usl[-1][4]
-        if len(us) > 0:
-            return us[-1][4]
-        return lvl_100[-1][4] # Avevo solo livello 100?!
+            
+    # No empty slots
+    merged = []
+    if lvl_100:
+        merged.extend(lvl_100)
+    if us:
+        merged.extend(us)
+    if usl:
+        merged.extend(usl)
 
+    for p in reversed(merged):
+        if p[0] != "sableye":
+            return p[4]
 
+    return merged[-1][4]
 
 async def extract_name_and_level_from_vittoria(msg: str):
     lines = msg.splitlines()
@@ -418,6 +425,11 @@ async def replies_to_vittoria(event, text, client):
     print('trovato', await pokemon_utility(name, level))
 
     if less_useful[0] is not None:
+
+        if name.lower() == 'sableye' and 'sableye' not in [p[0] for p in team]:
+            await event.reply(f"Sono io! via {less_useful[0].capitalize()}, non mi servi più!")
+            return await drop_the_useless(useful,useless,lvl_100)
+    
         if less_useful[2]*1.1< await pokemon_utility(name, level):
             await event.reply(f"È chiaramente più utile di {less_useful[0].capitalize()}, lo prendo!")
             return await drop_the_useless(useful,useless,lvl_100)        
