@@ -309,7 +309,7 @@ async def replies_to_pvp(event, text, client):
         if n not in [int(x) for x in da_schierare]:
             da_schierare += str(n)
 
-    return da_schierare
+    return da_schierare[::-1]
     
 async def replies_to_potenziamento(event, text, client):
     tipi = await extract_types(text)
