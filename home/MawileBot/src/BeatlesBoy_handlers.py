@@ -288,21 +288,21 @@ async def replies_to_pvp(event, text, client):
             if useful[i][0] is not None:
                 da_schierare += str(useful[i][4])
         else: 
-            return da_schierare
+            return da_schierare[::-1]
         
     for i in range(len(useless)):
         if len(da_schierare) < n_schierabili: 
             if useless[i][0] is not None:
                 da_schierare += str(useless[i][4])
         else:
-            return da_schierare
+            return da_schierare[::-1]
         
     for i in range(len(lvl_100)):
         if len(da_schierare) < n_schierabili: 
             if lvl_100[i][0] is not None:
                 da_schierare += str(lvl_100[i][4])
         else:
-            return da_schierare
+            return da_schierare[::-1]
      
     while len(da_schierare) < n_schierabili:
         n = randrange(1,10)
