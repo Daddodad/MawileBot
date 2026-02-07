@@ -12,3 +12,5 @@ EVERY TIME THE CODE CHANGES:
 
 Active dockers:
 ) docker ps -a
+
+) docker logs mawilebot-mawile_bot-1

@@ -404,9 +404,9 @@ async def replies_to_vittoria(event, text, client):
     useful, useless, lvl_100 = await filter_team(team, remove_100 = True)
 
     dopo_cattura = "Non ho capito se catturarlo o no.. Aiuto..."
-    print(useful)
-    print(useless)
-    print(lvl_100)
+    print('\nUseful', useful)
+    print('\nLess useful',useless)
+    print('\nlvl100',lvl_100)
 
     if useful:
         less_useful = next(
