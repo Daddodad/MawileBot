@@ -111,11 +111,11 @@ def poke_exist(pokea):
         return False
     return False
 
-def similar_pokemon_name(pokemon_probable_name):
+async def similar_pokemon_name(pokemon_probable_name):
     with open(ENV_PATH+'/pokemon_list.json', 'r', encoding="utf-8") as f:
         choices = json.load(f)
 
-    return most_similar(pokemon_probable_name, choices)
+    return await most_similar(pokemon_probable_name.lower(), choices)
 
 def random_pokemon():
     r = int(random.randrange(1025))+1
@@ -169,17 +169,15 @@ def type_interaction(type_att,type_def):
     type_def = pokemon_types.index(type_def)
     return (damage_array[type_att,type_def])
 
-def calculate_bonus_answer(bonus_pokemon, moltiplicatore):
+async def calculate_bonus_answer(bonus_pokemon, moltiplicatore):
     print(bonus_pokemon, moltiplicatore)
     try:
         poke1,poke2 = bonus_pokemon.split(" ")
-        with open(ENV_PATH+'/pokemon_list.json', 'r', encoding="utf-8") as f:
-            choices = json.load(f)
         if not poke_exist(poke1):
-            poke1 = most_similar(poke1, choices).capitalize()
+            poke1 = await similar_pokemon_name(poke1).capitalize()
             #manda messaggio
         if not poke_exist(poke2):
-            poke2 = most_similar(poke2, choices).capitalize()
+            poke2 = await similar_pokemon_name(poke2).capitalize()
             #manda messaggio
         try:
             [b1,b2] = calculate_bonus(poke1, poke2, moltiplicatore)
@@ -409,9 +407,7 @@ def poke_lega_all(multiplier):
 
     return message
 
-
-def get_type_emoji(type_name):
-    type_emojis = {
+TYPE_EMOJI_LIST = { 
         'Normal': '⚪',
         'Fire': '🔥',
         'Water': '💧',
@@ -431,7 +427,11 @@ def get_type_emoji(type_name):
         'Steel': '🔩',
         'Fairy': '🧚'
     }
-    return type_emojis.get(type_name, '❓')
+
+EMOJI_TO_TYPE = {v: k for k, v in TYPE_EMOJI_LIST.items()}
+
+def get_type_emoji(type_name):
+    return TYPE_EMOJI_LIST.get(type_name, '❓')
 
 def format_types(types):
     formatted_types = [f"{get_type_emoji(t.capitalize())} {t.capitalize()}" for t in types]
@@ -646,7 +646,7 @@ def poke_cell_gym(casella):
     else:
         return None
 
-def poke_cell(cell):
+async def poke_cell(cell):
     start = STARTING_DATE
     today = datetime.now().date()
     #print(today, start)
@@ -793,7 +793,7 @@ def poke_evo_level(chat_id,pokemon):
 
     return lvl
 
-def poke_cell_specific(route,cell,encounters):
+async def poke_cell_specific(route,cell,encounters):
     start = STARTING_DATE
     today = datetime.now().date()
     offset = cell
@@ -815,7 +815,7 @@ def poke_cell_specific(route,cell,encounters):
                 old_poke = pokemon
                 if evo_dict[pokemon][0] != 'last':
                     pokemon = evo_dict[pokemon][-1][1]
-                pokemon_name = similar_pokemon_name(pokemon)
+                pokemon_name = await similar_pokemon_name(pokemon.lower())
                 if pokemon_name.lower()!=pokemon.lower():
                     print(f"La forma finale di {old_poke} è {pokemon_name}? A me risulta {pokemon}... Boh...")
                     pokemon = pokemon_name
@@ -848,7 +848,7 @@ async def poke_trainer(chat_id,pokemons, is_capopalestra = False):
     #     offset += 1
     #print(casella, offset)
 
-    _, enemy_powers, capopalestra_power, multiplier, _ = poke_cell(offset)
+    _, enemy_powers, capopalestra_power, multiplier, _ = await poke_cell(offset)
 
     if not is_capopalestra:
         tab, limits = match_prevision(team, pokemons, enemy_powers, multiplier)
@@ -880,7 +880,7 @@ async def poke_encounter(chat_id,encounter):
         offset += 1
     #print(casella, offset)
 
-    enemy_powers, multiplier = poke_cell_specific(route,offset,encounter)
+    enemy_powers, multiplier = await poke_cell_specific(route,offset,encounter)
 
     tab = encounter_prevision(team, encounter, enemy_powers, multiplier)
     #print('ooo',enemy_powers)
@@ -1729,7 +1729,7 @@ most_similar_cache = {  'morpeko': ['morpeko-full-belly','morpeko-hangry'],
                         "rowlethisui" : "rowlet-hisui",
                         "pikachualola" : "pikachu",}
 
-def most_similar(query, choices, r = True):
+async def most_similar(query, choices, r = True):
     if query.lower() in most_similar_cache:
         cached_result = most_similar_cache[query.lower()]
         if isinstance(cached_result, list):
@@ -1809,7 +1809,7 @@ async def automatic_card_reader(image):
 
             if pokemon_probable_name != '':
                 if poke_exist(pokemon_probable_name.lower()):
-                    pokemon_probable_name = check_alt_forms(pokemon_probable_name.lower(),*typing)
+                    pokemon_probable_name = await check_alt_forms(pokemon_probable_name.lower(),*typing)
                     secret_data.append([pokemon_probable_name,int(pokemon_probable_level)])
                     if round(get_poke_bst(pokemon_probable_name.lower())*int(pokemon_probable_level)/100) != int(pokemon_probable_power):
                         errors.append('01')
@@ -1817,11 +1817,8 @@ async def automatic_card_reader(image):
                         errors.append('00')
                 else:
 
-                    with open(ENV_PATH+'/pokemon_list.json', 'r', encoding="utf-8") as f:
-                        choices = json.load(f)
-
-                    pokemon_name = most_similar(pokemon_probable_name, choices)
-                    pokemon_name = check_alt_forms(pokemon_name.lower(),*typing)
+                    pokemon_name = await similar_pokemon_name(pokemon_probable_name)
+                    pokemon_name = await check_alt_forms(pokemon_name.lower(),*typing)
 
                     if round(get_poke_bst(pokemon_name)*int(pokemon_probable_level)/100) != int(pokemon_probable_power):
                         errors.append('11')
@@ -1903,7 +1900,12 @@ ALT_FORMS = {
     ('wooper', 'poison', 'ground'): 'wooper-paldea'
 }
 
-def check_alt_forms(name, type1=None, type2=None):
+async def check_alt_forms(name, type1=None, type2=None):
+
+    name = name.lower() if type1 else name
+    type1 = type1.lower() if type1 else None
+    type2 = type2.lower() if type2 else None
+
     key2 = (name, type1)
     key3 = (name, type1, type2)
     key3r = (name, type2, type1)

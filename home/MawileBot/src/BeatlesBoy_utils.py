@@ -13,7 +13,12 @@ else:
     sys.path.insert(0,ENV_PATH) # MawileBot
     sys.path.append(os.path.dirname(os.path.abspath(__file__)))
     
-from poke_lib import automatic_card_reader, calculate_bonus_via_types, get_power, poke_cell, most_similar,get_poke_bst
+from poke_lib import (
+                        automatic_card_reader, calculate_bonus_via_types, 
+                        get_power, poke_cell, similar_pokemon_name,
+                        get_poke_bst, EMOJI_TO_TYPE,
+                        check_alt_forms
+                      )
 
 
 tipi_to_types = {
@@ -21,61 +26,61 @@ tipi_to_types = {
     'Terra': 'Ground','Volante': 'Flying','Psico': 'Psychic','Coleottero': 'Bug','Roccia': 'Rock','Spettro': 'Ghost','Drago': 'Dragon','Buio': 'Dark','Acciaio': 'Steel','Folletto': 'Fairy'
 }
 
+async def find_evo_at_level_x(pokemon, level_x):
+
+    pokemon_x = pokemon
+
+    with open(ENV_PATH+f"/even_evo_file.json", 'r') as ef:
+        evo_dict = json.load(ef)  
+    if pokemon in evo_dict:
+        if len(evo_dict[pokemon]) >2:
+            if evo_dict[pokemon][0] == 'last':
+                if level_x < evo_dict[pokemon][1][0]: # Torno indietro?
+                    pokemon_x = evo_dict[pokemon][1][1]
+                elif level_x < evo_dict[pokemon][2][0]: # Torno indietro?
+                    pokemon_x = evo_dict[pokemon][2][1]
+            if evo_dict[pokemon][0]=="base":
+                if level_x >= evo_dict[pokemon][2][0]:
+                    pokemon_x = evo_dict[pokemon][2][1]
+                elif level_x >= evo_dict[pokemon][1][0]:
+                    pokemon_x = evo_dict[pokemon][1][1]
+            elif evo_dict[pokemon][0]=="mid":
+                if level_x < evo_dict[pokemon][1][0]: # Torno indietro?
+                    pokemon_x = evo_dict[pokemon][1][1]
+                elif level_x >= evo_dict[pokemon][2][0]:
+                    pokemon_x = evo_dict[pokemon][2][1]
+        else:
+            if evo_dict[pokemon][0] == 'last':
+                if level_x < evo_dict[pokemon][1][0]: # Torno indietro?
+                    pokemon_x = evo_dict[pokemon][1][1]
+            if evo_dict[pokemon][0]=="base":
+                if level_x >= evo_dict[pokemon][1][0]:
+                    pokemon_x = evo_dict[pokemon][1][1]
+
+    return pokemon_x
+
 async def pokemon_utility(pokemon,lvl):
     if pokemon is  None:
         return 0
     #TODO: implement a better utility function
 
     with open(ENV_PATH+f"/even_evo_file.json", 'r') as ef:
-        evo_dict = json.load(ef)
-
-    with open(ENV_PATH+'/pokemon_list.json', 'r', encoding="utf-8") as f:
-        choices = json.load(f)   
+        evo_dict = json.load(ef)  
         
-    pokemon = most_similar(pokemon.lower(), choices)
+    pokemon = await similar_pokemon_name(pokemon.lower())
 
-    pokemon15 = pokemon
-    pokemon30 = pokemon
     lvl15 = min(100,lvl+15)
     lvl30 = min(100,lvl+30)
-    if pokemon in evo_dict:
-        if evo_dict[pokemon][0] != 'last':
-            pokemon15 = pokemon
-            if evo_dict[pokemon][0]=="base":
-                if lvl15 >= evo_dict[pokemon][1][0]:
-                    pokemon15 = evo_dict[pokemon][1][1]
-            elif evo_dict[pokemon][0]=="mid":
-                if lvl15 <= evo_dict[pokemon][1][0]:
-                    pokemon15 = evo_dict[pokemon][1][1]
-                elif lvl15 >= evo_dict[pokemon][2][0]:
-                    pokemon15 = evo_dict[pokemon][2][1]
-        pokemon30 = pokemon15
-        if pokemon15 == pokemon:
-            if evo_dict[pokemon][0]=="base":
-                if lvl30 >= evo_dict[pokemon][1][0]:
-                    pokemon30 = evo_dict[pokemon][1][1]
-            elif evo_dict[pokemon][0]=="mid":
-                if lvl30 <= evo_dict[pokemon][1][0]:
-                    pokemon30 = evo_dict[pokemon][1][1]
-                elif lvl30 >= evo_dict[pokemon][2][0]:
-                    pokemon30 = evo_dict[pokemon][2][1]
-        else:
-            if evo_dict[pokemon15][0]=="base":
-                if lvl30 >= evo_dict[pokemon15][1][0]:
-                    pokemon30 = evo_dict[pokemon15][1][1]
-            elif evo_dict[pokemon15][0]=="mid":
-                if lvl30 <= evo_dict[pokemon15][1][0]:
-                    pokemon30 = evo_dict[pokemon15][1][1]
-                elif lvl30 >= evo_dict[pokemon15][2][0]:
-                    pokemon30 = evo_dict[pokemon15][2][1] 
-            else:
-                pokemon30 = pokemon15 
 
+    pokemon15 = await find_evo_at_level_x(pokemon, lvl15)
+    pokemon30 = await find_evo_at_level_x(pokemon, lvl30)
+    
     potenza_attuale = get_poke_bst(pokemon)*int(lvl)/100
     potenza_tra_15 = get_poke_bst(pokemon15)*int(lvl15)/100
     potenza_tra_30 = get_poke_bst(pokemon30)*int(lvl30)/100
 
-    return potenza_attuale + potenza_tra_15 + potenza_tra_30
+    #return potenza_attuale*0.2 + potenza_tra_15*0.4 + potenza_tra_30*0.4
+    return potenza_tra_15 + potenza_tra_30
 
 async def filter_team(team, remove_100=False):
     if team:
@@ -93,7 +98,7 @@ async def filter_team(team, remove_100=False):
         return [], [], []
 
 async def extract_pokemon_and_pl(text):
-    # Pokémon name: after "hai incontrato", before "selvatico" or comma
+    # Pokémon name (unchanged)
     name_match = re.search(
         r"hai incontrato\s+(?:il\s+leggendario\s+)?([A-Za-zÀ-ÿ'’]+)",
         text,
@@ -106,7 +111,35 @@ async def extract_pokemon_and_pl(text):
     pokemon = name_match.group(1) if name_match else None
     pl = int(pl_match.group(1)) if pl_match else None
 
+    # --- Extract emojis ---
+    emojis = []
+
+    for line in text.splitlines():
+        if "PL" in line:
+            stat_line = line.strip()
+            break
+    else:
+        stat_line = ""
+
+    if pokemon and stat_line:
+        # Remove name and everything after PL
+        middle = stat_line.replace(pokemon, "")
+        middle = middle.split("PL")[0]
+
+        for ch in middle:
+            # emoji / symbols live here
+            if ord(ch) > 127:
+                emojis.append(ch)
+
+    pokemon = await similar_pokemon_name(pokemon.lower())
+    pokemon = await check_alt_forms(pokemon,
+                                    EMOJI_TO_TYPE.get(emojis[0],None),
+                                    EMOJI_TO_TYPE.get(emojis[1],None) if len(emojis) >1 else None
+                                    )
+    print('Letto ',pokemon, pl, EMOJI_TO_TYPE.get(emojis[0],None), EMOJI_TO_TYPE.get(emojis[1],None) if len(emojis) >1 else None)
+
     return pokemon, pl
+
 
 async def extract_number_of_pvp_choices(text):
     clean = text.replace("\n", " ")
@@ -116,7 +149,7 @@ async def extract_number_of_pvp_choices(text):
     return num_pokemon
 
 async def calculate_winning_options(enemy_poke, enemy_pl, team):
-    _, _, _, multiplier, _ = poke_cell(0)
+    _, _, _, multiplier, _ = await poke_cell(0)
     winning_options = []
 
     print(' il mio team:', team )
@@ -183,3 +216,72 @@ async def extract_types(text):
         pokemon_type = line.split()[0]
         types.append(pokemon_type)
     return types
+
+async def read_pokemons_from_trainer(text):
+    result = []
+    for line in text.splitlines():
+        line = line.strip()
+        if not line.startswith("-"):
+            continue
+        row = line[1:]
+        name = ""
+        types = []
+        i = 0
+        while i < len(row):
+            ch = row[i]
+            matched = False
+            for emoji, ptype in EMOJI_TO_TYPE.items():
+                if row.startswith(emoji, i):
+                    types.append(ptype)
+                    i += len(emoji)
+                    matched = True
+                    break
+
+            if not matched:
+                name += ch
+                i += 1
+
+        name = name.strip()
+        if len(types) == 0:
+            types = [None, None]
+        elif len(types) == 1:
+            types.append(None)
+        else:
+            types = types[:2]
+        result.append([name, types[0], types[1]])
+
+    for r in result:
+        r[0] = await similar_pokemon_name(r[0].lower())
+        r[0] = await check_alt_forms(r[0],r[1],r[2])
+
+    return result
+
+async def calculate_best_strategy(team, enemy_team, enemy_powers,multiplier):
+    print('team', team)
+    print('enemy_team', enemy_team)
+    print('enemy_powers', enemy_powers)
+    prob_matrix = []
+    for pokemon in team:
+        if pokemon is not None:
+            print(pokemon)
+            pp_of_wins = []
+            types1 = poke.get(name = pokemon[0]).types
+            for power in enemy_powers:
+                print(power)
+                total = 0
+                for enemy_poke in enemy_team:
+                    types2 = poke.get(name = enemy_poke[0]).types
+
+                    bonus = calculate_bonus_via_types(types1, types2 ,multiplier)
+                    bonus_netto = bonus[0]-bonus[1]
+
+                    print("Bonus calcolato:", bonus_netto)
+
+                    if pokemon[3] + bonus_netto > power:
+                        total+=1
+                pp_of_wins.append(total/len(enemy_team))
+            prob_matrix.append(pp_of_wins)
+
+    print(prob_matrix)
+    best_schieramento = []
+    return best_schieramento

@@ -312,14 +312,14 @@ async def bonus(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     return BONUS_READ_POKEMONS
 
 async def show_main_bonus_menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    MULT = poke_cell(0)[3]
+    MULT = await poke_cell(0)[3]
     if  context.user_data.get('bonus_fallito') == True:      # Se ho già fallito a dire pokemon, rileggi
         context.user_data['moltiplicatore'] = MULT
         context.user_data['bonus_pokemon'] = update.message.text
     elif 'bonus_pokemon' not in context.user_data.keys():   # Se non sto cambiando moltiplicatore, leggi:
         context.user_data['moltiplicatore'] = MULT
         context.user_data['bonus_pokemon'] = update.message.text
-    np1, np2, text = calculate_bonus_answer(context.user_data.get('bonus_pokemon'), context.user_data.get('moltiplicatore') )
+    np1, np2, text = await calculate_bonus_answer(context.user_data.get('bonus_pokemon'), context.user_data.get('moltiplicatore') )
     try:
         if np1.lower() != context.user_data.get('bonus_pokemon').split(" ")[0].lower():
             await update.message.reply_text(text="Ho assunto che con "+context.user_data.get('bonus_pokemon').split(" ")[0]+" tu intendessi "+np1)
@@ -599,14 +599,14 @@ async def choose_pokemon_gym(update: Update, context: ContextTypes.DEFAULT_TYPE)
         if poke_exist(old_pokemon_name):
             pokemon_name = old_pokemon_name + ' 0'
         else:
-            pokemon_name = similar_pokemon_name(old_pokemon_name.lower())
+            pokemon_name = await similar_pokemon_name(old_pokemon_name.lower())
             if old_pokemon_name.lower()!=pokemon_name.lower():
                 await update.message.reply_text(f"Assumo che con {old_pokemon_name} intendessi {pokemon_name.capitalize()}...")
             pokemon_name = pokemon_name + ' 0'
         await update.message.reply_text(f"Assumerò il livello di {old_pokemon_name} sia 0...")
     elif len(parts) == 2 and parts[1].isdigit():
         if not poke_exist(old_pokemon_name.split()[0]):
-            new_pokemon_name = similar_pokemon_name(old_pokemon_name.split()[0].lower())
+            new_pokemon_name = await similar_pokemon_name(old_pokemon_name.split()[0].lower())
             if old_pokemon_name.split()[0].lower()!=new_pokemon_name.lower():
                 await update.message.reply_text(f"Assumo che con {old_pokemon_name.split()[0]} intendessi {new_pokemon_name.capitalize()}...")
             pokemon_name = new_pokemon_name + ' ' + old_pokemon_name.split()[1]
@@ -761,7 +761,7 @@ def create_team_keyboard(team):
 async def choose_pokemon(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     old_pokemon_name = update.message.text
     #print('Pokémon received:', pokemon_name)
-    pokemon_name = similar_pokemon_name(old_pokemon_name.lower())
+    pokemon_name = await similar_pokemon_name(old_pokemon_name.lower())
     if old_pokemon_name.lower()!=pokemon_name.lower():
             await update.message.reply_text(f"Assumo che con {old_pokemon_name} intendessi {pokemon_name.capitalize()}...")
     if poke_exist(pokemon_name) == True:
@@ -1023,7 +1023,7 @@ async def dex_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     if poke_exist(pokemon_name):
         pass
     else:
-        pokemon = similar_pokemon_name(pokemon_name.lower())
+        pokemon = await similar_pokemon_name(pokemon_name.lower())
         if pokemon.lower()!=pokemon_name.lower():
             await update.message.reply_text(f"Assumo che con {pokemon_name} intendessi {pokemon.capitalize()}...")
         pokemon_name = pokemon
@@ -1059,7 +1059,7 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     await query.answer()
 
     if query.data == "cell_current":
-        content = poke_cell(0)
+        content = await poke_cell(0)
         if content == None:
             text = "Non siamo più su una casella..."
         else:
@@ -1073,7 +1073,7 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
                 text+= f'La potenza del boss di oggi è {content[2]}.'
         await query.edit_message_text(text)
     elif query.data == "cell_next":
-        content = poke_cell(1)
+        content = await poke_cell(1)
         if content == None:
             text = "Non ci sono prossime caselle."
         else:
@@ -1095,7 +1095,7 @@ async def get_custom_x(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
     try:
         x = int(update.message.text)
         if x > 0:
-            content = poke_cell(x)
+            content = await poke_cell(x)
             if content == None:
                 text = """Non c'è nessuna casella così avanti. Dimmi un altro "x" """
                 await update.message.reply_text(text)
@@ -1402,7 +1402,7 @@ async def fight_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("La lega è finita... usa il comando /lega!")
 
     elif has_a_team(chat_id):
-        if poke_cell(0)[0] == True:
+        if await poke_cell(0)[0] == True:
             keyboard = [
                 [InlineKeyboardButton("Allenatore", callback_data=TRAINER)],
                 [InlineKeyboardButton("Capopalestra", callback_data=CAPOPALESTRA)],
@@ -1441,7 +1441,7 @@ async def enter_pokemons(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if poke_exist(p):
             new_poke_list.append(p)
         else:
-            new_p = similar_pokemon_name(p.lower())
+            new_p = await similar_pokemon_name(p.lower())
             if new_p.lower()!=p.lower():
                 if poke_exist(new_p) == False:
                     await update.message.reply_text(f'Mhh... Non mi risulta nessun "{p}"... Riprova a dirmi la lista.')
@@ -1843,7 +1843,9 @@ async def team_update(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
                             message += " (⚠️🔞)" 
                         if y == '01':
                             message += " (🔞)" 
-                        message +=  f' lvl: {x[1]}\n'       
+                        message +=  f' lvl {x[1]}\n' 
+                if 'Sableye' in message:
+                    await update.message.reply_text('Ottima scelta comunque... Non ti deluderò!')
                 await update.message.reply_text(message)
 
                 with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
@@ -1912,6 +1914,6 @@ async def text_answer(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
         await message.reply_text(random.choice(answers))
 
     if "tank" in text.lower():
-        await message.reply_text("Ma che hai, la prima elementare?")
+        await message.reply_text("Ma impara a scrivere bene...")
 
     return ConversationHandler.END  # or keep conversation going if needed

@@ -28,7 +28,10 @@ from BeatlesBoy_utils import (
     calculate_potenziabili,
     extract_number_of_pvp_choices,
     filter_team,
-    pokemon_utility
+    pokemon_utility,
+    read_pokemons_from_trainer,
+    poke_cell,
+    calculate_best_strategy
 )
 
 # if os.path.exists('/home/SableyeBot/src'):
@@ -193,12 +196,22 @@ async def reply_to_text(event, text, client):
         dopo_cattura = await replies_to_vittoria(event,text,client)
         await event.reply(str(dopo_cattura))
         return True       
+    elif "Allenatore, dovrai affrontare" in text:
+        da_schierare = await replies_to_trainer(event, text, client, is_capopalestra = False)
+        await event.reply(str(da_schierare))
+        return True
+    elif "Allenatore, ora dovrai affrontare il Capopalestra" in text:
+        da_schierare = await replies_to_trainer(event, text, client, is_capopalestra = True)
+        await event.reply(str(da_schierare))
+        return True
     elif " è salito al livello " in text:
         pass
     elif "Schieramento ricevuto! Attendi che il tuo avversario faccia lo stesso per visualizzare i risultati" in text:
         pass
+    elif "Giornata di gioco conclusa!" in text:
+        pass
     else: 
-        await event.reply("❓❓")
+        await event.reply("❓Non ho capito❓")
     return False
     
 
@@ -242,7 +255,7 @@ async def load_team_from_json(event, client):
 
 async def replies_to_wild_pokemon(event, text, client):
     pokemon, pl = await extract_pokemon_and_pl(text)
-    await event.reply(f"Ho incontrato {pokemon} con PL {pl}.\n\nAspettando la FOTO del team... 2 minuti massimo ⏳")
+    await event.reply(f"Ho incontrato {pokemon.capitalize()} con PL {pl}.\n\nAspettando la FOTO del team... 2 minuti massimo ⏳")
 
     team = await load_team_from_json(event, client)
     useful, useless, lvl_100 = await filter_team(team, remove_100 = True)
@@ -254,15 +267,20 @@ async def replies_to_wild_pokemon(event, text, client):
         if winning_options is None or len(winning_options) == 0:
             winning_options = await calculate_winning_options(pokemon, pl, lvl_100)    
         print("Winning options:", winning_options)
-        winning_option = winning_options[0]            
+        if winning_options:
+            winning_option = winning_options[0] 
+        else:
+            winning_option = None           
     except Exception as e:
         print("Errore nel calcolo delle opzioni vincenti:", e)
-        winning_option = None
+        winning_option = 'Error'
     
     print("Winning option:", winning_option)
 
-    if not winning_option:
-        return 'Avrei schierato a caso 1' 
+    if winning_option == 'Error':
+        return 'Errore: Avrei schierato a caso 1'
+    elif not winning_option:
+        return 'Non posso vincere?!' 
     else:
         #return f"avrei schierato {winning_option[3]} ({winning_option[0]}, bonus {winning_option[2]})"
         return winning_option[3]
@@ -445,3 +463,42 @@ async def replies_to_vittoria(event, text, client):
         return dopo_cattura 
     
     return 0
+
+async def replies_to_trainer(event, text, client, is_capopalestra):
+    _, enemy_powers, capopalestra_powers, multiplier, _ = await poke_cell(1) # SArchiapone!!!
+    if len(enemy_powers) != 3 or len(capopalestra_powers) != 6:
+        return("Qualcosa è andato storto con poke_cell...")
+    print(enemy_powers, capopalestra_powers)
+
+    if is_capopalestra:
+        return "Non so ancora fare i capopalestra"
+        #TODO add reader of images
+        enemy_powers = []
+    else:
+        enemy_team = await read_pokemons_from_trainer(text)
+        if len (enemy_team) == 1:
+            enemy_powers = enemy_powers[2]
+        elif len(enemy_team) == 2:
+            enemy_powers = [enemy_powers[1], enemy_powers[2]]
+        elif len(enemy_team) == 3:
+            enemy_powers = [enemy_powers[0], enemy_powers[1], enemy_powers[2]]
+        elif len(enemy_team) == 4:
+            enemy_powers = [enemy_powers[0], enemy_powers[1], enemy_powers[2], enemy_powers[2]]
+        elif len(enemy_team) == 5:
+            enemy_powers = [enemy_powers[0], enemy_powers[0], enemy_powers[1], enemy_powers[1], enemy_powers[2]]
+        elif len(enemy_team) == 6:
+            enemy_powers = [enemy_powers[0], enemy_powers[0], enemy_powers[0], enemy_powers[1], enemy_powers[1], enemy_powers[2]]
+
+    team = await load_team_from_json(event, client)    
+    useful, useless, lvl_100 = await filter_team(team, remove_100 = True)
+
+    await calculate_best_strategy(useful,enemy_team, enemy_powers, multiplier)
+
+    try:
+        pass
+    except Exception as e:
+        print('Errore nel calcolare la miglior strategia!',e)
+    print(enemy_team)
+    print(enemy_powers)
+
+    return 'Ho incontrato qualcuno, ma non so che fare.'
