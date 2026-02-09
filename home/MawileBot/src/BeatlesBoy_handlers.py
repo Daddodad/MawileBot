@@ -210,6 +210,8 @@ async def reply_to_text(event, text, client):
         pass
     elif "Giornata di gioco conclusa!" in text:
         pass
+    elif "Allenatore, benvenuto nella prossima zona!" in text:
+        pass
     else: 
         await event.reply("❓Non ho capito❓")
     return False
