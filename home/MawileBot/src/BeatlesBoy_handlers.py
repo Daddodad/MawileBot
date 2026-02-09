@@ -31,6 +31,7 @@ from BeatlesBoy_utils import (
     pokemon_utility,
     read_pokemons_from_trainer,
     poke_cell,
+    process_and_reply,
     calculate_best_strategy
 )
 
@@ -201,7 +202,22 @@ async def reply_to_text(event, text, client):
         await event.reply(str(da_schierare))
         return True
     elif "Allenatore, ora dovrai affrontare il Capopalestra" in text:
-        da_schierare = await replies_to_trainer(event, text, client, is_capopalestra = True)
+        images = []
+        if event.grouped_id:  
+            album_messages = await client.get_messages(
+                event.chat_id,
+                ids=None,
+                min_id=event.id - 10,
+                max_id=event.id + 10
+            )
+
+            for msg in album_messages:
+                if msg.grouped_id == event.grouped_id and msg.media:
+                    images.append(msg.media)
+        else:
+            if event.media:
+                images.append(event.media)
+        da_schierare = await replies_to_trainer(event, text, client, is_capopalestra = True, images = images)
         await event.reply(str(da_schierare))
         return True
     elif " è salito al livello " in text:
@@ -466,13 +482,17 @@ async def replies_to_vittoria(event, text, client):
     
     return 0
 
-async def replies_to_trainer(event, text, client, is_capopalestra):
+async def replies_to_trainer(event, text, client, is_capopalestra, images = None):
     _, enemy_powers, capopalestra_powers, multiplier, _ = await poke_cell(0)
     if len(enemy_powers) != 3 or len(capopalestra_powers) != 6:
         return("Qualcosa è andato storto con poke_cell...")
     #print(enemy_powers, capopalestra_powers)
 
     if is_capopalestra:
+        with open(os.path.join(ENV_PATH, "pokemon_vectors_9.json"), "r", encoding="utf-8") as f:
+            pokemon_vectors = json.load(f)
+        await process_and_reply(event, client, images, pokemon_vectors)
+
         return "Non so ancora fare i capopalestra"
         #TODO add reader of images
         enemy_powers = []
@@ -490,6 +510,10 @@ async def replies_to_trainer(event, text, client, is_capopalestra):
             enemy_powers = [enemy_powers[0], enemy_powers[0], enemy_powers[1], enemy_powers[1], enemy_powers[2]]
         elif len(enemy_team) == 6:
             enemy_powers = [enemy_powers[0], enemy_powers[0], enemy_powers[0], enemy_powers[1], enemy_powers[1], enemy_powers[2]]
+
+    await event.reply(
+        f"Ho incontrato {', '.join([e[0].capitalize() for e in enemy_team])}? Capiamo chi schierare..."
+    )
 
     team = await load_team_from_json(event, client)    
     useful, useless, lvl_100 = await filter_team(team, remove_100 = True)
@@ -513,8 +537,8 @@ async def replies_to_trainer(event, text, client, is_capopalestra):
                 p_of_victory, best_schieramento = await calculate_best_strategy(new_useful,enemy_team, enemy_powers, multiplier)
                 if p_of_victory.sum()>410:
                     break
-        pos_da_schierare = [p[4] for p in best_schieramento]            
-        return f"Schiererei {pos_da_schierare}"
+        pos_da_schierare = [str(p[4]) for p in best_schieramento]            
+        return ''.join(pos_da_schierare)
     except Exception as e:
         print('Errore nel calcolare la miglior strategia!',e)
 

@@ -5,6 +5,8 @@ import os
 import sys
 import json
 import pypokedex as poke
+from io import BytesIO
+from PIL import Image, ImageDraw
 from scipy.optimize import linear_sum_assignment
 import numpy as np
 
@@ -310,3 +312,67 @@ async def calculate_best_strategy(team, enemy_team, enemy_powers,multiplier):
     # print('best_schieramento', best_schieramento)
 
     return p_of_victory, best_schieramento
+
+async def process_and_reply(event,client, media_list, pokemon_vectors):
+    """
+    Process a list of media from a message, compute 9-point cross embeddings,
+    and reply with the image marked + text if Pokémon found.
+    """
+    for media in media_list:
+        # Download media into memory
+        file_bytes = await client.download_media(media, file=BytesIO())
+        file_bytes.seek(0)
+
+        # Try opening as image
+        try:
+            img = Image.open(file_bytes).convert("RGB")  # keep RGB to draw
+        except Exception as e:
+            print(f"Skipping file, cannot open as image: {e}")
+            continue
+
+        mat_gray = img.convert("L")
+        mat = np.array(mat_gray)
+
+        # 9-point cross embedding
+        h, w = mat.shape
+        f = 0.3
+        cx, cy = w // 2, h // 2
+        dx, dy = int(w * f), int(h * f)
+
+        coords = [
+            (cx, cy),
+            (cx, max(cy - dy, 0)),
+            (cx, min(cy + dy, h - 1)),
+            (max(cx - dx, 0), cy),
+            (min(cx + dx, w - 1), cy),
+            (max(cx - dx//2, 0), max(cy - dy//2, 0)),
+            (min(cx + dx//2, w - 1), max(cy - dy//2, 0)),
+            (max(cx - dx//2, 0), min(cy + dy//2, h - 1)),
+            (min(cx + dx//2, w - 1), min(cy + dy//2, h - 1)),
+        ]
+
+        vector = [int(mat[y, x]) for x, y in coords]
+
+        # Check against your Pokémon embeddings
+        matches = [
+            name for name, emb in pokemon_vectors.items()
+            if emb == vector
+        ]
+
+        # Draw cross points on the image
+        draw = ImageDraw.Draw(img)
+        radius = 5
+        for x, y in coords:
+            draw.ellipse((x - radius, y - radius, x + radius, y + radius), fill=(255, 0, 0))
+
+        # Prepare reply text
+        if matches:
+            reply_text = f"Found Pokémon: {', '.join(matches)}"
+        else:
+            reply_text = "Pokémon not recognized."
+
+        # Reply with image + text
+        out_bytes = BytesIO()
+        img.save(out_bytes, format="PNG")
+        out_bytes.seek(0)
+        await event.reply(file=out_bytes, message=reply_text)
