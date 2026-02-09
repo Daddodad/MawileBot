@@ -240,12 +240,12 @@ async def load_team_from_json(event, client):
             continue
         #await msg.reply("Questa è una foto")
         try:
-            await msg.reply("Ho ricevuto la foto della squadra, la aggiorno...")  # opzionale
             photo_bytes = await msg.download_media(bytes)
             pil_image = Image.open(BytesIO(photo_bytes))
 
             team = await aggiorna_team_da_foto(pil_image)
             success = True
+            await msg.reply("Ho ricevuto la foto della squadra, la aggiorno...")  # opzionale
             with open(json_path, "w", encoding="utf-8") as f:
                 json.dump(team, f, indent=2)
             break  # stop at first successful photo
@@ -467,10 +467,10 @@ async def replies_to_vittoria(event, text, client):
     return 0
 
 async def replies_to_trainer(event, text, client, is_capopalestra):
-    _, enemy_powers, capopalestra_powers, multiplier, _ = await poke_cell(1) # SArchiapone!!!
+    _, enemy_powers, capopalestra_powers, multiplier, _ = await poke_cell(0)
     if len(enemy_powers) != 3 or len(capopalestra_powers) != 6:
         return("Qualcosa è andato storto con poke_cell...")
-    print(enemy_powers, capopalestra_powers)
+    #print(enemy_powers, capopalestra_powers)
 
     if is_capopalestra:
         return "Non so ancora fare i capopalestra"
@@ -497,10 +497,25 @@ async def replies_to_trainer(event, text, client, is_capopalestra):
     await calculate_best_strategy(useful,enemy_team, enemy_powers, multiplier)
 
     try:
-        pass
+        p_of_victory, best_schieramento = await calculate_best_strategy(useful,enemy_team, enemy_powers, multiplier)
+        if 0 in p_of_victory:   # Si può fare di meglio?
+            print('\nprovo a fare di meglio', sum(p_of_victory),'\n')
+            new_useful = useful.copy()
+            for uls in useless:
+                new_useful.append(uls)
+                p_of_victory, best_schieramento = await calculate_best_strategy(new_useful,enemy_team, enemy_powers, multiplier)
+                if 0 not in p_of_victory:
+                    break
+        if is_capopalestra and sum(p_of_victory)<410:
+            new_useful = useful.copy()
+            for lv100 in lvl_100:
+                new_useful.append(lv100)
+                p_of_victory, best_schieramento = await calculate_best_strategy(new_useful,enemy_team, enemy_powers, multiplier)
+                if p_of_victory.sum()>410:
+                    break
+        pos_da_schierare = [p[4] for p in best_schieramento]            
+        return f"Schiererei {pos_da_schierare}"
     except Exception as e:
         print('Errore nel calcolare la miglior strategia!',e)
-    print(enemy_team)
-    print(enemy_powers)
 
     return 'Ho incontrato qualcuno, ma non so che fare.'

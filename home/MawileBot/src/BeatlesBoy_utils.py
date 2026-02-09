@@ -5,6 +5,9 @@ import os
 import sys
 import json
 import pypokedex as poke
+from scipy.optimize import linear_sum_assignment
+import numpy as np
+
 if os.path.exists('/home/SableyeBot/src'):
     ENV_PATH = '/home/SableyeBot/src'
     sys.path.insert(0,ENV_PATH) # SableyeBot
@@ -87,6 +90,7 @@ async def filter_team(team, remove_100=False):
         utilities = []
         lvl_100 = []
         for index, (poke, lvl) in enumerate(team):
+            #poke = await similar_pokemon_name(poke.lower()) #Sarchiapone
             u = await pokemon_utility(poke,lvl)
             if remove_100 and lvl == 100:
                 lvl_100.append((poke, lvl, u, get_power(poke, lvl), index+1))
@@ -257,17 +261,20 @@ async def read_pokemons_from_trainer(text):
     return result
 
 async def calculate_best_strategy(team, enemy_team, enemy_powers,multiplier):
-    print('team', team)
-    print('enemy_team', enemy_team)
-    print('enemy_powers', enemy_powers)
+    # print('team', team)
+    # print('enemy_team', enemy_team)
+    # print('enemy_powers', enemy_powers)
     prob_matrix = []
+    base_bonus = 0
     for pokemon in team:
-        if pokemon is not None:
-            print(pokemon)
+        if pokemon[0] is not None:
+            base_bonus += 0.001
+            #print(pokemon)
             pp_of_wins = []
+            #print('\n',pokemon[0],'\n')
             types1 = poke.get(name = pokemon[0]).types
             for power in enemy_powers:
-                print(power)
+                #print(power)
                 total = 0
                 for enemy_poke in enemy_team:
                     types2 = poke.get(name = enemy_poke[0]).types
@@ -275,13 +282,31 @@ async def calculate_best_strategy(team, enemy_team, enemy_powers,multiplier):
                     bonus = calculate_bonus_via_types(types1, types2 ,multiplier)
                     bonus_netto = bonus[0]-bonus[1]
 
-                    print("Bonus calcolato:", bonus_netto)
+                    #print("Bonus calcolato:", bonus_netto)
 
                     if pokemon[3] + bonus_netto > power:
                         total+=1
-                pp_of_wins.append(total/len(enemy_team))
+                pp_of_wins.append(total/len(enemy_team)*100+base_bonus)
+            #print(pokemon, pp_of_wins)
             prob_matrix.append(pp_of_wins)
+        else:
+            prob_matrix.append([0 for _ in range(len(enemy_powers))])
 
-    print(prob_matrix)
+    # Hungarian algorithm minimizes, so negate
+    M = np.array(prob_matrix)
+    row_ind, col_ind = linear_sum_assignment(-M)  #col_ind è l'indice che ci interessa
+
+    assignment = dict(zip(col_ind, row_ind))  # slot -> pokemon index
+
     best_schieramento = []
-    return best_schieramento
+    p_of_victory = []
+
+    for slot in range(len(col_ind)):
+        poke_idx = assignment[slot]
+        best_schieramento.append(team[poke_idx])
+        p_of_victory.append(int(M[poke_idx, slot]))
+
+    # print('p_of_victory', p_of_victory)
+    # print('best_schieramento', best_schieramento)
+
+    return p_of_victory, best_schieramento
