@@ -411,7 +411,7 @@ async def replies_to_vittoria(event, text, client):
     await event.reply(f"Vittoria! Catturo o no {name} di livello {level}? Decidiamo...")
     #TODO: aggiustare team = await load_team_from_json(event, client)
 
-    await asyncio.sleep(10)  # aspetta 2 minuti
+    await asyncio.sleep(20)  # aspetta 2 minuti
 
     json_path = os.path.join(ENV_PATH, "BeatlesBoy_team.json")
     print("Loading JSON from:", json_path)
