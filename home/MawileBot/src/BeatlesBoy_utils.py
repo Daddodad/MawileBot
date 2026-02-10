@@ -279,6 +279,7 @@ async def calculate_best_strategy(team, enemy_team, enemy_powers,multiplier):
                 #print(power)
                 total = 0
                 for enemy_poke in enemy_team:
+                    #print(enemy_poke)
                     types2 = poke.get(name = enemy_poke[0]).types
 
                     bonus = calculate_bonus_via_types(types1, types2 ,multiplier)
@@ -316,27 +317,21 @@ async def calculate_best_strategy(team, enemy_team, enemy_powers,multiplier):
 
     return [int(p) for p in p_of_victory], best_schieramento
 
-async def process_and_reply(event,client, media_list, pokemon_vectors):
-    """
-    Process a list of media from a message, compute 9-point cross embeddings,
-    and reply with the image marked + text if Pokémon found.
-    """
-    for media in media_list:
-        # Download media into memory
+
+async def process_and_reply(event, client, media_list, pokemon_vectors):
+    pokemons_found = []
+    for c, media in enumerate(media_list):
         file_bytes = await client.download_media(media, file=BytesIO())
         file_bytes.seek(0)
 
-        # Try opening as image
         try:
-            img = Image.open(file_bytes).convert("RGB")  # keep RGB to draw
-        except Exception as e:
-            print(f"Skipping file, cannot open as image: {e}")
+            img = Image.open(file_bytes).convert("RGB")
+        except:
             continue
 
         mat_gray = img.convert("L")
         mat = np.array(mat_gray)
 
-        # 9-point cross embedding
         h, w = mat.shape
         f = 0.3
         cx, cy = w // 2, h // 2
@@ -356,26 +351,31 @@ async def process_and_reply(event,client, media_list, pokemon_vectors):
 
         vector = [int(mat[y, x]) for x, y in coords]
 
-        # Check against your Pokémon embeddings
-        matches = [
-            name for name, emb in pokemon_vectors.items()
-            if emb == vector
-        ]
+        name, dist = await match_vector(vector, pokemon_vectors)
+        pokemons_found.append([(await clean_pokemon_name(name)),dist])
 
-        # Draw cross points on the image
-        draw = ImageDraw.Draw(img)
-        radius = 5
-        for x, y in coords:
-            draw.ellipse((x - radius, y - radius, x + radius, y + radius), fill=(255, 0, 0))
+    return pokemons_found
 
-        # Prepare reply text
-        if matches:
-            reply_text = f"Found Pokémon: {', '.join(matches)}"
-        else:
-            reply_text = "Pokémon not recognized."
+async def clean_pokemon_name(p):
+    p = p.replace("shiny","")
+    p = await similar_pokemon_name(p)
+    return p
 
-        # Reply with image + text
-        out_bytes = BytesIO()
-        img.save(out_bytes, format="PNG")
-        out_bytes.seek(0)
-        await event.reply(file=out_bytes, message=reply_text)
+async def match_vector(vector, pokemon_vectors):
+    v = np.array(vector, dtype=np.float32)
+    best_name = None
+    best_dist = float("inf")
+    exact_match = None
+    for name, emb in pokemon_vectors.items():
+        e = np.array(emb, dtype=np.float32)
+
+        if np.array_equal(e, v):
+            exact_match = name
+            break
+        diff = e - v
+        dist = np.sqrt(np.sum(diff * diff))
+        if dist < best_dist:
+            best_dist = dist
+            best_name = name
+    return exact_match if exact_match else best_name, best_dist
+

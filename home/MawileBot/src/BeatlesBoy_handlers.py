@@ -491,11 +491,17 @@ async def replies_to_trainer(event, text, client, is_capopalestra, images = None
     if is_capopalestra:
         with open(os.path.join(ENV_PATH, "pokemon_vectors_9.json"), "r", encoding="utf-8") as f:
             pokemon_vectors = json.load(f)
-        await process_and_reply(event, client, images, pokemon_vectors)
+        pokemon_found = (await process_and_reply(event, client, images, pokemon_vectors))[:-1]
 
-        return "Non so ancora fare i capopalestra"
         #TODO add reader of images
-        enemy_powers = []
+
+        message = "Ho incontrato un Capopalestra con:\n"
+        message += "\n".join([f"{name.capitalize()} ({dist:.2f})" for name, dist in pokemon_found])
+
+        await event.reply(message)
+
+        enemy_powers = capopalestra_powers
+        enemy_team = [[p[0],None,None] for p in pokemon_found]
     else:
         enemy_team = await read_pokemons_from_trainer(text)
         if len (enemy_team) == 1:
@@ -511,9 +517,9 @@ async def replies_to_trainer(event, text, client, is_capopalestra, images = None
         elif len(enemy_team) == 6:
             enemy_powers = [enemy_powers[0], enemy_powers[0], enemy_powers[0], enemy_powers[1], enemy_powers[1], enemy_powers[2]]
 
-    await event.reply(
-        f"Ho incontrato {', '.join([e[0].capitalize() for e in enemy_team])}? Capiamo chi schierare..."
-    )
+        await event.reply(
+            f"Ho incontrato {', '.join([e[0].capitalize() for e in enemy_team])}? Capiamo chi schierare..."
+        )
 
     team = await load_team_from_json(event, client)    
     useful, useless, lvl_100 = await filter_team(team, remove_100 = True)
