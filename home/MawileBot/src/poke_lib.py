@@ -174,10 +174,10 @@ async def calculate_bonus_answer(bonus_pokemon, moltiplicatore):
     try:
         poke1,poke2 = bonus_pokemon.split(" ")
         if not poke_exist(poke1):
-            poke1 = await similar_pokemon_name(poke1).capitalize()
+            poke1 = (await similar_pokemon_name(poke1)).capitalize()
             #manda messaggio
         if not poke_exist(poke2):
-            poke2 = await similar_pokemon_name(poke2).capitalize()
+            poke2 = (await similar_pokemon_name(poke2)).capitalize()
             #manda messaggio
         try:
             [b1,b2] = calculate_bonus(poke1, poke2, moltiplicatore)

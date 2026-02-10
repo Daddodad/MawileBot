@@ -312,7 +312,7 @@ async def bonus(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     return BONUS_READ_POKEMONS
 
 async def show_main_bonus_menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    MULT = await poke_cell(0)[3]
+    MULT = (await poke_cell(0))[3]
     if  context.user_data.get('bonus_fallito') == True:      # Se ho già fallito a dire pokemon, rileggi
         context.user_data['moltiplicatore'] = MULT
         context.user_data['bonus_pokemon'] = update.message.text
@@ -1402,11 +1402,11 @@ async def fight_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("La lega è finita... usa il comando /lega!")
 
     elif has_a_team(chat_id):
-        if await poke_cell(0)[0] == True:
+        if (await poke_cell(0))[0]:
             keyboard = [
                 [InlineKeyboardButton("Allenatore", callback_data=TRAINER)],
                 [InlineKeyboardButton("Capopalestra", callback_data=CAPOPALESTRA)],
-                [InlineKeyboardButton("Selvatici", callback_data=WILD)],
+                #[InlineKeyboardButton("Selvatici", callback_data=WILD)],
             ]
         else:
             keyboard = [
