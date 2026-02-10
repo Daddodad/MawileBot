@@ -294,11 +294,14 @@ async def calculate_best_strategy(team, enemy_team, enemy_powers,multiplier):
         else:
             prob_matrix.append([0 for _ in range(len(enemy_powers))])
 
+    #print(prob_matrix)
     # Hungarian algorithm minimizes, so negate
     M = np.array(prob_matrix)
     row_ind, col_ind = linear_sum_assignment(-M)  #col_ind è l'indice che ci interessa
 
     assignment = dict(zip(col_ind, row_ind))  # slot -> pokemon index
+
+    #print(assignment)
 
     best_schieramento = []
     p_of_victory = []
@@ -306,12 +309,12 @@ async def calculate_best_strategy(team, enemy_team, enemy_powers,multiplier):
     for slot in range(len(col_ind)):
         poke_idx = assignment[slot]
         best_schieramento.append(team[poke_idx])
-        p_of_victory.append(int(M[poke_idx, slot]))
+        p_of_victory.append((M[poke_idx, slot]))
 
-    # print('p_of_victory', p_of_victory)
-    # print('best_schieramento', best_schieramento)
+    print('p_of_victory', p_of_victory)
+    print('best_schieramento', best_schieramento)
 
-    return p_of_victory, best_schieramento
+    return [int(p) for p in p_of_victory], best_schieramento
 
 async def process_and_reply(event,client, media_list, pokemon_vectors):
     """

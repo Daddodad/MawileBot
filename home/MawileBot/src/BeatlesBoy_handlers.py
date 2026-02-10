@@ -518,8 +518,6 @@ async def replies_to_trainer(event, text, client, is_capopalestra, images = None
     team = await load_team_from_json(event, client)    
     useful, useless, lvl_100 = await filter_team(team, remove_100 = True)
 
-    await calculate_best_strategy(useful,enemy_team, enemy_powers, multiplier)
-
     try:
         p_of_victory, best_schieramento = await calculate_best_strategy(useful,enemy_team, enemy_powers, multiplier)
         if 0 in p_of_victory:   # Si può fare di meglio?
