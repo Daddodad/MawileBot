@@ -443,7 +443,7 @@ async def replies_to_vittoria(event, text, client):
 
     message_utility = ''
     for po in useful:
-        message_utility+=(f"\n{po[0] (po[2])}")
+        message_utility+=(f"\n{po[0]} {(po[2])}")
     await event.reply(f"La mia squadra è: {message_utility}")
 
     dopo_cattura = "Non ho capito se catturarlo o no.. Aiuto..."
