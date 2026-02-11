@@ -439,11 +439,11 @@ async def replies_to_vittoria(event, text, client):
 
     print(team)
 
-    useful, useless, lvl_100 = await filter_team(team, remove_100 = True)
+    useful, useless, lvl_100 = await filter_team(team, remove_100 = False) # Non tolgo i lvl 100 ! altrimenti faccio solo catture inutili!
 
     message_utility = ''
     for po in useful:
-        message_utility.append(f"\n{useful[0] (useful[2])}")
+        message_utility.append(f"\n{po[0] (po[2])}")
     await event.reply(f"La mia squadra è: {message_utility}")
 
     dopo_cattura = "Non ho capito se catturarlo o no.. Aiuto..."
