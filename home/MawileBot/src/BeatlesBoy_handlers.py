@@ -424,7 +424,9 @@ async def extract_name_and_level_from_vittoria(msg: str):
 async def replies_to_vittoria(event, text, client):
     name, level = await extract_name_and_level_from_vittoria(text)
 
-    await event.reply(f"Vittoria! Catturo o no {name} di livello {level}? Decidiamo...")
+    pokemon_u =  await pokemon_utility(name, level)
+
+    await event.reply(f"Vittoria! Catturo o no {name} di livello {level} (utility {pokemon_u})? Decidiamo...")
     #TODO: aggiustare team = await load_team_from_json(event, client)
 
     await asyncio.sleep(20)  # aspetta 2 minuti
@@ -438,6 +440,11 @@ async def replies_to_vittoria(event, text, client):
     print(team)
 
     useful, useless, lvl_100 = await filter_team(team, remove_100 = True)
+
+    message_utility = ''
+    for po in useful:
+        message_utility.append(f"\n{useful[0] (useful[2])}")
+    await event.reply(f"La mia squadra è: {message_utility}")
 
     dopo_cattura = "Non ho capito se catturarlo o no.. Aiuto..."
     print('\nUseful', useful)
@@ -458,7 +465,7 @@ async def replies_to_vittoria(event, text, client):
             count+=1
 
     print('Less useful', less_useful)
-    print('trovato', await pokemon_utility(name, level))
+    print('trovato', pokemon_u)
 
     if less_useful[0] is not None:
 
@@ -466,7 +473,7 @@ async def replies_to_vittoria(event, text, client):
             await event.reply(f"Sono io! via {less_useful[0].capitalize()}, non mi servi più!")
             return await drop_the_useless(useful,useless,lvl_100)
     
-        if less_useful[2]*1.1< await pokemon_utility(name, level):
+        if less_useful[2]*1.1< pokemon_u:
             await event.reply(f"È chiaramente più utile di {less_useful[0].capitalize()}, lo prendo!")
             return await drop_the_useless(useful,useless,lvl_100)        
 
