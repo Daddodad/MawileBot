@@ -175,7 +175,7 @@ async def calculate_winning_options(enemy_poke, enemy_pl, team):
             bonus_netto = bonus[0]-bonus[1]
 
             # print("Bonus calcolato:", bonus_netto)
-            if pl + bonus_netto > enemy_pl:
+            if pl + bonus_netto >= enemy_pl:
                 winning_options.append((your_poke, pl, bonus_netto, index))
 
     print("Opzioni vincenti calcolate:", winning_options)
