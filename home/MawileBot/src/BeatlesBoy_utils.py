@@ -263,9 +263,9 @@ async def read_pokemons_from_trainer(text):
     return result
 
 async def calculate_best_strategy(team, enemy_team, enemy_powers,multiplier):
-    # print('team', team)
-    # print('enemy_team', enemy_team)
-    # print('enemy_powers', enemy_powers)
+    print('team', team)
+    print('enemy_team', enemy_team)
+    print('enemy_powers', enemy_powers)
     prob_matrix = []
     base_bonus = 0
     for pokemon in team:
@@ -287,7 +287,7 @@ async def calculate_best_strategy(team, enemy_team, enemy_powers,multiplier):
 
                     #print("Bonus calcolato:", bonus_netto)
 
-                    if pokemon[3] + bonus_netto > power:
+                    if pokemon[3] + bonus_netto >= power:
                         total+=1
                 pp_of_wins.append(total/len(enemy_team)*100+base_bonus)
             #print(pokemon, pp_of_wins)
@@ -295,7 +295,7 @@ async def calculate_best_strategy(team, enemy_team, enemy_powers,multiplier):
         else:
             prob_matrix.append([0 for _ in range(len(enemy_powers))])
 
-    #print(prob_matrix)
+    print(prob_matrix)
     # Hungarian algorithm minimizes, so negate
     M = np.array(prob_matrix)
     row_ind, col_ind = linear_sum_assignment(-M)  #col_ind è l'indice che ci interessa
