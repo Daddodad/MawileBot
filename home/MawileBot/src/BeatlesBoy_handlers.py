@@ -473,7 +473,7 @@ async def replies_to_vittoria(event, text, client):
             await event.reply(f"Sono io! via {less_useful[0].capitalize()}, non mi servi più!")
             return await drop_the_useless(useful,useless,lvl_100)
     
-        if less_useful[2]*1.1< pokemon_u:
+        if less_useful[2]*1.05< pokemon_u:
             await event.reply(f"È chiaramente più utile di {less_useful[0].capitalize()}, lo prendo!")
             return await drop_the_useless(useful,useless,lvl_100)        
 
