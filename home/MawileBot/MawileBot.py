@@ -2,8 +2,16 @@ import random
 import json
 import asyncio
 import os
+import configparser
 from telegram import BotCommand, Update
 from telegram.ext import Application, ContextTypes, CommandHandler, MessageHandler, CallbackQueryHandler
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CONFIG_PATH = os.path.join(BASE_DIR, "config.ini")
+config = configparser.ConfigParser()
+config.read(CONFIG_PATH)
+
+BOT_TOKEN = config["MawileBot"]["bot_token"]
 
 import sys
 if os.path.exists('/home/SableyeBot/src'):
@@ -44,7 +52,7 @@ async def set_bot_commands(application: Application) -> None:
 # ------------------------------------------------------------------------- MAIN ------------------------------------------------------------
 
 def main() -> None:
-    application = Application.builder().token("8115605790:AAF2BAAGm48-Rt-d5U44Mw7rLD02yo2v1hY").post_init(set_bot_commands).build()
+    application = Application.builder().token(BOT_TOKEN).post_init(set_bot_commands).build()
 
     # Add photo answer
     application.add_handler(auto_team_update(), group = 666)
@@ -92,5 +100,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
-#Info: per installare librerie, usa in una bash pip3.10 install --user numpy

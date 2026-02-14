@@ -23,6 +23,15 @@ else:
     ENV_PATH = 'home/MawileBot/src'
     sys.path.insert(0,ENV_PATH) # MawileBot
 
+try:
+    with open(os.path.join(ENV_PATH, "secret_player_data.json"), "r") as f:
+        data = f.read()
+except FileNotFoundError:
+    # create file with empty JSON object
+    with open(os.path.join(ENV_PATH, "secret_player_data.json"), "w") as f:
+        f.write("{}")
+    data = "{}"
+    
 from datetime import datetime, date
 # Lega a 42 caselle
 # LvL = [5, 6, 7, 8, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 27, 29, 30, 31, 33, 36, 38, 41, 43, 45, 46, 49, 51, 54, 56, 58, 61, 62, 64, 66, 69, 71, 74, 76]

@@ -2,7 +2,17 @@
 import os
 from telethon import TelegramClient
 import sys
+import configparser
 import asyncio
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CONFIG_PATH = os.path.join(BASE_DIR, "config.ini")
+config = configparser.ConfigParser()
+config.read(CONFIG_PATH)
+
+API_ID = int(config["BeatlesBoy"]["api_id"])
+API_HASH = config["BeatlesBoy"]["api_hash"]
+
 
 if os.path.exists('/home/SableyeBot/src'):
     sys.path.insert(0,'/home/SableyeBot/src') # SableyeBot
@@ -11,13 +21,10 @@ else:
     
 from src.BeatlesBoy_handlers import register_handlers, scheduled_job
 
-api_id = 32734550
-api_hash = '18742bc7269a1e306dce108908ae5291'
-
 client = TelegramClient(
     'home/MawileBot/sessions/userbot',
-    api_id,
-    api_hash
+    API_ID,
+    API_HASH
 )
 
 async def main():

@@ -12,9 +12,15 @@ home/output_splits/temp/
 home/MawileBot/sessions/userbot.session
 home/MawileBot/sessions/userbot.session-journal
 
+# Ignore the real config file
+home/MawileBot/config.ini
+
 # Ignore the whole images folder
 /images/
 images/
 
 # Ignore temp in MAC
 .DS*
+
+# Ignore the Info File.
+Info_Davide.txt

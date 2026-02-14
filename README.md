@@ -28,7 +28,7 @@
 
  ---
 
- ## Note operative
+ ## Note operative (SableyeBot/MawileBot)
 
  1. **SEMPRE PUSHARE SU GITHUB** per evitare branching e casini.  
  2. Ogni modifica a `./src` può **e DEVE** essere spostata su SableyeBot (copia incolla dei files).  
@@ -42,22 +42,3 @@
  6. **TESTARE SEMPRE CON MAWILEBOT PRIMA DI CARICARE SU SABLEYE**
 
  ---
-
- ## NOTA PER DAVIDE
-
- **NEW PC:**  APRI IL TERMINAL CORRETTO
- Per il `.venv` + jupyter-lab:
- ```bash
- ..\.daddodad_env\Scripts\Activate.ps1
- jupyter-lab (o prova da vscode)
- ```
-
- Lanciare da dentro MawileBot con Python:
- ```bash
- python .\home\MawileBot\MawileBot.py
- ```
-
- **MAC** 
- ```bash
- python3 ./home/MawileBot/MawileBot.py
- ```

@@ -2,6 +2,7 @@ from datetime import datetime, time as dtime, timedelta
 from io import BytesIO
 import json
 import os
+import ast
 from pyexpat.errors import messages
 import sys
 from random import randrange
@@ -9,8 +10,16 @@ from PIL import Image
 from telethon import events
 import asyncio
 import random
-
+import configparser
 from telethon.tl.types import Message
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CONFIG_PATH = os.path.join(BASE_DIR, "../config.ini")
+config = configparser.ConfigParser()
+config.read(CONFIG_PATH)
+
+ALLOWED_CHAT_IDs = ast.literal_eval(config["BeatlesBoy"]["allowed_chat_ids"])
+
 
 if os.path.exists('/home/SableyeBot/src'):
     ENV_PATH = '/home/SableyeBot/src'
@@ -43,9 +52,6 @@ from BeatlesBoy_utils import (
 #     sys.path.insert(0,ENV_PATH) # MawileBot
 #     sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-
-ALLOWED_CHAT_IDs = [-4998491045, -5272320132]
-DAVIDE_CHAT_ID = 454010613
 
 TARGET_TIMES = [
     dtime(15, 0),

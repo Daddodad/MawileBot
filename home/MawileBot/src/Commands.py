@@ -1,11 +1,13 @@
+import os
+import ast
 import asyncio
 import time
 import json
 import random
+import configparser
 from matplotlib import image
 import requests #test
 from PIL import Image, ImageDraw, ImageFont
-import os
 from io import BytesIO
 from telegram import Update, Bot
 #from telegram import BotCommand, ForceReply
@@ -14,25 +16,41 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
 from telegram.error import BadRequest
 import pypokedex as poke
 
-# Custom exception for unauthorized access
-class UnauthorizedAccess(Exception):
-    pass
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CONFIG_PATH = os.path.join(BASE_DIR, "../config.ini")
+config = configparser.ConfigParser()
+config.read(CONFIG_PATH)
 
 import sys
 if os.path.exists('/home/SableyeBot/src'):
+    ADMIN_WHITELIST = ast.literal_eval(config["SableyeBot"]["admin_whitelist"])
     ENV_PATH = '/home/SableyeBot/src'
     sys.path.insert(0,ENV_PATH) # SableyeBot
 else:
+    ADMIN_WHITELIST = ast.literal_eval(config["MawileBot"]["admin_whitelist"])
     ENV_PATH = './home/MawileBot/src'
     sys.path.insert(0,ENV_PATH) # MawileBot
     sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+    
+try:
+    with open(os.path.join(ENV_PATH, "secret_player_data.json"), "r") as f:
+        data = f.read()
+except FileNotFoundError:
+    # create file with empty JSON object
+    with open(os.path.join(ENV_PATH, "secret_player_data.json"), "w") as f:
+        f.write("{}")
+    data = "{}"
 
 from poke_lib import calculate_bonus_answer, random_pokemon, random_player, get_power, poke_evo_level,format_types_emoji
 from poke_lib import add_new_player, poke_lega_single, poke_lega_all, poke_gym, poke_exist, poke_dex1, poke_dex2, poke_cell
 from poke_lib import add_route,check_route, poke_check_if_evo, poke_fight, poke_counter, has_a_team, poke_gym_test, poke_lega_team_team
 from poke_lib import automatic_card_reader, gym_types, gym_cell, poke_cell_gym, load_fonts,randomly_shiny, similar_pokemon_name
 from poke_lib import has_lega_ended
+
 # ----------------------------------------------------------------- GENERIC COMMANDS --------------------------------------------------------------------------------
+# Custom exception for unauthorized access
+class UnauthorizedAccess(Exception):
+    pass
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     await update.message.reply_text("Niente da fare, eh")
@@ -44,11 +62,9 @@ async def end_conversation(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     return ConversationHandler.END
 
 def whitelist(chat_id):
-    if chat_id in [333178731,454010613]:
+    if chat_id in ADMIN_WHITELIST:
         return True
     return False
-
-# Werry = 762058738
 
 async def id_check(update: Update, command_is_start = False) ->None:
 
@@ -61,16 +77,6 @@ async def id_check(update: Update, command_is_start = False) ->None:
     # Ringraziamo chatgpt per la scritta "Bottone Rosso"
 
     chat_id = update.effective_chat.id
-
-    if chat_id in []:
-        answers = [
-            "… i Vassago non dovrebbero affidarsi a tool di Laoconte, potrebbero rimetterci le corna",
-            "… chiedilo al tuo guardiano Vassago, cosa vuoi da me",
-            "… ancora qui? Tornatene al tuo gate, Vassago",
-            "… Vassago infame per te solo le lame",
-            "… uh guarda, un bel sacrificio Vassago si è palesato"
-            ]
-        await update.message.reply_text(random.choice(answers))
 
     if deactivate_the_bot:
         if not whitelist(chat_id):
@@ -922,7 +928,6 @@ async def ping_all_start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         return ConversationHandler.END
 
 async def send_ping_all(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    #bot = Bot(token="7119226556:AAErwxsF7x0rksunnoKp3_ItLcQPfQdlqlM")
     with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
         accounts = json.load(file)
         if update.message.text:
