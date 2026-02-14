@@ -2,7 +2,9 @@
 
  Copia di SableyeBot locale + Tutto il necessario per BeatlesBoy.
  Per lanciare, compilare il file config.ini. 
+ 
  **>** SableyeBot/MawileBot ovviamente girerà sul bot token che viene inserito.
+ 
  **>** BeatlesBoy risponderà a nome del numero di telefono legato all'api hash inserito.
 
  ## Nota sui file mancanti
