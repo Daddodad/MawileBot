@@ -15,6 +15,9 @@ home/MawileBot/sessions/userbot.session-journal
 # Ignore the real config file
 home/MawileBot/config.ini
 
+# Ignore the secret_player_data
+home/MawileBot/src/secret_player_data.json
+
 # Ignore the whole images folder
 /images/
 images/
