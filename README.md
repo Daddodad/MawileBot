@@ -2,16 +2,24 @@
 
  Copia di SableyeBot locale
 
+ ## Nota sui file mancanti
+
  ## Struttura
 
  ```
  📁 MawileBot/                               # Repository
  ├── 📁 home/                                # Su PythonAnywhere, c'è una corrispondente home.
  │   └── 📁 MawileBot/                       # MawileBot. Su PythonAnywhere, c'è un corrispondente SableyeBot.
+ │       ├── 📁 sessions/                    # Sessioni di BeatlesBoy.
+ │       │   └── session.md                  # Spiegazioni sulle sessions
  │       ├── 📁 src/                         # Su PythonAnywhere, c'è un corrispondente src.
  │       │   └── 📁 images/                  # Contiene immagini utili. Su PythonAnywhere ce ne stanno di più; qui non servono a meno che non stai testando.
+ │       │       ├── 📁 templates/           # Templates
+ │       │       ├── 📁 types/               # Types per /card
  │       │       └── 📁 pokemons/            # Contiene le immagini meme dei Pokémon. Stanno tutte su PythonAnywhere tranne Missingno per evitare bug.
  │       ├── MawileBot.py                    # Main file. Su PythonAnywhere ci sono SableyeBot.py e ./mysite/SableyeBotApp.py.
+ │       ├── BeatlesBoy.py                    # Main file. 
+ │       ├── config.ini / config_template.ini # Main file. Su PythonAnywhere ci sono SableyeBot.py e ./mysite/SableyeBotApp.py.
  │       ├── 📁 old/                         # Roba vecchia per fare ordine.
  │       ├── 📁 utils/                       # Roba utile per creare files quando escono nuove gen / nuovi stili del bot.
  │       │   └── 📁 output_splits/           # Cartella (locale) per gestire la lettura automatica della squadra.
@@ -20,9 +28,7 @@
  │       │   └── 📁 pokemon_list_creator/    # Crea il file con tutti i pokemon
  │       │   └── 📁 pokemon_type_list_creator/# Crea vari file sui tipi di pokemon esistenti
  │       └── test.ipynb e simili             # Stanno qui per i test. Quando li finisci, o li butti o vanno in /old.
- ├── .gitignore                             # Per non far caricare su GitHub roba inutile
- ├── README.txt                              # per i fan delle strutture ricorsive
- ├── Dockerfile                              # ned
+ ├── .gitignore                              # Per non far caricare su GitHub roba inutile
  ├── README.md                               # per i fan delle strutture ricorsive
  └── requirements.txt                        # Può servire? Potrebbe avere roba inutile
  ```
