@@ -1,8 +1,14 @@
  # MawileBot
 
- Copia di SableyeBot locale
+ Copia di SableyeBot locale + Tutto il necessario per BeatlesBoy.
+ Per lanciare, compilare il file config.ini. 
+ **>** SableyeBot/MawileBot ovviamente girerà sul bot token che viene inserito.
+ **>** BeatlesBoy risponderà a nome del numero di telefono legato all'api hash inserito.
 
  ## Nota sui file mancanti
+Due file contengono informazioni segrete, quindi non sono presenti:
+**MawileBot/home/MawileBot/config.ini** Essenziale per il funzionamento. Dentro la stessa cartella c'è un config_template.ini per aiutare nella configurazione.
+**MawileBot/home/MawileBot/src/secret_player_data.json** Tiene traccia degli utenti di SableyeBot/MawileBot, contiene solo chatid.
 
  ## Struttura
 
@@ -19,7 +25,7 @@
  │       │       └── 📁 pokemons/            # Contiene le immagini meme dei Pokémon. Stanno tutte su PythonAnywhere tranne Missingno per evitare bug.
  │       ├── MawileBot.py                    # Main file. Su PythonAnywhere ci sono SableyeBot.py e ./mysite/SableyeBotApp.py.
  │       ├── BeatlesBoy.py                    # Main file. 
- │       ├── config.ini / config_template.ini # Main file. Su PythonAnywhere ci sono SableyeBot.py e ./mysite/SableyeBotApp.py.
+ │       ├── config.ini / config_template.ini # FILE DI CONFIG!
  │       ├── 📁 old/                         # Roba vecchia per fare ordine.
  │       ├── 📁 utils/                       # Roba utile per creare files quando escono nuove gen / nuovi stili del bot.
  │       │   └── 📁 output_splits/           # Cartella (locale) per gestire la lettura automatica della squadra.
