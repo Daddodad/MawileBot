@@ -7,7 +7,9 @@
 
  ## Nota sui file mancanti
 Due file contengono informazioni segrete, quindi non sono presenti:
+
 **MawileBot/home/MawileBot/config.ini** Essenziale per il funzionamento. Dentro la stessa cartella c'è un config_template.ini per aiutare nella configurazione.
+
 **MawileBot/home/MawileBot/src/secret_player_data.json** Tiene traccia degli utenti di SableyeBot/MawileBot, contiene solo chatid.
 
  ## Struttura
