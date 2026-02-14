@@ -25,5 +25,6 @@ images/
 # Ignore temp in MAC
 .DS*
 
-# Ignore the Info File.
+# Other
+Dockerfile
 Info_Davide.txt

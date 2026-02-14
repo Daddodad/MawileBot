@@ -20,10 +20,11 @@
  │       │   └── 📁 pokemon_list_creator/    # Crea il file con tutti i pokemon
  │       │   └── 📁 pokemon_type_list_creator/# Crea vari file sui tipi di pokemon esistenti
  │       └── test.ipynb e simili             # Stanno qui per i test. Quando li finisci, o li butti o vanno in /old.
- ├── 📁 images/                              # Il bot crea delle figure. Quelle figure finiscono qui (se usato in locale. Su Sableyebot non esiste, sanno dentro src/images. È un bug?)
- │                                           # Su SableyeBot finiscono in /home/SableyeBot/images/. È un bug ma non ci interessa molto, Sableye funziona e questo funziona.
- ├── README.txt
- └── .gitignore                             # Per non far caricare su GitHub roba inutile
+ ├── .gitignore                             # Per non far caricare su GitHub roba inutile
+ ├── README.txt                              # per i fan delle strutture ricorsive
+ ├── Dockerfile                              # ned
+ ├── README.md                               # per i fan delle strutture ricorsive
+ └── requirements.txt                        # Può servire? Potrebbe avere roba inutile
  ```
 
  ---
