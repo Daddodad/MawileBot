@@ -5,8 +5,11 @@
  
  **>** SableyeBot/MawileBot ovviamente girerà sul bot token che viene inserito.
  
- **>** BeatlesBoy risponderà a nome del numero di telefono legato all'api hash inserito.
+ **>>** BeatlesBoy risponderà a nome del numero di telefono legato all'api hash inserito.
 
+ **>>>** Lanciare con python3 .home\MawileBot\MawileBot.py e python3 .home\MawileBot\BeatlesBoy.py
+
+ 
  ## Nota sui file mancanti
 Due file contengono informazioni segrete, quindi non sono presenti:
 

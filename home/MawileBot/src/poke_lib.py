@@ -422,14 +422,14 @@ TYPE_EMOJI_LIST = {
         'Water': '💧',
         'Electric': '⚡',
         'Grass': '🍃',
-        'Ice': '❄️',
-        'Fighting': '👊',
-        'Poison': '☠️',
+        'Ice': '❄',
+        'Fighting': '💪',
+        'Poison': '☠',
         'Ground': '🟠',
         'Flying': '🦅',
         'Psychic': '🔮',
         'Bug': '🐛',
-        'Rock': '⛰️',
+        'Rock': '⛰',
         'Ghost': '👻',
         'Dragon': '🐉',
         'Dark': '⚫',
@@ -1911,6 +1911,7 @@ ALT_FORMS = {
 
 async def check_alt_forms(name, type1=None, type2=None):
 
+    print(name, type1,type2)
     name = name.lower() if type1 else name
     type1 = type1.lower() if type1 else None
     type2 = type2.lower() if type2 else None

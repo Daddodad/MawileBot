@@ -137,6 +137,8 @@ async def extract_pokemon_and_pl(text):
             if ord(ch) > 127:
                 emojis.append(ch)
 
+    # print(emojis[0])
+    # print(emojis[1] if len(emojis)>1 else None)
     pokemon = await similar_pokemon_name(pokemon.lower())
     pokemon = await check_alt_forms(pokemon,
                                     EMOJI_TO_TYPE.get(emojis[0],None),
