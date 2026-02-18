@@ -518,7 +518,7 @@ async def replies_to_trainer(event, text, client, is_capopalestra, images = None
     else:
         enemy_team = await read_pokemons_from_trainer(text)
         if len (enemy_team) == 1:
-            enemy_powers = enemy_powers[2]
+            enemy_powers = [enemy_powers[2]]
         elif len(enemy_team) == 2:
             enemy_powers = [enemy_powers[1], enemy_powers[2]]
         elif len(enemy_team) == 3:
