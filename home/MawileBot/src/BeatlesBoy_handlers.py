@@ -240,7 +240,7 @@ async def reply_to_text(event, text, client):
     
 
 async def load_team_from_json(event, client):
-    await asyncio.sleep(10)  # aspetta 2 minuti
+    await asyncio.sleep(20)  # aspetta 20 sec
 
     json_path = os.path.join(ENV_PATH, "BeatlesBoy_team.json")
     print("Loading JSON from:", json_path)
@@ -279,7 +279,7 @@ async def load_team_from_json(event, client):
 
 async def replies_to_wild_pokemon(event, text, client):
     pokemon, pl = await extract_pokemon_and_pl(text)
-    await event.reply(f"Ho incontrato {pokemon.capitalize()} con PL {pl}.\n\nAspettando la FOTO del team... 2 minuti massimo ⏳")
+    await event.reply(f"Ho incontrato {pokemon.capitalize()} con PL {pl}.\n\nAspettando la FOTO del team... 20 secondi massimo ⏳")
 
     team = await load_team_from_json(event, client)
     useful, useless, lvl_100 = await filter_team(team, remove_100 = True)
@@ -310,7 +310,7 @@ async def replies_to_wild_pokemon(event, text, client):
         return winning_option[3]
     
 async def replies_to_pvp(event, text, client):
-    await event.reply(f"Una PvP! Pronto a schierare i migliori!\n\nAspettando la FOTO del team... 2 minuti massimo ⏳")
+    await event.reply(f"Una PvP! Pronto a schierare i migliori!\n\nAspettando la FOTO del team... 20 secondi massimo ⏳")
 
     n_schierabili = await extract_number_of_pvp_choices(text)
 
@@ -355,7 +355,7 @@ async def replies_to_pvp(event, text, client):
     
 async def replies_to_potenziamento(event, text, client):
     tipi = await extract_types(text)
-    await event.reply(f"Ho incontrato potenziamento coi tipi {tipi}.\n\nAspettando la FOTO del team... 2 minuti massimo ⏳")
+    await event.reply(f"Ho incontrato potenziamento coi tipi {tipi}.\n\nAspettando la FOTO del team... 20 secondi massimo ⏳")
 
     team = await load_team_from_json(event, client)    
     useful, useless, lvl_100 = await filter_team(team, remove_100 = True)
@@ -433,17 +433,12 @@ async def replies_to_vittoria(event, text, client):
     pokemon_u =  await pokemon_utility(name, level)
 
     await event.reply(f"Vittoria! Catturo o no {name} di livello {level} (utility {pokemon_u})? Decidiamo...")
-    #TODO: aggiustare team = await load_team_from_json(event, client)
-
-    await asyncio.sleep(20)  # aspetta 2 minuti
 
     json_path = os.path.join(ENV_PATH, "BeatlesBoy_team.json")
     print("Loading JSON from:", json_path)
 
     with open(json_path, "r", encoding="utf-8") as f:
         team = json.load(f)
-
-    print(team)
 
     useful, useless, lvl_100 = await filter_team(team, remove_100 = False) # Non tolgo i lvl 100 ! altrimenti faccio solo catture inutili!
 
@@ -534,7 +529,8 @@ async def replies_to_trainer(event, text, client, is_capopalestra, images = None
             f"Ho incontrato {', '.join([e[0].capitalize() for e in enemy_team])}? Capiamo chi schierare..."
         )
 
-    team = await load_team_from_json(event, client)    
+    team = await load_team_from_json(event, client) 
+  
     useful, useless, lvl_100 = await filter_team(team, remove_100 = True)
 
     try:
@@ -547,12 +543,20 @@ async def replies_to_trainer(event, text, client, is_capopalestra, images = None
                 p_of_victory, best_schieramento = await calculate_best_strategy(new_useful,enemy_team, enemy_powers, multiplier)
                 if 0 not in p_of_victory:
                     break
-        if is_capopalestra and sum(p_of_victory)<410:
+
+        # TODO: migliorare logica di capopalestra (check se il punteggio non migliora, se vegnono schierati useful o useless, etc...) 
+        # TODO: tecnicamente i meno utili hanno la precedenza nello schieramento... Forse meglio il contrario...
+        if is_capopalestra and sum(p_of_victory)<600:
             new_useful = useful.copy()
+            for uls in useless:
+                new_useful.append(uls)
+                p_of_victory, best_schieramento = await calculate_best_strategy(new_useful,enemy_team, enemy_powers, multiplier)
+                if sum(p_of_victory)>=600:
+                    break
             for lv100 in lvl_100:
                 new_useful.append(lv100)
                 p_of_victory, best_schieramento = await calculate_best_strategy(new_useful,enemy_team, enemy_powers, multiplier)
-                if p_of_victory.sum()>410:
+                if sum(p_of_victory)>=600:
                     break
         pos_da_schierare = [str(p[4]) for p in best_schieramento]            
         return ''.join(pos_da_schierare)
@@ -560,3 +564,4 @@ async def replies_to_trainer(event, text, client, is_capopalestra, images = None
         print('Errore nel calcolare la miglior strategia!',e)
 
     return 'Ho incontrato qualcuno, ma non so che fare.'
+    

@@ -1708,6 +1708,7 @@ most_similar_cache = {  'morpeko': ['morpeko-full-belly','morpeko-hangry'],
                         "gourgeists" : ["gourgeist-average","gourgeist-small","gourgeist-large","gourgeist-super"],
                         "lycanroc" : ["lycanroc-midday","lycanroc-midnight","lycanroc-dusk"],
                         "tipo-zero" : "type-null",
+                        "tipo zero" : "type-null",
                         "cosmogsolgaleo" : "cosmog",
                         "cosmoemsolgaleo" : "cosmoem",
                         "cosmoglunala" : "cosmog",
@@ -1739,6 +1740,9 @@ most_similar_cache = {  'morpeko': ['morpeko-full-belly','morpeko-hangry'],
                         "pikachualola" : "pikachu",}
 
 async def most_similar(query, choices, r = True):
+    #print("most sim", query)
+    query_norm = query.lower().strip().replace("\ufe0f", "")
+    query = query_norm
     if query.lower() in most_similar_cache:
         cached_result = most_similar_cache[query.lower()]
         if isinstance(cached_result, list):
@@ -1816,6 +1820,7 @@ async def automatic_card_reader(image):
 
             typing = (typing_from_avg_colors(type1_crop),typing_from_avg_colors(type2_crop))
 
+            
             if pokemon_probable_name != '':
                 if poke_exist(pokemon_probable_name.lower()):
                     pokemon_probable_name = await check_alt_forms(pokemon_probable_name.lower(),*typing)

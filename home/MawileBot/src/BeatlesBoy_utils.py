@@ -259,7 +259,9 @@ async def read_pokemons_from_trainer(text):
         result.append([name, types[0], types[1]])
 
     for r in result:
+        print(r)
         r[0] = await similar_pokemon_name(r[0].lower())
+        print(r)
         r[0] = await check_alt_forms(r[0],r[1],r[2])
 
     return result
@@ -272,7 +274,7 @@ async def calculate_best_strategy(team, enemy_team, enemy_powers,multiplier):
     base_bonus = 0
     for pokemon in team:
         if pokemon[0] is not None:
-            base_bonus += 0.001
+            base_bonus += 0.001  
             #print(pokemon)
             pp_of_wins = []
             #print('\n',pokemon[0],'\n')
