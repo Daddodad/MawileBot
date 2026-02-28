@@ -262,7 +262,7 @@ def add_new_player(update: Update):
         return True
     return False
 
-def get_poke_bst(pokemon):
+async def get_poke_bst(pokemon):
     bst_bonus = 0
     if "-mega" in pokemon:
         pokemon = pokemon.split('-')[0]
@@ -294,12 +294,12 @@ def get_poke_bst(pokemon):
         return bst + bst_bonus
     return bst
 
-def poke_lega_single(poke_liv, name,molt):
+async def poke_lega_single(poke_liv, name,molt):
 
     try:
         pokemon,liv = poke_liv.split(" ")
         try:
-            text = poke_lega_test(pokemon, int(liv), name, molt)
+            text = await poke_lega_test(pokemon, int(liv), name, molt)
         except:
             text = "Ku ku ku... C'é qualcosa di sbagliato... Riprova."
     except:
@@ -307,8 +307,8 @@ def poke_lega_single(poke_liv, name,molt):
 
     return text
 
-def poke_lega_team(poke_liv, name,molt):
-    return poke_lega_single(poke_liv, name,molt)
+async def poke_lega_team(poke_liv, name,molt):
+    return await poke_lega_single(poke_liv, name,molt)
 
 
 def has_a_team(chat_id):
@@ -323,7 +323,7 @@ def has_a_team(chat_id):
             return True
     return False
 
-def poke_lega_test(pokemon, level, name, multiplier ,only_perc = False):
+async def poke_lega_test(pokemon, level, name, multiplier ,only_perc = False):
     #print('00000')
     message = f'Trainer: {name} '
     if name == 'generic' or name == 'Generic':
@@ -333,7 +333,7 @@ def poke_lega_test(pokemon, level, name, multiplier ,only_perc = False):
     with open(ENV_PATH+'/public_player_data.json', 'r') as file:
         enemies = json.load(file)
 
-    pokemon_bst = get_poke_bst(pokemon)
+    pokemon_bst = await get_poke_bst(pokemon)
     pokemon_stats = round(level*pokemon_bst/100)
 
     n_total = 0
@@ -354,7 +354,7 @@ def poke_lega_test(pokemon, level, name, multiplier ,only_perc = False):
         if mod_bonus == 0:
             n_pareggi+=1
 
-        enemy_bst = get_poke_bst(enemy)
+        enemy_bst = await get_poke_bst(enemy)
         enemy_level = round((pokemon_stats + mod_bonus)*100/enemy_bst)
         while pokemon_stats + mod_bonus < round(enemy_level*enemy_bst/100):
             enemy_level -= 1
@@ -453,19 +453,19 @@ def format_types_emoji(types):
 async def poke_dex1(pokemon_name: str) -> str:
     # This function should return the Pokédex entry for the given Pokémon
     message = ''
-    message += poke_lega_test(pokemon_name, level = 100, name = "generic", multiplier = 20 ,only_perc = True)
+    message += await poke_lega_test(pokemon_name, level = 100, name = "generic", multiplier = 20 ,only_perc = True)
     return message
 
 async def poke_dex2(pokemon_name: str) -> str:
     message = ''
     message += f' Tipo: {format_types(poke.get(name = pokemon_name).types)}\n\n'
-    message += f'BST: {get_poke_bst(pokemon_name)}\n'
+    message += f'BST: {(await get_poke_bst(pokemon_name))}\n'
     message += '\nAttendi il prossimo messaggio (ogni tanto va in time-out e non arriva, ci stiamo lavorando)...'
     return message
 
-def get_power(pokemon, lvl):
+async def get_power(pokemon, lvl):
     if pokemon is not None:
-        return round(lvl*get_poke_bst(pokemon)/100)
+        return round(lvl*(await get_poke_bst(pokemon))/100)
     else:
         return 0
 
@@ -476,14 +476,14 @@ def extract_first_number(cell):
     except:
         return None
 
-def poke_lega_team_team(chat_id, enemies):
+async def poke_lega_team_team(chat_id, enemies):
     with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
         priv_data = json.load(file)
-    team = [[pokemon[0], get_power(pokemon[0], pokemon[1])] for pokemon in priv_data[chat_id]["team"] if pokemon[0]]
+    team = [[pokemon[0], await get_power(pokemon[0], pokemon[1])] for pokemon in priv_data[chat_id]["team"] if pokemon[0]]
     dfs = []
     potenze = []
     for enemy, enemy_powers in enemies:
-        potenze.append(get_power(enemy,enemy_powers))
+        potenze.append(await get_power(enemy,enemy_powers))
         enemy_powers = [enemy_powers,enemy_powers,enemy_powers]
         enemy = [enemy]
         multiplier = 20
@@ -516,10 +516,10 @@ def gym_types():
         gym_data = json.load(file)
     return gym_data["order_of_gym_types"]
 
-def poke_gym(chat_id, gym):
+async def poke_gym(chat_id, gym):
     with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
         priv_data = json.load(file)
-    team = [[pokemon[0], get_power(pokemon[0], pokemon[1])] for pokemon in priv_data[chat_id]["team"] if pokemon[0]]
+    team = [[pokemon[0], await get_power(pokemon[0], pokemon[1])] for pokemon in priv_data[chat_id]["team"] if pokemon[0]]
     with open(ENV_PATH+'/gym_data.json', 'r') as file:
         gym_data = json.load(file)
 
@@ -540,7 +540,7 @@ def poke_gym(chat_id, gym):
     necessary_lvls = {}
     for p in team_with_level:
         try:
-            necessary_lvls[p[0]] = get_gym_results(gym, gym_data, p[0], p[1], chat_id)[-1]
+            necessary_lvls[p[0]] = await get_gym_results(gym, gym_data, p[0], p[1], chat_id)[-1]
         except:
             necessary_lvls[p[0]] = None # Da fixare
 
@@ -828,7 +828,7 @@ async def poke_cell_specific(route,cell,encounters):
                 if pokemon_name.lower()!=pokemon.lower():
                     print(f"La forma finale di {old_poke} è {pokemon_name}? A me risulta {pokemon}... Boh...")
                     pokemon = pokemon_name
-            stats = get_poke_bst(pokemon)
+            stats = await get_poke_bst(pokemon)
             boss_power = max(mid_power,int((LvL[casella]+aumento+int((stats-500)/10))*coeff[int((casella)/NUM_CASELLE_PER_RIGA)]))
             encounter_power.append(boss_power)
         return encounter_power, multiplier
@@ -847,7 +847,7 @@ async def poke_fight(chat_id,trainer,pokemons,is_capopalestra = False):
 async def poke_trainer(chat_id,pokemons, is_capopalestra = False):
     with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
         priv_data = json.load(file)
-    team = [[pokemon[0], get_power(pokemon[0], pokemon[1])] for pokemon in priv_data[chat_id]["team"] if pokemon[0]]
+    team = [[pokemon[0], await get_power(pokemon[0], pokemon[1])] for pokemon in priv_data[chat_id]["team"] if pokemon[0]]
 
     casella = get_casella()
 
@@ -879,7 +879,7 @@ async def poke_trainer(chat_id,pokemons, is_capopalestra = False):
 async def poke_encounter(chat_id,encounter):
     with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
         priv_data = json.load(file)
-    team = [[pokemon[0], get_power(pokemon[0], pokemon[1])] for pokemon in priv_data[chat_id]["team"] if pokemon[0]]
+    team = [[pokemon[0], await get_power(pokemon[0], pokemon[1])] for pokemon in priv_data[chat_id]["team"] if pokemon[0]]
     route = priv_data[chat_id]["route"]
 
     casella = get_casella()
@@ -955,7 +955,7 @@ def encounter_table(team,enemy,multiplier,limits = None):
     return(bonus_netti,tab)
 
 
-def poke_counter(pokemon, level=100):
+async def poke_counter(pokemon, level=100):
     counters = []
 
     multiplier = 20
@@ -963,13 +963,13 @@ def poke_counter(pokemon, level=100):
     with open(ENV_PATH+'/public_player_data.json', 'r') as file:
         enemies = json.load(file)['generic']
 
-    pokemon_bst = get_poke_bst(pokemon)
+    pokemon_bst = await get_poke_bst(pokemon)
     pokemon_stats = round(pokemon_bst*level/100)
 
     for enemy in enemies:
         bonus_list = calculate_bonus(enemy,pokemon,multiplier)
         bonus = bonus_list[0] - bonus_list[1]
-        enemy_bst = get_poke_bst(enemy)
+        enemy_bst = await get_poke_bst(enemy)
         if enemy_bst + bonus > pokemon_stats:
             wins = True
         else:
@@ -983,7 +983,7 @@ def poke_counter(pokemon, level=100):
 
     return sorted_counters
 
-def get_wins(pokemon, livello, all_types_combo, multiplier, limits):
+async def get_wins(pokemon, livello, all_types_combo, multiplier, limits):
 
     grey_wins = 0
     red_wins = 0
@@ -995,7 +995,7 @@ def get_wins(pokemon, livello, all_types_combo, multiplier, limits):
     min_bonus = 1000
     max_bonus = 0
     if livello != 0:
-        pokemon_bst = get_poke_bst(pokemon)
+        pokemon_bst = await get_poke_bst(pokemon)
         pokemon_stats = round(livello*pokemon_bst/100)
         for t in all_types_combo:
             types2 = poke.get(name=pokemon).types
@@ -1033,7 +1033,7 @@ def get_wins(pokemon, livello, all_types_combo, multiplier, limits):
 
     return average, min_bonus, max_bonus, grey_wins, red_wins, yellow_wins, green_wins
 
-def poke_gym_test(chat_id, pokemon, livello=0, next=4):
+async def poke_gym_test(chat_id, pokemon, livello=0, next=4):
 
     casella = get_casella()
 
@@ -1049,11 +1049,11 @@ def poke_gym_test(chat_id, pokemon, livello=0, next=4):
     end = min(offset + next, len(gym_types()))
 
     for gym in gym_types()[offset:end]:
-        results.append(get_gym_results(gym, gym_data, pokemon, livello, chat_id))
+        results.append(await get_gym_results(gym, gym_data, pokemon, livello, chat_id))
 
     return results
 
-def get_gym_results(gym, gym_data, pokemon, livello, chat_id):
+async def get_gym_results(gym, gym_data, pokemon, livello, chat_id):
 
     results = []
 
@@ -1074,19 +1074,19 @@ def get_gym_results(gym, gym_data, pokemon, livello, chat_id):
 
     all_types_combo = generate_all_types_combo(enemy[1])
 
-    average, min_bonus, max_bonus, grey_wins, red_wins, yellow_wins, green_wins = get_wins(pokemon, livello, all_types_combo, multiplier, limits)
+    average, min_bonus, max_bonus, grey_wins, red_wins, yellow_wins, green_wins = await get_wins(pokemon, livello, all_types_combo, multiplier, limits)
 
     if livello != 0:
         if grey_wins > 0:
             bonus = min_bonus
-            pokemon_bst = get_poke_bst(pokemon)
+            pokemon_bst = await get_poke_bst(pokemon)
             necessary_lvl = round((limits[0]-bonus)*100/pokemon_bst)
             while limits[0] - bonus > round(necessary_lvl*pokemon_bst/100):
                 necessary_lvl += 1
             new_pokemon, evo_lvl = poke_evolve_not_async(chat_id, pokemon, necessary_lvl)
             while new_pokemon != pokemon.lower():
-                _, bonus, _, _, _, _, _ = get_wins(new_pokemon, livello, all_types_combo, multiplier, limits)
-                pokemon_bst = get_poke_bst(new_pokemon)
+                _, bonus, _, _, _, _, _ = await get_wins(new_pokemon, livello, all_types_combo, multiplier, limits)
+                pokemon_bst = await get_poke_bst(new_pokemon)
                 necessary_lvl = round((limits[0]-bonus)*100/pokemon_bst)
                 while limits[0] - bonus > round(necessary_lvl*pokemon_bst/100):
                     necessary_lvl += 1
@@ -1825,7 +1825,7 @@ async def automatic_card_reader(image):
                 if poke_exist(pokemon_probable_name.lower()):
                     pokemon_probable_name = await check_alt_forms(pokemon_probable_name.lower(),*typing)
                     secret_data.append([pokemon_probable_name,int(pokemon_probable_level)])
-                    if round(get_poke_bst(pokemon_probable_name.lower())*int(pokemon_probable_level)/100) != int(pokemon_probable_power):
+                    if round((await get_poke_bst(pokemon_probable_name.lower()))*int(pokemon_probable_level)/100) != int(pokemon_probable_power):
                         errors.append('01')
                     else:
                         errors.append('00')
@@ -1834,7 +1834,7 @@ async def automatic_card_reader(image):
                     pokemon_name = await similar_pokemon_name(pokemon_probable_name)
                     pokemon_name = await check_alt_forms(pokemon_name.lower(),*typing)
 
-                    if round(get_poke_bst(pokemon_name)*int(pokemon_probable_level)/100) != int(pokemon_probable_power):
+                    if round((await get_poke_bst(pokemon_name))*int(pokemon_probable_level)/100) != int(pokemon_probable_power):
                         errors.append('11')
                     else:
                         errors.append('10')

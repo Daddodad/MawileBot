@@ -569,7 +569,7 @@ async def gym_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
         await query.edit_message_text(f"Il moltiplicatore della palestra sarà {temp_multi}\n\nAttendi per la foto...")
         # Call the poke_gym function
-        image_path, numero_pokemon = poke_gym(str(chat_id), gym_type)
+        image_path, numero_pokemon = await poke_gym(str(chat_id), gym_type)
         # Open the image file
         try:
             cap = f"Ecco il risultato del tuo team contro la palestra {gym_type.capitalize()}.\n\n🔴: batte la fascia bassa ({enemy_powers[0]})\n🟡: batte la fascia media ({enemy_powers[2]})\n🟢: batte la fascia alta ({enemy_powers[4]})"
@@ -648,7 +648,7 @@ async def handle_gym_count_choice(update: Update, context: ContextTypes.DEFAULT_
     if query.data == "gggg_test_4":
         await query.edit_message_text("Attendi il prossimo messaggio...")
         chat_id = query.message.chat_id
-        result = poke_gym_test(str(chat_id),pokemon_name,int(livello), 4)
+        result = await poke_gym_test(str(chat_id),pokemon_name,int(livello), 4)
         await context.bot.send_message(
             chat_id=chat_id,
             text=f"Ecco i risultati per {pokemon_name} al {livello}\n(4 palestre future):\n\n{format_gym_test(result)}"
@@ -675,7 +675,7 @@ async def handle_custom_gym_count(update: Update, context: ContextTypes.DEFAULT_
     await update.message.reply_text("Attendi il prossimo messaggio...")
     pokemon_name,livello = context.user_data.get('test_pokemon').split(" ")
     chat_id = update.effective_chat.id
-    result = poke_gym_test(str(chat_id),pokemon_name,int(livello), int(gym_count))
+    result = await poke_gym_test(str(chat_id),pokemon_name,int(livello), int(gym_count))
     await update.message.reply_text(f"Ecco i risultati per {pokemon_name} al {livello}\n({gym_count} palestre future):\n\n{format_gym_test(result)}")
     return ConversationHandler.END
 
@@ -1220,7 +1220,7 @@ async def show_main_lega_single_menu(update: Update, context: ContextTypes.DEFAU
     elif 'lega_single_pokemon' not in context.user_data.keys():
         context.user_data['moltiplicatore'] = 20
         context.user_data['lega_single_pokemon'] = update.message.text
-    text = poke_lega_single(context.user_data.get('lega_single_pokemon'), context.user_data.get('enemy_trainer'), context.user_data.get('moltiplicatore'))
+    text = await poke_lega_single(context.user_data.get('lega_single_pokemon'), context.user_data.get('enemy_trainer'), context.user_data.get('moltiplicatore'))
 
     if text[0] == 'T':  # Da fixare
         context.user_data['lega_single_fallito'] = False
@@ -1250,7 +1250,7 @@ async def counter_main(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
     await update.message.reply_text('Il messaggio si legge come:\nPokémon avversario\n(Bonus)\nBST\nCheck se può batterti\nLivello a cui può batterti\n\nAttendi il prossimo messaggio...')
     try:
-        content = poke_counter(context.user_data['counter_pokemon'])
+        content = await poke_counter(context.user_data['counter_pokemon'])
 
         text = f"I counters di {context.user_data['counter_pokemon']} sono:\n\n"
         for c in content:
@@ -1301,7 +1301,7 @@ async def lega_team_main(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     #print('OK', context.user_data['counter_team'])
     chat_id = update.effective_chat.id
 
-    image_path = poke_lega_team_team(str(chat_id), context.user_data['counter_team'])
+    image_path = await poke_lega_team_team(str(chat_id), context.user_data['counter_team'])
     
     # Open the image file
     cap = "Ecco il risultato del tuo team contro la squadra che mi hai inviato"
@@ -1319,7 +1319,7 @@ async def lega_team_main(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         #print('OK', context.user_data['counter_team'])
         chat_id = update.effective_chat.id
 
-        image_path = poke_lega_team_team(str(chat_id), context.user_data['counter_team'])
+        image_path = await poke_lega_team_team(str(chat_id), context.user_data['counter_team'])
         # Open the image file
         cap = "Ecco il risultato del tuo team contro la squadra avversaria inserita"
         with open(image_path, 'rb') as image_file:
@@ -1596,7 +1596,7 @@ async def card_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         #             image.paste(placeholder, (x + 10, y + 40))
 
         #         # Draw bottom text
-        #         texts = [["Tipo:",50,f'{format_types_emoji(poke.get(name = pokemon_name).types)}'], ["Potenza:",90,f"{get_power(team[i][0],team[i][1])}"], ["Livello:",80,f"{team[i][1]}"], ["Livello Evo:",110,f"{poke_evo_level(chat_id,pokemon_name)}"]]
+        #         texts = [["Tipo:",50,f'{format_types_emoji(poke.get(name = pokemon_name).types)}'], ["Potenza:",90,f"{await get_power(team[i][0],team[i][1])}"], ["Livello:",80,f"{team[i][1]}"], ["Livello Evo:",110,f"{poke_evo_level(chat_id,pokemon_name)}"]]
         #         for j, text in enumerate(texts):
         #             text_y = y + cell_height - 108 + j * 22
         #             text_y_text = y + cell_height - 108 + j * 23
@@ -1722,7 +1722,7 @@ async def card_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                 except Exception as e:
                     print('ERrorreeeeeee ',e)
                 # Draw potenza:
-                text = f"{get_power(team[i][0],team[i][1])}"
+                text = f"{await get_power(team[i][0],team[i][1])}"
                 draw.text((x + offset_x+170+randomshift(), y + offset_y+cell_height+119+randomshift()), str(text), fill=font_color, font=font)
                 # Draw Livello:
                 text = f"{team[i][1]}"
