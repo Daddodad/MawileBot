@@ -73,19 +73,12 @@ async def pokemon_utility(pokemon,lvl):
         evo_dict = json.load(ef)  
         
     pokemon = await similar_pokemon_name(pokemon.lower())
+    max_bst = await get_poke_bst(await find_evo_at_level_x(pokemon, 100))
 
-    lvl15 = min(100,lvl+15)
-    lvl30 = min(100,lvl+30)
+    utility = max_bst/620*10
 
-    pokemon15 = await find_evo_at_level_x(pokemon, lvl15)
-    pokemon30 = await find_evo_at_level_x(pokemon, lvl30)
-    
-    potenza_attuale = get_poke_bst(pokemon)*int(lvl)/100
-    potenza_tra_15 = get_poke_bst(pokemon15)*int(lvl15)/100
-    potenza_tra_30 = get_poke_bst(pokemon30)*int(lvl30)/100
 
-    #return potenza_attuale*0.2 + potenza_tra_15*0.4 + potenza_tra_30*0.4
-    return potenza_tra_15 + potenza_tra_30
+    return round(utility, 2)  # 0-10 scale
 
 async def filter_team(team, remove_100=False):
     if team:
@@ -95,9 +88,9 @@ async def filter_team(team, remove_100=False):
             #poke = await similar_pokemon_name(poke.lower()) #Sarchiapone
             u = await pokemon_utility(poke,lvl)
             if remove_100 and lvl == 100:
-                lvl_100.append((poke, lvl, u, get_power(poke, lvl), index+1))
+                lvl_100.append((poke, lvl, u, await get_power(poke, lvl), index+1))
             else:
-                utilities.append((poke, lvl, u, get_power(poke, lvl), index+1))
+                utilities.append((poke, lvl, u, await get_power(poke, lvl), index+1))
         utilities.sort(key=lambda x: x[2], reverse=True)
         return utilities[:6], utilities[6:], lvl_100
     else:
@@ -156,7 +149,7 @@ async def extract_number_of_pvp_choices(text):
     num_pokemon = int(words[i + 1])
     return num_pokemon
 
-async def calculate_winning_options(enemy_poke, enemy_pl, team):
+async def calculate_winning_options_selvatico(enemy_poke, enemy_pl, team):
     _, _, _, multiplier, _ = await poke_cell(0)
     winning_options = []
 
@@ -178,10 +171,10 @@ async def calculate_winning_options(enemy_poke, enemy_pl, team):
 
             # print("Bonus calcolato:", bonus_netto)
             if pl + bonus_netto >= enemy_pl:
-                winning_options.append((your_poke, pl, bonus_netto, index))
+                winning_options.append((your_poke, pl, bonus_netto, index, utility))
 
     print("Opzioni vincenti calcolate:", winning_options)
-    winning_options.sort(key=lambda x: x[1], reverse=False) # ordina per PL crescente
+    winning_options.sort(key=lambda x: x[4], reverse=True) # ordina per utility decrescente
     return winning_options
 
 async def calculate_potenziabili(tipi, team):
@@ -200,9 +193,9 @@ async def calculate_potenziabili(tipi, team):
     if potenziabili == []:
         for your_poke, lvl, utility, pl, index in team:
             if your_poke is not None:
-                potenziabili.append((your_poke, pl, "nessun tipo", index))
+                potenziabili.append((your_poke, utility, "nessun tipo", index))
 
-    potenziabili.sort(key=lambda x: x[1], reverse=False) # ordina per PL crescente
+    potenziabili.sort(key=lambda x: x[1], reverse=True) # ordina per utility decrescente
     return potenziabili
 
 async def aggiorna_team_da_foto(pil_image):
@@ -271,10 +264,10 @@ async def calculate_best_strategy(team, enemy_team, enemy_powers,multiplier):
     print('enemy_team', enemy_team)
     print('enemy_powers', enemy_powers)
     prob_matrix = []
-    base_bonus = 0
+    base_bonus = 0.010
     for pokemon in team:
         if pokemon[0] is not None:
-            base_bonus += 0.001  
+            base_bonus -= 0.001  
             #print(pokemon)
             pp_of_wins = []
             #print('\n',pokemon[0],'\n')

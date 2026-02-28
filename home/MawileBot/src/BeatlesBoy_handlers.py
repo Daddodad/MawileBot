@@ -13,6 +13,8 @@ import random
 import configparser
 from telethon.tl.types import Message
 
+from poke_lib import get_poke_bst, get_casella, LvL
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CONFIG_PATH = os.path.join(BASE_DIR, "../config.ini")
 config = configparser.ConfigParser()
@@ -30,13 +32,14 @@ else:
     sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from BeatlesBoy_utils import (
-    calculate_winning_options,
+    calculate_winning_options_selvatico,
     extract_pokemon_and_pl,
     aggiorna_team_da_foto,
     extract_types,
     calculate_potenziabili,
     extract_number_of_pvp_choices,
     filter_team,
+    find_evo_at_level_x,
     pokemon_utility,
     read_pokemons_from_trainer,
     poke_cell,
@@ -238,15 +241,26 @@ async def reply_to_text(event, text, client):
         await event.reply("❓Non ho capito❓")
     return False
     
-
 async def load_team_from_json(event, client):
+    json_path = os.path.join(ENV_PATH, "BeatlesBoy_info.json")
+    print("Loading JSON from:", json_path)
+    with open(json_path, "r", encoding="utf-8") as f:
+        team = (json.load(f))["team"]
+    return team
+
+async def dump_team_in_json(team, event, client):
+    json_path = os.path.join(ENV_PATH, "BeatlesBoy_info.json")
+    print("Dumping JSON to:", json_path)
+    with open(json_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    data["team"] = team
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2)
+
+async def load_team_and_check_card(event, client):
     await asyncio.sleep(20)  # aspetta 20 sec
 
-    json_path = os.path.join(ENV_PATH, "BeatlesBoy_team.json")
-    print("Loading JSON from:", json_path)
-
-    with open(json_path, "r", encoding="utf-8") as f:
-        team = json.load(f)
+    team = await load_team_from_json(event, client)
 
     # recupera l'ultimo messaggio della chat
     messages = await client.get_messages(
@@ -268,8 +282,7 @@ async def load_team_from_json(event, client):
             team = await aggiorna_team_da_foto(pil_image)
             success = True
             await msg.reply("Ho ricevuto la foto della squadra, la aggiorno...")  # opzionale
-            with open(json_path, "w", encoding="utf-8") as f:
-                json.dump(team, f, indent=2)
+            await dump_team_in_json(team, event, client)
             break  # stop at first successful photo
         except Exception as e:
             continue
@@ -281,18 +294,22 @@ async def replies_to_wild_pokemon(event, text, client):
     pokemon, pl = await extract_pokemon_and_pl(text)
     await event.reply(f"Ho incontrato {pokemon.capitalize()} con PL {pl}.\n\nAspettando la FOTO del team... 20 secondi massimo ⏳")
 
-    team = await load_team_from_json(event, client)
+    team = await load_team_and_check_card(event, client)
     useful, useless, lvl_100 = await filter_team(team, remove_100 = True)
 
     try:
-        winning_options = await calculate_winning_options(pokemon, pl, useful)
+        winning_options = await calculate_winning_options_selvatico(pokemon, pl, useful)
         if winning_options is None or len(winning_options) == 0:
-            winning_options = await calculate_winning_options(pokemon, pl, useless)
+            winning_options = await calculate_winning_options_selvatico(pokemon, pl, useless)
         if winning_options is None or len(winning_options) == 0:
-            winning_options = await calculate_winning_options(pokemon, pl, lvl_100)    
+            winning_options = await calculate_winning_options_selvatico(pokemon, pl, lvl_100)    
         print("Winning options:", winning_options)
         if winning_options:
-            winning_option = winning_options[0] 
+            winning_option = random.choices(
+                winning_options,
+                weights=[t[-1] for t in winning_options],
+                k=1
+            )[0]
         else:
             winning_option = None           
     except Exception as e:
@@ -302,7 +319,7 @@ async def replies_to_wild_pokemon(event, text, client):
     print("Winning option:", winning_option)
 
     if winning_option == 'Error':
-        return 'Errore: Avrei schierato a caso 1'
+        return 'Errore: Avrei schierato a caso! C\'è stato un errore!'
     elif not winning_option:
         return 'Non posso vincere?!' 
     else:
@@ -314,7 +331,7 @@ async def replies_to_pvp(event, text, client):
 
     n_schierabili = await extract_number_of_pvp_choices(text)
 
-    team = await load_team_from_json(event, client)
+    team = await load_team_and_check_card(event, client)
     useful, useless, lvl_100 = await filter_team(team, remove_100 = True)
     useful.sort( key = lambda x: x[3], reverse=True )  # ordina per power decrescente
     lvl_100.sort( key = lambda x: x[3], reverse=True )  # ordina per power decrescente
@@ -357,7 +374,7 @@ async def replies_to_potenziamento(event, text, client):
     tipi = await extract_types(text)
     await event.reply(f"Ho incontrato potenziamento coi tipi {tipi}.\n\nAspettando la FOTO del team... 20 secondi massimo ⏳")
 
-    team = await load_team_from_json(event, client)    
+    team = await load_team_and_check_card(event, client)    
     useful, useless, lvl_100 = await filter_team(team, remove_100 = True)
 
     try:
@@ -378,6 +395,7 @@ async def replies_to_potenziamento(event, text, client):
         return potenziabili[0][3]
 
 async def drop_the_useless(us, usl, lvl_100):
+    #TODO migliora un po' la logica...
     occupied_slot = []
 
     for u in us:
@@ -389,8 +407,7 @@ async def drop_the_useless(us, usl, lvl_100):
     for l100 in lvl_100:
         if l100[0] is not None:
             occupied_slot.append(l100[4])
-
-    print(occupied_slot)
+    #print(occupied_slot)
 
     if len(occupied_slot) < 9:
         for i in range(1, 10):
@@ -406,12 +423,37 @@ async def drop_the_useless(us, usl, lvl_100):
         merged.extend(us)
     if usl:
         merged.extend(usl)
+    
+    merged.sort(key=lambda x: x[2])
 
+    #print('merged', merged)
     for p in reversed(merged):
         if p[0] != "sableye":
             return p[4]
 
     return merged[-1][4]
+
+async def check_if_training_pokemon(less_useful, pokemon_da_catturare):
+    print(less_useful, pokemon_da_catturare)
+    livelli_rimanenti = (len(LvL) - get_casella()) *2 *1.5
+    drop_mon = less_useful[0]
+    drop_liv = min(100, less_useful[1]+livelli_rimanenti)
+    catch_mon = pokemon_da_catturare[0]
+    catch_liv =  min(100, pokemon_da_catturare[1]+livelli_rimanenti)
+    drop_mon = await find_evo_at_level_x(drop_mon, drop_liv)
+    catch_mon = await find_evo_at_level_x(catch_mon, catch_liv)
+
+    print(drop_mon, catch_mon)
+
+    drop_power = (await get_poke_bst(drop_mon))*int(drop_liv)/100
+    catch_power = (await get_poke_bst(catch_mon))*int(catch_liv)/100
+   
+    print(drop_power, catch_power)
+
+    if catch_power > drop_power:
+        return True, livelli_rimanenti
+    else:
+        return False, livelli_rimanenti
 
 async def extract_name_and_level_from_vittoria(msg: str):
     lines = msg.splitlines()
@@ -434,12 +476,7 @@ async def replies_to_vittoria(event, text, client):
 
     await event.reply(f"Vittoria! Catturo o no {name} di livello {level} (utility {pokemon_u})? Decidiamo...")
 
-    json_path = os.path.join(ENV_PATH, "BeatlesBoy_team.json")
-    print("Loading JSON from:", json_path)
-
-    with open(json_path, "r", encoding="utf-8") as f:
-        team = json.load(f)
-
+    team = await load_team_and_check_card(event, client)
     useful, useless, lvl_100 = await filter_team(team, remove_100 = False) # Non tolgo i lvl 100 ! altrimenti faccio solo catture inutili!
 
     message_utility = ''
@@ -474,9 +511,15 @@ async def replies_to_vittoria(event, text, client):
             await event.reply(f"Sono io! via {less_useful[0].capitalize()}, non mi servi più!")
             return await drop_the_useless(useful,useless,lvl_100)
     
-        if less_useful[2]*1.05< pokemon_u:
-            await event.reply(f"È chiaramente più utile di {less_useful[0].capitalize()}, lo prendo!")
-            return await drop_the_useless(useful,useless,lvl_100)        
+        if less_useful[2]<= pokemon_u: # First check utility
+            to_be_dropped = await drop_the_useless(useful,useless,lvl_100) 
+            catch, livelli_rimanenti = (await check_if_training_pokemon(less_useful, (name, level)))
+            if catch:
+                await event.reply(f"È chiaramente più utile di {less_useful[0].capitalize()}, lo prendo!")
+                return to_be_dropped        
+            else: 
+                await event.reply(f"L'utilità è maggiore, ma non recupera {less_useful[0].capitalize()} in {livelli_rimanenti} livelli (livelli rimanenti stimati / 6).")
+                return 0
 
     # Non ho nemmeno 6 pokemon...
     if count<6:
@@ -529,7 +572,7 @@ async def replies_to_trainer(event, text, client, is_capopalestra, images = None
             f"Ho incontrato {', '.join([e[0].capitalize() for e in enemy_team])}? Capiamo chi schierare..."
         )
 
-    team = await load_team_from_json(event, client) 
+    team = await load_team_and_check_card(event, client) 
   
     useful, useless, lvl_100 = await filter_team(team, remove_100 = True)
 
@@ -544,8 +587,7 @@ async def replies_to_trainer(event, text, client, is_capopalestra, images = None
                 if 0 not in p_of_victory:
                     break
 
-        # TODO: migliorare logica di capopalestra (check se il punteggio non migliora, se vegnono schierati useful o useless, etc...) 
-        # TODO: tecnicamente i meno utili hanno la precedenza nello schieramento... Forse meglio il contrario...
+        # TODO: migliorare logica di capopalestra (check se il punteggio non migliora, se vengono schierati useful o useless, etc...) 
         if is_capopalestra and sum(p_of_victory)<600:
             new_useful = useful.copy()
             for uls in useless:
