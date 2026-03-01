@@ -237,6 +237,12 @@ async def reply_to_text(event, text, client):
         pass
     elif "Allenatore, benvenuto nella prossima zona!" in text:
         pass
+    elif "VITTORIE:" in text:  # Ignore pvp results
+        pass
+    elif "SCONFITTE:" in text:  # Ignore pvp results
+        pass
+    elif "PAREGGI:" in text:  # Ignore pvp results
+        pass
     else: 
         await event.reply("❓Non ho capito❓")
     return False
@@ -476,7 +482,7 @@ async def replies_to_vittoria(event, text, client):
 
     await event.reply(f"Vittoria! Catturo o no {name} di livello {level} (utility {pokemon_u})? Decidiamo...")
 
-    team = await load_team_and_check_card(event, client)
+    team = await load_team_from_json(event, client)
     useful, useless, lvl_100 = await filter_team(team, remove_100 = False) # Non tolgo i lvl 100 ! altrimenti faccio solo catture inutili!
 
     message_utility = ''
