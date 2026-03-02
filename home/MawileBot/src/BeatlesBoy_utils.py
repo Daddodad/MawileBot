@@ -75,10 +75,11 @@ async def pokemon_utility(pokemon,lvl):
     pokemon = await similar_pokemon_name(pokemon.lower())
     max_bst = await get_poke_bst(await find_evo_at_level_x(pokemon, 100))
 
+    print(f"BST di {find_evo_at_level_x(pokemon, 100)} a livello 100: {max_bst}")
     utility_bst = max_bst/620*10
     utility_lvl = lvl/10
 
-    utility = utility_bst * 0.5 + utility_lvl * 0.5
+    utility = utility_bst * 0.7 + utility_lvl * 0.3
     return round(utility, 2)  # 0-10 scale
 
 async def filter_team(team, remove_100=False):
