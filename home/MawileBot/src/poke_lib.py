@@ -460,7 +460,7 @@ async def poke_dex2(pokemon_name: str) -> str:
     message = ''
     message += f' Tipo: {format_types(poke.get(name = pokemon_name).types)}\n\n'
     message += f'BST: {(await get_poke_bst(pokemon_name))}\n'
-    message += '\nAttendi il prossimo messaggio (ogni tanto va in time-out e non arriva, ci stiamo lavorando)...'
+    message += '\nAttendi il prossimo messaggio...'
     return message
 
 async def get_power(pokemon, lvl):
