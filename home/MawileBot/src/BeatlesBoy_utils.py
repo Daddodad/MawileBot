@@ -33,7 +33,8 @@ tipi_to_types = {
 
 async def find_evo_at_level_x(pokemon, level_x):
 
-    pokemon_x = pokemon
+    pokemon = await similar_pokemon_name(pokemon.lower())
+    pokemon_x = pokemon.lower()
 
     with open(ENV_PATH+f"/even_evo_file.json", 'r') as ef:
         evo_dict = json.load(ef)  

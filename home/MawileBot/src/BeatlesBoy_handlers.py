@@ -443,11 +443,20 @@ async def check_if_training_pokemon(less_useful, pokemon_da_catturare):
     print(less_useful, pokemon_da_catturare)
     livelli_rimanenti = (len(LvL) - get_casella()) *2 *1.5
     drop_mon = less_useful[0]
-    drop_liv = min(100, less_useful[1]+livelli_rimanenti)
+    drop_liv = less_useful[1]+livelli_rimanenti  # Can be over 100
     catch_mon = pokemon_da_catturare[0]
-    catch_liv =  min(100, pokemon_da_catturare[1]+livelli_rimanenti)
-    drop_mon = await find_evo_at_level_x(drop_mon, drop_liv)
-    catch_mon = await find_evo_at_level_x(catch_mon, catch_liv)
+    catch_liv =  pokemon_da_catturare[1]+livelli_rimanenti  # Can be over 100
+    scarto_liv = max(0, drop_liv-100, catch_liv-100)
+    if scarto_liv > 0:
+        drop_liv = max(0, drop_liv - scarto_liv)
+        catch_liv = max(0, catch_liv - scarto_liv)
+
+    print(f"livelli rimanenti: {livelli_rimanenti}, drop_liv: {drop_liv}, catch_liv: {catch_liv}")
+
+    pari_liv = min(100 -drop_liv, catch_liv)
+
+    drop_mon = await find_evo_at_level_x(drop_mon.lower(), drop_liv)
+    catch_mon = await find_evo_at_level_x(catch_mon.lower(), catch_liv)
 
     print(drop_mon, catch_mon)
 
