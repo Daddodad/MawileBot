@@ -540,7 +540,7 @@ async def poke_gym(chat_id, gym):
     necessary_lvls = {}
     for p in team_with_level:
         try:
-            necessary_lvls[p[0]] = await get_gym_results(gym, gym_data, p[0], p[1], chat_id)[-1]
+            necessary_lvls[p[0]] = (await get_gym_results(gym, gym_data, p[0], p[1], chat_id))[-1]
         except:
             necessary_lvls[p[0]] = None # Da fixare
 
@@ -677,7 +677,7 @@ async def poke_cell(cell):
         else:
             encounter_power = [low_power,mid_power]
             boss_power = [int((LvL[casella]+aumento)*coeff[int((casella)/NUM_CASELLE_PER_RIGA)]),int((LvL[casella]+aumento+10)*coeff[int((casella)/NUM_CASELLE_PER_RIGA)]),int((LvL[casella]+aumento+18)*coeff[int((casella)/NUM_CASELLE_PER_RIGA)])]
-            return False, encounter_power, boss_power, multiplier, None
+            return False, encounter_power, boss_power, multiplier, LvL[casella]
     else:
         return None
 

@@ -572,7 +572,7 @@ async def gym_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         image_path, numero_pokemon = await poke_gym(str(chat_id), gym_type)
         # Open the image file
         try:
-            cap = f"Ecco il risultato del tuo team contro la palestra {gym_type.capitalize()}.\n\n🔴: batte la fascia bassa ({enemy_powers[0]})\n🟡: batte la fascia media ({enemy_powers[2]})\n🟢: batte la fascia alta ({enemy_powers[4]})"
+            cap = f"Ecco il risultato del tuo team contro la palestra {gym_type.capitalize()}.\n\n🔴: batte la fascia media ({enemy_powers[0]})\n🟡: batte la fascia forte ({enemy_powers[2]})\n🟢: batte la fascia molto forte ({enemy_powers[4]})"
             with open(image_path, 'rb') as image_file:
                 # Send a new message with the image
                 await context.bot.send_photo(
@@ -1089,7 +1089,7 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
                 text+= f'La potenza dei Pokémon del capopalestra della prossima casella è {content[2]}.'
             else:
                 text+= f'La potenza dei selvatici della prossima casella è {content[1]}.\n\n'
-                text+= f'Il livello dei pokemon selvatici sara {int(content[3])-1} o {int(content[3])+1}.\n\n'
+                text+= f'Il livello dei pokemon selvatici sarà {int(content[4])-1} o {int(content[4])+1}.\n\n'
                 text+= f'La potenza del boss della prossima casella sarà tra {content[2][0]} e {content[2][1]}. Se il boss è un leggendario di copertina, la sua potenza sarà {content[2][2]}'
         await query.edit_message_text(text)
     elif query.data == "cell_custom":
@@ -1113,7 +1113,7 @@ async def get_custom_x(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
                     text+= f'La potenza del capopalestra della casella tra {x} è {content[2]}.'
                 else:
                     text+= f'La potenza dei selvatici della casella tra {x} è {content[1]}.\n\n'
-                    text+= f'Il livello dei pokemon selvatici sara {int(content[3])-1} o {int(content[3])+1}.\n\n'
+                    text+= f'Il livello dei pokemon selvatici sarà {int(content[4])-1} o {int(content[4])+1}.\n\n'
                     text+= f'La potenza del boss della casella tra {x} è {content[2]}. Se il boss è un leggendario di copertina, la sua potenza sarà {content[2][2]}'
                 await update.message.reply_text(text)
                 return ConversationHandler.END
@@ -1472,7 +1472,7 @@ async def enter_pokemons(update: Update, context: ContextTypes.DEFAULT_TYPE):
                                   poke_list,
                                   is_capopalestra=True
                                   )
-            cap = f"Ecco il risultato del tuo team contro questo capopalestra.\n\n🔴: batte la fascia bassa ({e_p[0]})\n🟡: batte la fascia media ({e_p[1]})\n🟢: batte la fascia alta ({e_p[2]})"
+            cap = f"Ecco il risultato del tuo team contro questo capopalestra.\n\n🔴: batte la fascia media ({e_p[0]})\n🟡: batte la fascia forte ({e_p[1]})\n🟢: batte la fascia molto forte ({e_p[2]})"
         else:
             image_path,e_p = await poke_fight(str(update.effective_chat.id),
                                   False,
