@@ -31,7 +31,7 @@ except FileNotFoundError:
     with open(os.path.join(ENV_PATH, "secret_player_data.json"), "w") as f:
         f.write("{}")
     data = "{}"
-    
+
 from datetime import datetime, date
 # Lega a 42 caselle
 # LvL = [5, 6, 7, 8, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 27, 29, 30, 31, 33, 36, 38, 41, 43, 45, 46, 49, 51, 54, 56, 58, 61, 62, 64, 66, 69, 71, 74, 76]
@@ -268,8 +268,14 @@ async def get_poke_bst(pokemon):
         pokemon = pokemon.split('-')[0]
         bst_bonus = 50
     bst = sum(poke.get(name=pokemon).base_stats)
+
     if pokemon.lower() == "archeops":
         return 495 + bst_bonus
+    if pokemon.lower() == "type-null":
+        return 535 + bst_bonus
+    if pokemon.lower() in ["keldeo-resolute", "keldeo-ordinary"]:
+        return 580 + bst_bonus
+
     if bst >= 670:
         return 620 + bst_bonus
     if bst == 600:
@@ -288,8 +294,6 @@ async def get_poke_bst(pokemon):
     non_leg_w_550_bst = ["florges", "arcanine", "arcanine-hisui","ursaluna-bloodmoon","silvally","palafin","palafin-hero","slaking", ]
     if pokemon.lower() in non_leg_w_550_bst:
         return 550 + bst_bonus
-    if pokemon.lower() == 'archeops':
-        return 495 + bst_bonus
     else:
         return bst + bst_bonus
     return bst
@@ -416,7 +420,7 @@ def poke_lega_all(multiplier):
 
     return message
 
-TYPE_EMOJI_LIST = { 
+TYPE_EMOJI_LIST = {
         'Normal': '⚪',
         'Fire': '🔥',
         'Water': '💧',
@@ -790,7 +794,7 @@ def poke_evo_level(chat_id,pokemon):
 
     if pokemon.lower() in evo_dict:
         pokemon = pokemon.lower()
-        
+
     lvl = '-'
     if pokemon in evo_dict:
         if evo_dict[pokemon][0]=="base":
@@ -824,7 +828,9 @@ async def poke_cell_specific(route,cell,encounters):
                 old_poke = pokemon
                 if evo_dict[pokemon][0] != 'last':
                     pokemon = evo_dict[pokemon][-1][1]
+                print('qui!', pokemon)
                 pokemon_name = await similar_pokemon_name(pokemon.lower())
+                print('qui!', pokemon_name)
                 if pokemon_name.lower()!=pokemon.lower():
                     print(f"La forma finale di {old_poke} è {pokemon_name}? A me risulta {pokemon}... Boh...")
                     pokemon = pokemon_name
@@ -881,16 +887,12 @@ async def poke_encounter(chat_id,encounter):
         priv_data = json.load(file)
     team = [[pokemon[0], await get_power(pokemon[0], pokemon[1])] for pokemon in priv_data[chat_id]["team"] if pokemon[0]]
     route = priv_data[chat_id]["route"]
-
     casella = get_casella()
-
     offset = 0
     while casella+1+offset in gym_cell():
         offset += 1
     #print(casella, offset)
-
     enemy_powers, multiplier = await poke_cell_specific(route,offset,encounter)
-
     tab = encounter_prevision(team, encounter, enemy_powers, multiplier)
     #print('ooo',enemy_powers)
 
@@ -1709,6 +1711,8 @@ most_similar_cache = {  'morpeko': ['morpeko-full-belly','morpeko-hangry'],
                         "lycanroc" : ["lycanroc-midday","lycanroc-midnight","lycanroc-dusk"],
                         "tipo-zero" : "type-null",
                         "tipo zero" : "type-null",
+                        "tipozero"  : "type-null",
+                        "tipoZero"  : "type-null",
                         "cosmogsolgaleo" : "cosmog",
                         "cosmoemsolgaleo" : "cosmoem",
                         "cosmoglunala" : "cosmog",
@@ -1737,12 +1741,16 @@ most_similar_cache = {  'morpeko': ['morpeko-full-belly','morpeko-hangry'],
                         "palafinpossente" : "palafin-hero",
                         "terapagosastrale" : "terapagos-terastal",
                         "rowlethisui" : "rowlet-hisui",
-                        "pikachualola" : "pikachu",}
+                        "pikachualola" : "pikachu",
+                        "keldeo"  : ["keldeo-resolute", "keldeo-ordinary"]}
 
 async def most_similar(query, choices, r = True):
-    #print("most sim", query)
     query_norm = query.lower().strip().replace("\ufe0f", "")
     query = query_norm
+    print("\tmost sim to", query)
+    if query.startswith('mega') and query != 'meganium':
+        query = query.replace('mega', '') + '-mega'
+        print("\tIt's mega, changed to", query)
     if query.lower() in most_similar_cache:
         cached_result = most_similar_cache[query.lower()]
         if isinstance(cached_result, list):
@@ -1752,7 +1760,7 @@ async def most_similar(query, choices, r = True):
                 return cached_result[0]
         else:
             return cached_result
-        
+
     matches = difflib.get_close_matches(query, choices, n=1, cutoff=0.0)
     return matches[0] if matches else None
 
@@ -1775,7 +1783,7 @@ async def automatic_card_reader(image):
             splits = process_image_to_remove_black(binary_img)
 
             pokemon_probable_name = compare_with_saved_data_json(splits)
-
+            print('probable name:',pokemon_probable_name)
             box_width = 120
             box_height = 47
             left = 740 + col * 345
@@ -1820,7 +1828,10 @@ async def automatic_card_reader(image):
 
             typing = (typing_from_avg_colors(type1_crop),typing_from_avg_colors(type2_crop))
 
-            
+            # mega handler (also built in into the similar_pokemon_name function but this is a backup)
+            if pokemon_probable_name.lower().startswith('mega') and pokemon_probable_name.lower() != 'meganium':
+                pokemon_probable_name = pokemon_probable_name.lower().replace('mega', '') + '-mega'
+
             if pokemon_probable_name != '':
                 if poke_exist(pokemon_probable_name.lower()):
                     pokemon_probable_name = await check_alt_forms(pokemon_probable_name.lower(),*typing)
