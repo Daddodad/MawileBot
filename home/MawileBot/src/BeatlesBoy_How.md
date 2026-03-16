@@ -35,7 +35,7 @@
 >>+ Non butta mai via Sableye. Cattura sempre Sableye se non ne ha.
 
 >DISTRIBUZIONE LIVELLI:
->> Da il livello al pokemon che vince
+>> Da il livello al pokemon che vince, e al pokemon più utile (se può distribuire).
 
 
 >POTENZIAMENTO:

@@ -401,7 +401,6 @@ async def replies_to_potenziamento(event, text, client):
         return potenziabili[0][3]
 
 async def drop_the_useless(us, usl, lvl_100):
-    #TODO migliora un po' la logica...
     occupied_slot = []
 
     for u in us:
@@ -432,8 +431,8 @@ async def drop_the_useless(us, usl, lvl_100):
     
     merged.sort(key=lambda x: x[2])
 
-    #print('merged', merged)
-    for p in reversed(merged):
+    print('merged', merged)
+    for p in merged:
         if p[0] != "sableye":
             return p[4]
 
@@ -494,6 +493,11 @@ async def replies_to_vittoria(event, text, client):
     team = await load_team_from_json(event, client)
     useful, useless, lvl_100 = await filter_team(team, remove_100 = False) # Non tolgo i lvl 100 ! altrimenti faccio solo catture inutili!
 
+    to_return = '0'
+    if "te schierato salirà di ben" in text:
+        if len(useful)!=0: # useful è già ordinato
+            to_return = '0'+str(useful[0][4])
+    
     message_utility = ''
     for po in useful:
         message_utility+=(f"\n{po[0]} {(po[2])}")
@@ -534,19 +538,19 @@ async def replies_to_vittoria(event, text, client):
                 return to_be_dropped        
             else: 
                 await event.reply(f"L'utilità è maggiore, ma non recupera {less_useful[0].capitalize()} in {livelli_rimanenti} livelli (livelli rimanenti stimati / 6).")
-                return 0
+                return to_return
 
     # Non ho nemmeno 6 pokemon...
     if count<6:
         if random.random() >0.5:
             await event.reply(f"Non ho nemmeno 6 pokémon... ma non mi sembra così utile questo...")
-            return 0
+            return to_return
         else:
             await event.reply('Non ho nemmeno 6 pokémon... e lui mi piace un sacco!')
             dopo_cattura = await drop_the_useless(useful,useless,lvl_100)
         return dopo_cattura 
     
-    return 0
+    return to_return
 
 async def replies_to_trainer(event, text, client, is_capopalestra, images = None):
     _, enemy_powers, capopalestra_powers, multiplier, _ = await poke_cell(0)
