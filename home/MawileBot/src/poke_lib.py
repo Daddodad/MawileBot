@@ -54,7 +54,7 @@ NUM_CASELLE_PER_RIGA = 6
 
 STARTING_DATE = date(2026,1,24)  # Data di inizio della lega, da cambiare ogni lega (metti il giorno prima, la prima casella dura solo 1)
 
-EVENTUALE_PAUSA = 0  # Giorni di pausa in una lega (mettili quando inizia la pausa)
+EVENTUALE_PAUSA = 1  # Giorni di pausa in una lega (mettili quando inizia la pausa)
 
 
 ###############################################################################################
@@ -275,6 +275,8 @@ async def get_poke_bst(pokemon):
         return 535 + bst_bonus
     if pokemon.lower() in ["keldeo-resolute", "keldeo-ordinary"]:
         return 580 + bst_bonus
+    if pokemon.lower() == "silvally":
+        return 550 + bst_bonus
 
     if bst >= 670:
         return 620 + bst_bonus
