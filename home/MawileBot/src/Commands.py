@@ -740,7 +740,7 @@ async def team_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     if update.callback_query:
         await update.callback_query.edit_message_text(text="Ecco qui il messaggio per modificare il tuo team... Ricorda che lo puoi sempre chiamare usando /team", reply_markup=reply_markup)
     else:
-        await update.message.reply_text(text="Ricordati che ora puoi mandarmi direttamente la card, non serve che ti impicci qui.\n Il comando /team non sarà mai deprecato, ma potrebbe sbagliare, specie sui livelli delle evoluzioni...")
+        await update.message.reply_text(text="Ricordati che ora puoi mandarmi direttamente la card, non serve che ti impicci qui.\nIl comando /team non sarà mai deprecato, ma potrebbe sbagliare, specie sui livelli delle evoluzioni...")
         await update.message.reply_text(text="Questo è il tuo team... Non male.", reply_markup=reply_markup)
 
         #await update.message.reply_text("Questo è il tuo team... Non male.", reply_markup=reply_markup)
