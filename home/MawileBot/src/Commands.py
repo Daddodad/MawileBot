@@ -1843,11 +1843,15 @@ async def team_update(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
                             pass
                         message+=f'{x[0]}'
                         if y == '10':
-                            message += " (⚠️)"   
+                            message += " (⚠️)"  
+                            await update.message.reply_text("⚠️ WARNING: Non sono sicuro di star leggendo bene questo nome... Ma se ho ragione, non c'è alcun problema!")
                         if y == '11':
                             message += " (⚠️🔞)" 
+                            await update.message.reply_text("⚠️ WARNING: Non sono sicuro di star leggendo bene questo nome... Ma se ho ragione, non c'è alcun problema!")
+                            await update.message.reply_text("🔞 ERROR: Secondo i miei calcoli, la potenza di questo Pokèmon è diversa... Questo mi farà sicuramente sballare i conti, tienilo a mente!")
                         if y == '01':
                             message += " (🔞)" 
+                            await update.message.reply_text("🔞 ERROR: Secondo i miei calcoli, la potenza di questo Pokèmon è diversa... Questo mi farà sicuramente sballare i conti, tienilo a mente!")
                         message +=  f' lvl {x[1]}\n' 
                 if 'Sableye' in message:
                     await update.message.reply_text('Ottima scelta comunque... Non ti deluderò!')
