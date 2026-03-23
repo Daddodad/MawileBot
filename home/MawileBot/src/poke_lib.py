@@ -56,7 +56,6 @@ STARTING_DATE = date(2026,1,24)  # Data di inizio della lega, da cambiare ogni l
 
 EVENTUALE_PAUSA = 1  # Giorni di pausa in una lega (mettili quando inizia la pausa)
 
-
 ###############################################################################################
 ###############################################################################################
 ###############################################################################################
@@ -1767,6 +1766,10 @@ async def most_similar(query, choices, r = True):
     return matches[0] if matches else None
 
 async def automatic_card_reader(image):
+    width, height = image.size
+    if (width, height) != (1667, 1920):
+        image = image.resize((1667, 1920), Image.LANCZOS)
+
     # Estrai i nomi e i livelli:
     secret_data =[]
     errors = []
