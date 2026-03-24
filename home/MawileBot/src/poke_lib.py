@@ -1788,6 +1788,7 @@ async def automatic_card_reader(image):
             splits = process_image_to_remove_black(binary_img)
 
             pokemon_probable_name = compare_with_saved_data_json(splits)
+            pokemon_probable_name = pokemon_probable_name.strip()
             pokemon_probable_name.replace('0','o')
 
             print('probable name:',pokemon_probable_name)
