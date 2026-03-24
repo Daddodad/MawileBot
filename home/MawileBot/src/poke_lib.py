@@ -1788,6 +1788,8 @@ async def automatic_card_reader(image):
             splits = process_image_to_remove_black(binary_img)
 
             pokemon_probable_name = compare_with_saved_data_json(splits)
+            pokemon_probable_name.replace('0','o')
+
             print('probable name:',pokemon_probable_name)
             box_width = 120
             box_height = 47
@@ -1801,7 +1803,9 @@ async def automatic_card_reader(image):
             splits = process_image_to_remove_black(binary_img)
 
             pokemon_probable_level = compare_with_saved_data_json(splits)
-
+            pokemon_probable_level.replace('O','0')
+            pokemon_probable_level.replace('o','0')
+            
             box_width = 120
             box_height = 47
             left = 760 + col * 345
@@ -1814,6 +1818,8 @@ async def automatic_card_reader(image):
             splits = process_image_to_remove_black(binary_img)
 
             pokemon_probable_power = compare_with_saved_data_json(splits)
+            pokemon_probable_power.replace('O','0')
+            pokemon_probable_power.replace('o','0')
 
             box_width = 45
             box_height = 45
