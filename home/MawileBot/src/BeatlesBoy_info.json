@@ -1,40 +1,46 @@
 {
   "team": [
     [
-      "samurott-hisui",
-      74
+      "lapras",
+      82
     ],
     [
-      "pelipper",
+      "latias",
+      71
+    ],
+    [
+      "spectrier",
       78
     ],
     [
-      "xatu",
-      53
+      "groudon",
+      68
     ],
     [
-      "krookodile",
-      65
+      "aggron",
+      83
     ],
     [
-      "slowbro",
-      55
+      "sneasler",
+      50
     ],
     [
-      "sableye",
-      26
+      "hatterene",
+      89
     ],
     [
-      "scovillain",
-      57
+      "garganacl",
+      73
     ],
     [
-      "keldeo-ordinary",
-      45
-    ],
-    [
-      "cosmog",
-      44
+      "cinderace",
+      80
     ]
-  ]
+  ],
+  "in_fase_lega": true,
+  "indizio_chiesto": 0,
+  "win_1": false,
+  "win_2": false,
+  "enemy_team_lega": [],
+  "team_lega": []
 }

@@ -35,6 +35,7 @@ from BeatlesBoy_utils import (
     calculate_winning_options_selvatico,
     extract_pokemon_and_pl,
     aggiorna_team_da_foto,
+    aggiorna_enemy_team_da_foto,
     extract_types,
     calculate_potenziabili,
     extract_number_of_pvp_choices,
@@ -44,7 +45,8 @@ from BeatlesBoy_utils import (
     read_pokemons_from_trainer,
     poke_cell,
     process_and_reply,
-    calculate_best_strategy
+    calculate_best_strategy,
+    reset_lega_info
 )
 
 # if os.path.exists('/home/SableyeBot/src'):
@@ -229,6 +231,17 @@ async def reply_to_text(event, text, client):
         da_schierare = await replies_to_trainer(event, text, client, is_capopalestra = True, images = images)
         await event.reply(str(da_schierare))
         return True
+    #### LEGA HANDLERS ####
+    elif "Allenatore, benvenuto nella fase" in text:
+        reset_lega_info(begin=True)
+        if "Aspetta che il tuo avversario schieri per poter chiedere l'indizio!" in text:
+            await handle_first_lega_message(event, text, client, indizio = True)
+        else:
+            await handle_first_lega_message(event, text, client, indizio = False)
+
+
+    #### LEGA HANDLERS ####
+
     elif " è salito al livello " in text:
         pass
     elif "Schieramento ricevuto! Attendi che il tuo avversario faccia lo stesso per visualizzare i risultati" in text:
@@ -242,6 +255,10 @@ async def reply_to_text(event, text, client):
     elif "SCONFITTE:" in text:  # Ignore pvp results
         pass
     elif "PAREGGI:" in text:  # Ignore pvp results
+        pass
+    elif "Ecco la card del tuo avversario!" in text:
+        pass
+    elif "Ecco la tua card aggiornata!" in text:
         pass
     else: 
         await event.reply("❓Non ho capito❓")
@@ -492,11 +509,12 @@ async def replies_to_vittoria(event, text, client):
 
     team = await load_team_from_json(event, client)
     useful, useless, lvl_100 = await filter_team(team, remove_100 = False) # Non tolgo i lvl 100 ! altrimenti faccio solo catture inutili!
+    useful_n_100, _u, _100 = await filter_team(team, remove_100 = True) # Tolgo i lvl100 per alcuni controlli, per altri no!
 
     to_return = '0'
     if "te schierato salirà di ben" in text:
-        if len(useful)!=0: # useful è già ordinato
-            to_return = '0'+str(useful[0][4])
+        if len(useful_n_100)!=0: # useful è già ordinato
+            to_return = '0'+str(useful_n_100[0][4])
     
     message_utility = ''
     for po in useful:
@@ -513,7 +531,7 @@ async def replies_to_vittoria(event, text, client):
             (u for u in reversed(useful) if u[0] is not None),
             None
         )
-    else: # Ho solo pokemon al 100?
+    else: # Ho 9 pokemon al 100?
         less_useful = lvl_100[-1]
 
     count = 0
@@ -626,3 +644,50 @@ async def replies_to_trainer(event, text, client, is_capopalestra, images = None
 
     return 'Ho incontrato qualcuno, ma non so che fare.'
     
+async def handle_first_lega_message(event, text, client, indizio):
+    print("Handling first lega message, indizio =", indizio)
+    teams = await load_two_teams_from_photos(event, client) 
+    print(teams)
+    team = teams[0] if teams else None
+    enemy_team = teams[1] if len(teams) > 1 else None
+    if indizio:
+        return "Aspetto che il mio avversario schieri per poter chiedere l'indizio!"
+    else:
+        return "Ho incontrato un avversario della lega! Capisco che non posso ancora chiedere l'indizio, ma schiero comunque il mio miglior team!"
+    
+
+async def load_two_teams_from_photos(event, client):
+    await asyncio.sleep(30)  # aspetta 30 sec
+    messages = await client.get_messages(
+        event.chat_id,
+        min_id=event.id,
+        limit=5
+    )
+    teams = []
+    for msg in messages:
+        if not msg.photo:
+            continue
+        try:
+            photo_bytes = await msg.download_media(bytes)
+            pil_image = Image.open(BytesIO(photo_bytes))
+
+            if msg.text == "Ecco la card del tuo avversario!":
+                await msg.reply("Ho ricevuto la foto della squadra avversaria, la aggiorno...")  # opzionale
+                team = await aggiorna_enemy_team_da_foto(pil_image)
+            elif msg.text == "Ecco la tua card aggiornata!":
+                await msg.reply("Ho ricevuto la foto della squadra, la aggiorno...")  # opzionale
+                team = await aggiorna_team_da_foto(pil_image)
+                await dump_team_in_json(team, event, client)
+            else:
+                continue  # testo non riconosciuto, salta
+
+            teams.append(team)
+
+            if len(teams) == 2:
+                break
+        except Exception as e:
+            continue
+
+    if len(teams) < 2:
+        await event.reply(f"Ho trovato solo {len(teams)} foto su 2 attese... controlla i messaggi.")
+    return teams

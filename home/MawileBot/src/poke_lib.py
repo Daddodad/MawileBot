@@ -1765,7 +1765,7 @@ async def most_similar(query, choices, r = True):
     matches = difflib.get_close_matches(query, choices, n=1, cutoff=0.0)
     return matches[0] if matches else None
 
-async def automatic_card_reader(image):
+async def automatic_card_reader(image, only_name = False):
     width, height = image.size
     if (width, height) != (1667, 1920):
         image = image.resize((1667, 1920), Image.LANCZOS)
@@ -1792,35 +1792,40 @@ async def automatic_card_reader(image):
             pokemon_probable_name.replace('0','o')
 
             print('probable name:',pokemon_probable_name)
-            box_width = 120
-            box_height = 47
-            left = 740 + col * 345
-            upper = 561 + row * 613
-            right = left + box_width
-            lower = upper + box_height
-            name_crop = image.crop((left, upper, right, lower))
-            binary_img = crop_to_binary(name_crop)
 
-            splits = process_image_to_remove_black(binary_img)
+            if not only_name:
+                box_width = 120
+                box_height = 47
+                left = 740 + col * 345
+                upper = 561 + row * 613
+                right = left + box_width
+                lower = upper + box_height
+                name_crop = image.crop((left, upper, right, lower))
+                binary_img = crop_to_binary(name_crop)
 
-            pokemon_probable_level = compare_with_saved_data_json(splits)
-            pokemon_probable_level.replace('O','0')
-            pokemon_probable_level.replace('o','0')
-            
-            box_width = 120
-            box_height = 47
-            left = 760 + col * 345
-            upper = 510 + row * 613
-            right = left + box_width
-            lower = upper + box_height
-            name_crop = image.crop((left, upper, right, lower))
-            binary_img = crop_to_binary(name_crop)
+                splits = process_image_to_remove_black(binary_img)
 
-            splits = process_image_to_remove_black(binary_img)
+                pokemon_probable_level = compare_with_saved_data_json(splits)
+                pokemon_probable_level.replace('O','0')
+                pokemon_probable_level.replace('o','0')
+                
+                box_width = 120
+                box_height = 47
+                left = 760 + col * 345
+                upper = 510 + row * 613
+                right = left + box_width
+                lower = upper + box_height
+                name_crop = image.crop((left, upper, right, lower))
+                binary_img = crop_to_binary(name_crop)
 
-            pokemon_probable_power = compare_with_saved_data_json(splits)
-            pokemon_probable_power.replace('O','0')
-            pokemon_probable_power.replace('o','0')
+                splits = process_image_to_remove_black(binary_img)
+
+                pokemon_probable_power = compare_with_saved_data_json(splits)
+                pokemon_probable_power.replace('O','0')
+                pokemon_probable_power.replace('o','0')
+            else:
+                pokemon_probable_level = 0
+                pokemon_probable_power = 0
 
             box_width = 45
             box_height = 45

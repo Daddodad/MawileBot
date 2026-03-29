@@ -208,6 +208,13 @@ async def aggiorna_team_da_foto(pil_image):
     # TODO Gestire errori
     return secret_data
 
+async def aggiorna_enemy_team_da_foto(pil_image):
+    secret_data,errors = await automatic_card_reader(pil_image, only_name = True)
+    #print("Dati segreti estratti:", secret_data)
+    #print("Errori durante l'estrazione:", errors)
+    # TODO Gestire errori
+    return secret_data
+
 async def extract_types(text):
     types = []
     for line in text.splitlines():
@@ -379,3 +386,20 @@ async def match_vector(vector, pokemon_vectors):
             best_name = name
     return exact_match if exact_match else best_name, best_dist
 
+#### LEGA UTILS ####
+def  reset_lega_info(begin = True):
+    json_path = os.path.join(ENV_PATH, "BeatlesBoy_info.json")
+    print("Dumping JSON to:", json_path)
+    with open(json_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    if begin:
+        data["in_fase_lega"] = True
+    else:
+        data["in_fase_lega"] = False
+    data["indizio_chiesto"] = 0
+    data["win_1"] = False
+    data["win_2"] = False
+    data["enemy_team_lega"] = []
+    data["team_lega"] = []
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2)
