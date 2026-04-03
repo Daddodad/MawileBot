@@ -254,9 +254,9 @@ async def reply_to_text(event, text, client):
         else:
             da_schierare = await lega_turn_1_no_hint(event, text, client)
             await event.reply(str(da_schierare))
-    elif "Purtroppo, con le vittorie raggiunte dal tuo avversario, sei stato sconfitto! Attendi domani per la tua prossima battaglia!" in text:
+    elif "Purtroppo, con le vittorie raggiunte dal tuo avversario, sei stato sconfitto!" in text:
         reset_lega_info(begin=False)
-    elif "Congratulazioni, grazie al tuo numero di match vinti e singoli Pokemon battuti hai vinto e passato il turno! Attendi domani per la tua prossima battaglia!" in text:
+    elif "Congratulazioni, grazie al tuo numero di match vinti e singoli Pokemon battuti hai vinto e passato il turno!" in text:
         reset_lega_info(begin=False)
 
     elif "Il tuo avversario ha schierato, puoi chiedere l'indizio!" in text:
