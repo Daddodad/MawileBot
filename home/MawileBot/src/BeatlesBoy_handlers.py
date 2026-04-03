@@ -33,14 +33,18 @@ else:
 
 from BeatlesBoy_utils import (
     calculate_winning_options_selvatico,
+    extract_all_matches_lega,
     extract_pokemon_and_pl,
     aggiorna_team_da_foto,
     aggiorna_enemy_team_da_foto,
+    extract_pokemon_and_pl_lega,
     extract_types,
     calculate_potenziabili,
     extract_number_of_pvp_choices,
     filter_team,
     find_evo_at_level_x,
+    lega_utility,
+    one_vs_team_lega,
     pokemon_utility,
     read_pokemons_from_trainer,
     poke_cell,
@@ -71,6 +75,8 @@ TARGET_TIMES = [
     dtime(22, 0),
     dtime(22, 30),
 ]
+
+THINK_TIME = 420
 
 async def scheduled_job(client):
 
@@ -179,7 +185,11 @@ def register_handlers(client):
 
         # ---- TEXT HANDLING ----
         if event.text:
-            await reply_to_text(event, event.text, client)
+            try:
+                await reply_to_text(event, event.text, client)
+            except Exception as e:
+                await event.reply(f"[Handlers] ❌ ERROR in message_handler: {e}")
+
 
 async def reply_to_text(event, text, client):
     await asyncio.sleep(1)  # wait for 10 seconds before replying
@@ -231,16 +241,60 @@ async def reply_to_text(event, text, client):
         da_schierare = await replies_to_trainer(event, text, client, is_capopalestra = True, images = images)
         await event.reply(str(da_schierare))
         return True
+    
+
     #### LEGA HANDLERS ####
+
+
     elif "Allenatore, benvenuto nella fase" in text:
         reset_lega_info(begin=True)
+        await handle_first_lega_message(event, text, client)
         if "Aspetta che il tuo avversario schieri per poter chiedere l'indizio!" in text:
-            await handle_first_lega_message(event, text, client, indizio = True)
+            pass
         else:
-            await handle_first_lega_message(event, text, client, indizio = False)
+            da_schierare = await lega_turn_1_no_hint(event, text, client)
+            await event.reply(str(da_schierare))
+    elif "Purtroppo, con le vittorie raggiunte dal tuo avversario, sei stato sconfitto! Attendi domani per la tua prossima battaglia!" in text:
+        reset_lega_info(begin=False)
+    elif "Congratulazioni, grazie al tuo numero di match vinti e singoli Pokemon battuti hai vinto e passato il turno! Attendi domani per la tua prossima battaglia!" in text:
+        reset_lega_info(begin=False)
+
+    elif "Il tuo avversario ha schierato, puoi chiedere l'indizio!" in text:
+        fase_lega = await load_x_from_json("fase_lega")
+        if fase_lega == 1:
+            indizio = await lega_hint_ask()
+        if fase_lega == 2:
+            indizio = await lega_hint_ask()
+        if fase_lega == 3:
+            indizio = await lega_hint_ask()
+        await event.reply(str(indizio))
+    elif "Ecco il Pokemon schierato ne" in text:
+        fase_lega = await load_x_from_json("fase_lega")
+        if fase_lega == 1:
+            da_schierare = await lega_turn_1_hint_reply(event, text, client)
+        if fase_lega == 2:  
+            da_schierare = await lega_turn_2_hint_reply(event, text, client)
+        if fase_lega == 3:
+            da_schierare = await lega_turn_3_hint_reply(event, text, client)
+        await event.reply(str(da_schierare))
+    elif "Bene, via al prossimo match!" in text:
+        if "Aspetta che il tuo avversario schieri per poter chiedere l'indizio!" in text:
+            pass
+        else:
+            fase_lega = await load_x_from_json("fase_lega")
+            if fase_lega == 2:
+                da_schierare = await lega_turn_2_no_hint(event, text, client)
+            if fase_lega == 3:
+                da_schierare = await lega_turn_3_no_hint(event, text, client)
+            await event.reply(str(da_schierare))
+    elif "Match vinto!" in text:
+        await compile_answer_lega(event, text, client, vittoria=True)
+    elif "Match perso!" in text:
+        await compile_answer_lega(event, text, client, vittoria=False)
 
 
     #### LEGA HANDLERS ####
+
 
     elif " è salito al livello " in text:
         pass
@@ -279,6 +333,22 @@ async def dump_team_in_json(team, event, client):
     data["team"] = team
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)
+
+async def dump_x_in_json(x, x_name):
+    json_path = os.path.join(ENV_PATH, "BeatlesBoy_info.json")
+    print("Dumping JSON to:", json_path)
+    with open(json_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    data[x_name] = x
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2)
+
+async def load_x_from_json(x_name):
+    json_path = os.path.join(ENV_PATH, "BeatlesBoy_info.json")
+    print("Loading JSON from:", json_path)
+    with open(json_path, "r", encoding="utf-8") as f:
+        x = (json.load(f))[x_name]
+    return x
 
 async def load_team_and_check_card(event, client):
     await asyncio.sleep(20)  # aspetta 20 sec
@@ -644,17 +714,22 @@ async def replies_to_trainer(event, text, client, is_capopalestra, images = None
 
     return 'Ho incontrato qualcuno, ma non so che fare.'
     
-async def handle_first_lega_message(event, text, client, indizio):
-    print("Handling first lega message, indizio =", indizio)
+async def handle_first_lega_message(event, text, client):
     teams = await load_two_teams_from_photos(event, client) 
-    print(teams)
     team = teams[0] if teams else None
     enemy_team = teams[1] if len(teams) > 1 else None
-    if indizio:
-        return "Aspetto che il mio avversario schieri per poter chiedere l'indizio!"
-    else:
-        return "Ho incontrato un avversario della lega! Capisco che non posso ancora chiedere l'indizio, ma schiero comunque il mio miglior team!"
+    print("Team:", team)
+    print("Enemy team:", enemy_team)
     
+    team = await lega_utility(team,enemy_team,first_time = True)
+
+    await dump_x_in_json(team, "team_lega")
+    await dump_x_in_json(enemy_team, "enemy_team_lega")
+
+    message = ""
+    message += "Il team avversario è \n{}".format(''.join([f"\t\t\t{p[0].capitalize()}\n" for p in enemy_team if p[0] is not None]))
+    message += "\nIl mio team è \n{}".format(''.join([f"\t\t\t{p[0].capitalize()} ({p[2]})\n" for p in team if p[0] is not None]))
+    await event.reply(message)
 
 async def load_two_teams_from_photos(event, client):
     await asyncio.sleep(30)  # aspetta 30 sec
@@ -691,3 +766,212 @@ async def load_two_teams_from_photos(event, client):
     if len(teams) < 2:
         await event.reply(f"Ho trovato solo {len(teams)} foto su 2 attese... controlla i messaggi.")
     return teams
+
+async def lega_turn_1_no_hint(event, text, client):
+    # No need to calculate anything, schiero i 3 più inutili!
+    await asyncio.sleep(THINK_TIME) # Tempo per pensare... fingi di non essere un bot...
+    team = await load_x_from_json("team_lega")
+
+    pos_da_schierare = [str(p[4]) for p in team[-3:]]
+    return ''.join(pos_da_schierare)
+
+async def lega_turn_2_no_hint(event, text, client):
+    await asyncio.sleep(THINK_TIME) # Tempo per pensare... fingi di non essere un bot...
+    team = await load_x_from_json("team_lega")
+    enemy_team = await load_x_from_json("enemy_team_lega")
+    team = await lega_utility(team, enemy_team)
+
+    if load_x_from_json("win_1") == False: # Ho perso il primo match, schiero i 3 più forti
+        pos_da_schierare = [str(p[4]) for p in team[:3]]
+    else:
+        pos_da_schierare = [str(p[4]) for p in team[-3:]]
+    return ''.join(pos_da_schierare)
+
+async def lega_turn_3_no_hint(event, text, client):
+    await asyncio.sleep(THINK_TIME) # Tempo per pensare... fingi di non essere un bot...
+    team = await load_x_from_json("team_lega")
+    pos_da_schierare = [str(p[4]) for p in team[:3]]
+    return ''.join(pos_da_schierare)
+
+async def lega_hint_ask():
+    x = random.choice([1,2,3])
+    await dump_x_in_json(x, "indizio_chiesto")
+    return x
+
+async def lega_turn_1_hint_reply(event, text, client):
+    await asyncio.sleep(THINK_TIME) # Tempo per pensare... fingi di non essere un bot...
+
+    team = await load_x_from_json("team_lega")
+    enemy_team = await load_x_from_json("enemy_team_lega")
+    indizio_chiesto = await load_x_from_json("indizio_chiesto")
+    enemy_poke, enemy_pl = await extract_pokemon_and_pl_lega(text)
+    print(indizio_chiesto)
+    print(enemy_poke, enemy_pl)
+
+    for i,pp in enumerate(enemy_team):
+        if pp[0] == enemy_poke:
+            enemy_team.pop(i)
+            break
+
+    team = await lega_utility(team, enemy_team)
+
+    vincente = one_vs_team_lega(team, enemy_poke, enemy_pl)
+
+    if vincente == None:
+        pos_da_schierare = [str(p[4]) for p in team[-3:]]
+        return ''.join(pos_da_schierare)
+    else:
+
+        for i,pp in enumerate(team):
+            if pp[0] == vincente[0] and pp[4] == vincente[4]:
+                team.pop(i)
+                break
+
+        pos_vincente = str(vincente[4])
+        print("Vincente:", vincente)
+        print("Team rimanente:", team)
+        print("Indizio chiesto:", indizio_chiesto)
+        print("Pos vincente:", pos_vincente)
+        if indizio_chiesto == 1:
+            pos_da_schierare = pos_vincente + str(team[2][4]) + str(team[4][4])
+        if indizio_chiesto == 2:
+            pos_da_schierare = str(team[2][4]) + pos_vincente + str(team[4][4])
+        if indizio_chiesto == 3:
+            pos_da_schierare = str(team[2][4]) + str(team[4][4]) + pos_vincente
+        return pos_da_schierare
+
+async def lega_turn_2_hint_reply(event, text, client):
+    await asyncio.sleep(THINK_TIME) # Tempo per pensare... fingi di non essere un bot...
+
+    team = await load_x_from_json("team_lega")
+    enemy_team = await load_x_from_json("enemy_team_lega")
+    indizio_chiesto = await load_x_from_json("indizio_chiesto")
+    enemy_poke, enemy_pl = await extract_pokemon_and_pl_lega(text)
+    print(indizio_chiesto)
+    print(enemy_poke, enemy_pl)
+
+    for i,pp in enumerate(enemy_team):
+        if pp[0] == enemy_poke:
+            enemy_team.pop(i)
+            break
+
+    team = await lega_utility(team, enemy_team)
+
+    vincente = one_vs_team_lega(team, enemy_poke, enemy_pl)
+
+    if load_x_from_json("win_1") == False: # Ho perso il primo match, schiero i 3 più forti
+
+        if vincente == None:
+            pos_da_schierare = [str(p[4]) for p in team[:3]]
+            return ''.join(pos_da_schierare)
+        else:
+
+            for i,pp in enumerate(team):
+                if pp[0] == vincente[0] and pp[4] == vincente[4]:
+                    team.pop(i)
+                    break
+
+            pos_vincente = str(vincente[4])
+            if indizio_chiesto == 1:
+                pos_da_schierare = pos_vincente + str(team[0][4]) + str(team[5][4])
+            if indizio_chiesto == 2:
+                pos_da_schierare = str(team[0][4]) + pos_vincente + str(team[5][4])
+            if indizio_chiesto == 3:
+                pos_da_schierare = str(team[0][4]) + str(team[5][4]) + pos_vincente
+            return pos_da_schierare
+    else:
+        if vincente == None:
+            pos_da_schierare = [str(p[4]) for p in team[-3:]]
+            return ''.join(pos_da_schierare)
+        else:
+
+            for i,pp in enumerate(team):
+                if pp[0] == vincente[0] and pp[4] == vincente[4]:
+                    team.pop(i)
+                    break
+
+            pos_vincente = str(vincente[4])
+            if indizio_chiesto == 1:
+                pos_da_schierare = pos_vincente + str(team[0][4]) + str(team[1][4])
+            if indizio_chiesto == 2:
+                pos_da_schierare = str(team[0][4]) + pos_vincente + str(team[1][4])
+            if indizio_chiesto == 3:
+                pos_da_schierare = str(team[0][4]) + str(team[1][4]) + pos_vincente
+            return pos_da_schierare        
+
+async def lega_turn_3_hint_reply(event, text, client):
+    await asyncio.sleep(THINK_TIME) # Tempo per pensare... fingi di non essere un bot...
+
+    team = await load_x_from_json("team_lega")
+    enemy_team = await load_x_from_json("enemy_team_lega")
+    indizio_chiesto = await load_x_from_json("indizio_chiesto")
+    enemy_poke, enemy_pl = await extract_pokemon_and_pl_lega(text)
+    print(indizio_chiesto)
+    print(enemy_poke, enemy_pl)
+
+    for i,pp in enumerate(enemy_team):
+        if pp[0] == enemy_poke:
+            enemy_team.pop(i)
+            break
+
+    team = await lega_utility(team, enemy_team)
+
+    vincente = one_vs_team_lega(team, enemy_poke, enemy_pl)
+
+    if vincente == None:
+        pos_da_schierare = [str(p[4]) for p in team[-3:]]
+        return ''.join(pos_da_schierare)
+    else:
+
+        for i,pp in enumerate(team):
+            if pp[0] == vincente[0] and pp[4] == vincente[4]:
+                team.pop(i)
+                break
+
+        pos_vincente = str(vincente[4])
+        if indizio_chiesto == 1:
+            pos_da_schierare = pos_vincente + str(team[0][4]) + str(team[1][4])
+        if indizio_chiesto == 2:
+            pos_da_schierare = str(team[0][4]) + pos_vincente + str(team[1][4])
+        if indizio_chiesto == 3:
+            pos_da_schierare = str(team[0][4]) + str(team[1][4]) + pos_vincente
+        return pos_da_schierare
+    
+async def compile_answer_lega(event, text, client, vittoria):
+    team = await load_x_from_json("team_lega")
+    enemy_team = await load_x_from_json("enemy_team_lega")
+
+    out_team, out_enemy_team = await extract_all_matches_lega(text)
+
+    print("Team estratto dal testo:", out_team)
+    print("Enemy team estratto dal testo:", out_enemy_team)
+
+    for p in out_team:
+        for i,pp in enumerate(team):
+            if pp[0] == p:
+                team.pop(i)
+                break
+
+    for p in out_enemy_team:
+        for i,pp in enumerate(enemy_team):
+            if pp[0] == p:
+                enemy_team.pop(i)
+                break
+
+    await dump_x_in_json(team, "team_lega")
+    await dump_x_in_json(enemy_team, "enemy_team_lega")
+    fase_lega = await load_x_from_json("fase_lega")
+    if vittoria:
+        await event.reply("Ho vinto! Aggiorno le squadre...")
+        if fase_lega == 1:
+            await dump_x_in_json(True, "win_1")
+        elif fase_lega == 2:
+            await dump_x_in_json(True, "win_2")
+    else:
+        await event.reply("Ho perso! Aggiorno le squadre...")
+        if fase_lega == 1:
+            await dump_x_in_json(False, "win_1")
+        elif fase_lega == 2:
+            await dump_x_in_json(False, "win_2")
+
+    await dump_x_in_json(fase_lega+1, "fase_lega")

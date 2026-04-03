@@ -19,7 +19,7 @@ else:
     sys.path.append(os.path.dirname(os.path.abspath(__file__)))
     
 from poke_lib import (
-                        automatic_card_reader, calculate_bonus_via_types, 
+                        automatic_card_reader, calculate_bonus, calculate_bonus_via_types, 
                         get_power, poke_cell, similar_pokemon_name,
                         get_poke_bst, EMOJI_TO_TYPE,
                         check_alt_forms
@@ -83,6 +83,41 @@ async def pokemon_utility(pokemon,lvl):
     utility = utility_bst * 0.7 + utility_lvl * 0.3
     return round(utility, 2)  # 0-10 scale
 
+async def lega_utility_core (poke, lvl, power, enemy_team):
+    mod = 0
+    for enemy in enemy_team:
+        enemy_power = await get_power(enemy[0], lvl)
+        bonus = calculate_bonus(poke,enemy[0],20)
+        mod_bonus = bonus[0]-bonus[1]
+        if power + mod_bonus >= enemy_power:
+            mod += 10
+        else:
+            mod -= 10
+    return (power + mod)/620
+
+
+
+async def lega_utility(team, enemy_team, first_time = False):
+    if first_time:
+        team_u = []
+        for index, (poke, lvl) in enumerate(team):
+
+            power = await get_power(poke, lvl)
+            u = await lega_utility_core(poke, lvl, power, enemy_team)
+
+            team_u.append((poke, lvl, u, power, index+1))
+        team_u.sort(key=lambda x: x[2], reverse=True)
+    else:
+        team_u = []
+        for (poke, lvl, _ , correct_power, correct_index) in team:
+
+            u = await lega_utility_core(poke, lvl, correct_power, enemy_team)
+
+            team_u.append((poke, lvl, u, correct_power, correct_index))
+        team_u.sort(key=lambda x: x[2], reverse=True)   
+    return team_u
+
+
 async def filter_team(team, remove_100=False):
     if team:
         utilities = []
@@ -144,6 +179,118 @@ async def extract_pokemon_and_pl(text):
 
     return pokemon, pl
 
+async def extract_pokemon_and_pl_lega(text):
+    lines = text.splitlines()
+    stat_line = ""
+    for line in lines:
+        if line.strip().startswith("-"):
+            stat_line = line.strip()
+            break
+    
+    if not stat_line:
+        return None, None
+    
+    line_match = re.search(r"-\s*([^-]+?)\s*(?:[\U00010000-\U0010ffff]|[\u2600-\u27ff]|\d)", stat_line)
+    
+    if line_match:
+        pokemon_raw = line_match.group(1).strip()
+    else:
+        pokemon_raw = stat_line.replace("-", "").split()[0]
+
+    all_numbers = re.findall(r"(\d+)", stat_line)
+    pl = int(all_numbers[-1]) if all_numbers else None
+
+    pokemon_lower = pokemon_raw.lower().strip()
+    if "mega " in pokemon_lower:
+        pokemon_final_name = "mega-" + pokemon_lower.replace("mega ", "").strip()
+    else:
+        pokemon_final_name = pokemon_lower.replace(" ", "-").replace("'", "-")
+
+    emojis = []
+    middle = stat_line.replace("-", "").replace(pokemon_raw, "")
+    if pl:
+        middle = middle.replace(str(pl), "")
+
+    for ch in middle:
+        if ord(ch) > 127: # Emoji e simboli speciali
+            emojis.append(ch)
+
+    pokemon_cleaned = await similar_pokemon_name(pokemon_final_name)
+    
+    type1 = EMOJI_TO_TYPE.get(emojis[0], None) if len(emojis) > 0 else None
+    type2 = EMOJI_TO_TYPE.get(emojis[1], None) if len(emojis) > 1 else None
+
+    pokemon_final = await check_alt_forms(pokemon_cleaned, type1, type2)
+    
+    print(f'Letto: {pokemon_final}, PL: {pl}, Tipi: {type1}, {type2}')
+
+    return pokemon_final.strip(), pl
+
+import re
+
+async def extract_all_matches_lega(text):
+    colonna_sinistra = []
+    colonna_destra = []
+    
+    for line in text.splitlines():
+        line = line.strip()
+        
+        if " vs " in line:
+            parts = line.split(" vs ")
+            if len(parts) < 2: continue
+            
+            # Sinistra: rimuoviamo l'eventuale trattino iniziale
+            left_raw = parts[0].lstrip("- ").strip()
+            right_raw = parts[1].strip()
+            
+            info_sx = await process_pokemon_side(left_raw)
+            info_dx = await process_pokemon_side(right_raw)
+            
+            colonna_sinistra.append(info_sx)
+            colonna_destra.append(info_dx)
+            
+    return colonna_sinistra, colonna_destra
+
+async def process_pokemon_side(side_text):
+    side_text = side_text.lstrip("- ").strip()
+    
+    pl_match = re.search(r"(\d+)\s*\(", side_text)
+    pl = int(pl_match.group(1)) if pl_match else None
+    
+    # 3. NOME: Usiamo una Regex che esclude solo le Emoji 
+    # e si ferma prima del valore PL identificato sopra
+    # Cattura tutto fino alla prima emoji o fino al numero del PL
+    # (Evitiamo di fermarci ai numeri interni al nome come in Porygon2)
+
+    emoji_pattern = r"[\U00010000-\U0010ffff\u2600-\u27ff]"
+    
+    if pl_match:
+        name_and_emojis = side_text[:pl_match.start()].strip()
+    else:
+        name_and_emojis = side_text
+
+    split_name = re.split(emoji_pattern, name_and_emojis, maxsplit=1)
+    pokemon_raw = split_name[0].strip() if split_name else ""
+
+    if not pokemon_raw or pokemon_raw == "":
+        print("Attenzione: Nome Pokémon non trovato nella stringa.")
+        return None
+
+    p_lower = pokemon_raw.lower().strip()
+    
+    if p_lower.startswith("mega "):
+        p_name = "mega-" + p_lower[5:].strip()
+    else:
+        p_name = p_lower.replace(" ", "-").replace("'", "-")
+
+    emojis = [ch for ch in side_text if ord(ch) > 127]
+    type1 = EMOJI_TO_TYPE.get(emojis[0]) if len(emojis) > 0 else None
+    type2 = EMOJI_TO_TYPE.get(emojis[1]) if len(emojis) > 1 else None
+
+    pokemon_cleaned = await similar_pokemon_name(p_name)
+    pokemon_final = await check_alt_forms(pokemon_cleaned, type1, type2)
+    
+    return pokemon_final
 
 async def extract_number_of_pvp_choices(text):
     clean = text.replace("\n", " ")
@@ -269,6 +416,27 @@ async def read_pokemons_from_trainer(text):
 
     return result
 
+def one_vs_team_lega(team, enemy_poke, enemy_pl):
+    winners = []
+    for pokemon in team:
+        if pokemon[0] is not None:
+            try:
+                types1 = poke.get(name = pokemon[0]).types
+                types2 = poke.get(name = enemy_poke).types
+            except:
+                print(f"Errore nel recuperare i tipi di {pokemon[0]} o {enemy_poke}")
+                continue
+
+            bonus = calculate_bonus_via_types(types1, types2 ,multiplier = 20)
+            bonus_netto = bonus[0]-bonus[1]
+
+            if pokemon[3] + bonus_netto >= enemy_pl:
+                winners.append(pokemon)
+    
+    winners.sort(key=lambda x: x[2], reverse=True)  
+    print("Team vs enemy_poke: ", enemy_poke, enemy_pl, " - Winners: ", winners)
+    return winners[-1] if winners else None
+
 async def calculate_best_strategy(team, enemy_team, enemy_powers,multiplier):
     print('team', team)
     print('enemy_team', enemy_team)
@@ -393,9 +561,9 @@ def  reset_lega_info(begin = True):
     with open(json_path, "r", encoding="utf-8") as f:
         data = json.load(f)
     if begin:
-        data["in_fase_lega"] = True
+        data["fase_lega"] = 1
     else:
-        data["in_fase_lega"] = False
+        data["fase_lega"] = 0
     data["indizio_chiesto"] = 0
     data["win_1"] = False
     data["win_2"] = False

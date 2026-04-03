@@ -5,28 +5,28 @@
       82
     ],
     [
-      "latias",
-      71
-    ],
-    [
-      "spectrier",
-      78
-    ],
-    [
-      "groudon",
-      68
+      "hatterene",
+      89
     ],
     [
       "aggron",
       83
     ],
     [
+      "groudon",
+      68
+    ],
+    [
+      "spectrier",
+      78
+    ],
+    [
       "sneasler",
       50
     ],
     [
-      "hatterene",
-      89
+      "latias",
+      71
     ],
     [
       "garganacl",
@@ -37,7 +37,7 @@
       80
     ]
   ],
-  "in_fase_lega": true,
+  "fase_lega": 1,
   "indizio_chiesto": 0,
   "win_1": false,
   "win_2": false,

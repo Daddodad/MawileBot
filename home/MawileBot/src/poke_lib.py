@@ -1743,7 +1743,11 @@ most_similar_cache = {  'morpeko': ['morpeko-full-belly','morpeko-hangry'],
                         "terapagosastrale" : "terapagos-terastal",
                         "rowlethisui" : "rowlet-hisui",
                         "pikachualola" : "pikachu",
-                        "keldeo"  : ["keldeo-resolute", "keldeo-ordinary"]}
+                        "keldeo"  : ["keldeo-resolute", "keldeo-ordinary"],
+                        "oh" : "ho-oh",
+                        "ho" : "ho-oh",
+                        "hooh" : "ho-oh",
+                        "ho oh" : "ho-oh",}
 
 async def most_similar(query, choices, r = True):
     query_norm = query.lower().strip().replace("\ufe0f", "")
