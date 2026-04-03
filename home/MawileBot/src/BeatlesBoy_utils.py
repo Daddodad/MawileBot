@@ -85,17 +85,29 @@ async def pokemon_utility(pokemon,lvl):
 
 async def lega_utility_core (poke, lvl, power, enemy_team):
     mod = 0
+
+    # FIGHT A PARI LIVELLO
     for enemy in enemy_team:
         enemy_power = await get_power(enemy[0], lvl)
         bonus = calculate_bonus(poke,enemy[0],20)
         mod_bonus = bonus[0]-bonus[1]
+        print(f"Comparing {poke} vs {enemy[0]} at same level: power {power} vs enemy power {enemy_power}, bonus {mod_bonus}")
         if power + mod_bonus >= enemy_power:
             mod += 10
         else:
             mod -= 10
-    return (power + mod)/620
 
+    # FIGHT A PARI POTENZA  
+    for enemy in enemy_team:
+        bonus = calculate_bonus(poke,enemy[0],20)
+        mod_bonus = bonus[0]-bonus[1]
+        if power + mod_bonus >= power:
+            mod += 10
+        else:
+            mod -= 10
 
+    u = (power + mod)/620
+    return round(u*10,2) # 0-10 scale
 
 async def lega_utility(team, enemy_team, first_time = False):
     if first_time:
