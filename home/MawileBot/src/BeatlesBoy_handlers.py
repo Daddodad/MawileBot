@@ -388,7 +388,7 @@ async def replies_to_wild_pokemon(event, text, client):
     await event.reply(f"Ho incontrato {pokemon.capitalize()} con PL {pl}.\n\nAspettando la FOTO del team... 20 secondi massimo ⏳")
 
     team = await load_team_and_check_card(event, client)
-    useful, useless, lvl_100 = await filter_team(team, remove_100 = True)
+    useful, useless, lvl_100 = await filter_team(team, remove_100 = True, nilb = True)
 
     try:
         winning_options = await calculate_winning_options_selvatico(pokemon, pl, useful)
@@ -397,22 +397,27 @@ async def replies_to_wild_pokemon(event, text, client):
         if winning_options is None or len(winning_options) == 0:
             winning_options = await calculate_winning_options_selvatico(pokemon, pl, lvl_100)    
         print("Winning options:", winning_options)
+
         if winning_options:
-            winning_option = random.choices(
-                winning_options,
-                weights=[t[-1] for t in winning_options],
-                k=1
-            )[0]
+            if winning_options[0][4]>10: # nilb
+                winning_option = winning_options[0]
+            else:
+                winning_option = random.choices(
+                    winning_options,
+                    weights=[t[-1] for t in winning_options],
+                    k=1
+                )[0]
         else:
             winning_option = None           
     except Exception as e:
         print("Errore nel calcolo delle opzioni vincenti:", e)
         winning_option = 'Error'
+        w_error = e
     
     print("Winning option:", winning_option)
 
     if winning_option == 'Error':
-        return 'Errore: Avrei schierato a caso! C\'è stato un errore!'
+        return f'Errore: Avrei schierato a caso! C\'è stato un errore! {w_error}'
     elif not winning_option:
         return 'Non posso vincere?!' 
     else:
@@ -468,21 +473,21 @@ async def replies_to_potenziamento(event, text, client):
     await event.reply(f"Ho incontrato potenziamento coi tipi {tipi}.\n\nAspettando la FOTO del team... 20 secondi massimo ⏳")
 
     team = await load_team_and_check_card(event, client)    
-    useful, useless, lvl_100 = await filter_team(team, remove_100 = True)
-
+    useful, useless, lvl_100 = await filter_team(team, remove_100 = True, nilb = True)
     try:
         potenziabili = await calculate_potenziabili(tipi, useful)
-        if potenziabili is None or len(potenziabili) == 0:
-            potenziabili = await calculate_potenziabili(tipi, useless)
-        if potenziabili is None or len(potenziabili) == 0:
-            potenziabili = await calculate_potenziabili(tipi, lvl_100)
+        # Perchè dovrebbe dare il potenziamento a gente inutile o al 100?!?!
+        # if potenziabili is None or len(potenziabili) == 0:
+        #     potenziabili = await calculate_potenziabili(tipi, useless)
+        # if potenziabili is None or len(potenziabili) == 0:
+        #     potenziabili = await calculate_potenziabili(tipi, lvl_100)
         print("Potenziabili:", potenziabili)
     except Exception as e:
         print("Errore nel calcolo dei potenziabili:", e)
         potenziabili = None
 
     if not potenziabili:
-        return 'Avrei schierato a caso 1' 
+        return 'Qualcosa non ha funzionato, non riesco a capire chi potenziare!' 
     else:
         #return f"avrei schierato {potenziabili[3]} ({potenziabili[0]}, bonus {potenziabili[2]})"
         return potenziabili[0][3]
@@ -579,7 +584,7 @@ async def replies_to_vittoria(event, text, client):
 
     team = await load_team_from_json(event, client)
     useful, useless, lvl_100 = await filter_team(team, remove_100 = False) # Non tolgo i lvl 100 ! altrimenti faccio solo catture inutili!
-    useful_n_100, _u, _100 = await filter_team(team, remove_100 = True) # Tolgo i lvl100 per alcuni controlli, per altri no!
+    useful_n_100, _u, _100 = await filter_team(team, remove_100 = True, nilb = True) # Tolgo i lvl 100 e aggiungo nilb SOLO per la scelta di distribuzione dei livelli.
 
     to_return = '0'
     if "te schierato salirà di ben" in text:
@@ -681,7 +686,7 @@ async def replies_to_trainer(event, text, client, is_capopalestra, images = None
 
     team = await load_team_and_check_card(event, client) 
   
-    useful, useless, lvl_100 = await filter_team(team, remove_100 = True)
+    useful, useless, lvl_100 = await filter_team(team, remove_100 = True, nilb = True)
 
     try:
         p_of_victory, best_schieramento = await calculate_best_strategy(useful,enemy_team, enemy_powers, multiplier)

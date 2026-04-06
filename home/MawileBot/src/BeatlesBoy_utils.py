@@ -130,7 +130,7 @@ async def lega_utility(team, enemy_team, first_time = False):
     return team_u
 
 
-async def filter_team(team, remove_100=False):
+async def filter_team(team, remove_100=False, nilb = False):
     if team:
         utilities = []
         lvl_100 = []
@@ -142,6 +142,17 @@ async def filter_team(team, remove_100=False):
             else:
                 utilities.append((poke, lvl, u, await get_power(poke, lvl), index+1))
         utilities.sort(key=lambda x: x[2], reverse=True)
+        if nilb:
+            try:
+                _, enemy_powers, capopalestra_powers, multiplier, _ = await poke_cell(1)
+            except:
+                _, enemy_powers, capopalestra_powers, multiplier, _ = await poke_cell(0)
+            for i in range(min(6, len(utilities))):
+                p = utilities[i]
+                if p[3] < enemy_powers[0]:
+                    utilities[i] = (p[0], p[1], p[2] + 10, p[3], p[4])
+            utilities.sort(key=lambda x: x[2], reverse=True)
+
         return utilities[:6], utilities[6:], lvl_100
     else:
         return [], [], []
@@ -344,12 +355,15 @@ async def calculate_potenziabili(tipi, team):
 
     for your_poke, lvl, utility, pl, index in team:
         if your_poke is not None:
+            if utility>10: # nilb
+                potenziabili.append((your_poke, utility, "nessun tipo", index))
+                break
 
             types1 = poke.get(name = your_poke).types
 
             for tipo in tipi:
                 if tipi_to_types[tipo].lower() in [t.lower() for t in types1]:
-                    potenziabili.append((your_poke, pl, tipo, index))
+                    potenziabili.append((your_poke, utility, tipo, index))
                     break
 
     if potenziabili == []:
