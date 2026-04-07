@@ -113,19 +113,23 @@ async def lega_utility(team, enemy_team, first_time = False):
     if first_time:
         team_u = []
         for index, (poke, lvl) in enumerate(team):
+            if poke is None:
+                team_u.append((None, 0, 0, 0, index+1))
+            else:
+                power = await get_power(poke, lvl)
+                u = await lega_utility_core(poke, lvl, power, enemy_team)
 
-            power = await get_power(poke, lvl)
-            u = await lega_utility_core(poke, lvl, power, enemy_team)
-
-            team_u.append((poke, lvl, u, power, index+1))
+                team_u.append((poke, lvl, u, power, index+1))
         team_u.sort(key=lambda x: x[2], reverse=True)
     else:
         team_u = []
         for (poke, lvl, _ , correct_power, correct_index) in team:
-
-            u = await lega_utility_core(poke, lvl, correct_power, enemy_team)
-
-            team_u.append((poke, lvl, u, correct_power, correct_index))
+            if poke is None:
+                team_u.append((None, 0, 0, 0, correct_index))
+            else:
+                u = await lega_utility_core(poke, lvl, correct_power, enemy_team)
+                team_u.append((poke, lvl, u, correct_power, correct_index))
+                
         team_u.sort(key=lambda x: x[2], reverse=True)   
     return team_u
 
