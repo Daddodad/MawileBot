@@ -85,9 +85,11 @@ async def pokemon_utility(pokemon,lvl):
 
 async def lega_utility_core (poke, lvl, power, enemy_team):
     mod = 0
-
+    print('called lega utility')
     # FIGHT A PARI LIVELLO
     for enemy in enemy_team:
+        if enemy[0] is None:
+            continue
         enemy_power = await get_power(enemy[0], lvl)
         bonus = calculate_bonus(poke,enemy[0],20)
         mod_bonus = bonus[0]-bonus[1]
@@ -99,6 +101,8 @@ async def lega_utility_core (poke, lvl, power, enemy_team):
 
     # FIGHT A PARI POTENZA  
     for enemy in enemy_team:
+        if enemy[0] is None:
+            continue
         bonus = calculate_bonus(poke,enemy[0],20)
         mod_bonus = bonus[0]-bonus[1]
         if power + mod_bonus >= power:
@@ -462,7 +466,7 @@ def one_vs_team_lega(team, enemy_poke, enemy_pl):
 
             if pokemon[3] + bonus_netto >= enemy_pl:
                 winners.append(pokemon)
-    
+    print('Questo lo battono', winners)
     winners.sort(key=lambda x: x[2], reverse=True)  
     print("Team vs enemy_poke: ", enemy_poke, enemy_pl, " - Winners: ", winners)
     return winners[-1] if winners else None
@@ -587,7 +591,7 @@ async def match_vector(vector, pokemon_vectors):
 #### LEGA UTILS ####
 def  reset_lega_info(begin = True):
     json_path = os.path.join(ENV_PATH, "BeatlesBoy_info.json")
-    print("Dumping JSON to:", json_path)
+    print("Dumping JSON to (reset lega):", json_path)
     with open(json_path, "r", encoding="utf-8") as f:
         data = json.load(f)
     if begin:

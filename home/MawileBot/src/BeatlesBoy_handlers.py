@@ -76,7 +76,7 @@ TARGET_TIMES = [
     dtime(22, 30),
 ]
 
-THINK_TIME = 420
+THINK_TIME = 10 #420
 
 async def scheduled_job(client):
 
@@ -320,14 +320,14 @@ async def reply_to_text(event, text, client):
     
 async def load_team_from_json(event, client):
     json_path = os.path.join(ENV_PATH, "BeatlesBoy_info.json")
-    print("Loading JSON from:", json_path)
+    print("Loading team from:", json_path)
     with open(json_path, "r", encoding="utf-8") as f:
         team = (json.load(f))["team"]
     return team
 
 async def dump_team_in_json(team, event, client):
     json_path = os.path.join(ENV_PATH, "BeatlesBoy_info.json")
-    print("Dumping JSON to:", json_path)
+    print("Dumping team to:", json_path)
     with open(json_path, "r", encoding="utf-8") as f:
         data = json.load(f)
     data["team"] = team
@@ -336,7 +336,7 @@ async def dump_team_in_json(team, event, client):
 
 async def dump_x_in_json(x, x_name):
     json_path = os.path.join(ENV_PATH, "BeatlesBoy_info.json")
-    print("Dumping JSON to:", json_path)
+    print(f"Dumping {x_name} to:", json_path)
     with open(json_path, "r", encoding="utf-8") as f:
         data = json.load(f)
     data[x_name] = x
@@ -345,7 +345,7 @@ async def dump_x_in_json(x, x_name):
 
 async def load_x_from_json(x_name):
     json_path = os.path.join(ENV_PATH, "BeatlesBoy_info.json")
-    print("Loading JSON from:", json_path)
+    print(f"Loading {x_name} from:", json_path)
     with open(json_path, "r", encoding="utf-8") as f:
         x = (json.load(f))[x_name]
     return x
@@ -729,8 +729,10 @@ async def handle_first_lega_message(event, text, client):
     team = await lega_utility(team,enemy_team,first_time = True)
 
     await dump_x_in_json(team, "team_lega")
-    await dump_x_in_json(enemy_team, "enemy_team_lega")
-
+    try:
+        await dump_x_in_json(enemy_team, "enemy_team_lega")
+    except Exception as e: 
+        print(f"Error dumping enemy_team {e}")
     message = ""
     message += "Il team avversario è \n{}".format(''.join([f"\t\t\t{p[0].capitalize()}\n" for p in enemy_team if p[0] is not None]))
     message += "\nIl mio team è \n{}".format(''.join([f"\t\t\t{p[0].capitalize()} ({p[2]})\n" for p in team if p[0] is not None]))
@@ -774,6 +776,7 @@ async def load_two_teams_from_photos(event, client):
 
 async def lega_turn_1_no_hint(event, text, client):
     # No need to calculate anything, schiero i 3 più inutili!
+    await event.reply("Non ho l'indizio... Aspetto un attimo e poi schiero!")
     await asyncio.sleep(THINK_TIME) # Tempo per pensare... fingi di non essere un bot...
     team = await load_x_from_json("team_lega")
 
@@ -781,18 +784,20 @@ async def lega_turn_1_no_hint(event, text, client):
     return ''.join(pos_da_schierare)
 
 async def lega_turn_2_no_hint(event, text, client):
+    await event.reply("Non ho l'indizio... Aspetto un attimo e poi schiero!")
     await asyncio.sleep(THINK_TIME) # Tempo per pensare... fingi di non essere un bot...
     team = await load_x_from_json("team_lega")
     enemy_team = await load_x_from_json("enemy_team_lega")
     team = await lega_utility(team, enemy_team)
 
-    if load_x_from_json("win_1") == False: # Ho perso il primo match, schiero i 3 più forti
+    if (await load_x_from_json("win_1")) == False: # Ho perso il primo match, schiero i 3 più forti
         pos_da_schierare = [str(p[4]) for p in team[:3]]
     else:
         pos_da_schierare = [str(p[4]) for p in team[-3:]]
     return ''.join(pos_da_schierare)
 
 async def lega_turn_3_no_hint(event, text, client):
+    await event.reply("Non ho l'indizio... Aspetto un attimo e poi schiero!")
     await asyncio.sleep(THINK_TIME) # Tempo per pensare... fingi di non essere un bot...
     team = await load_x_from_json("team_lega")
     pos_da_schierare = [str(p[4]) for p in team[:3]]
@@ -804,6 +809,7 @@ async def lega_hint_ask():
     return x
 
 async def lega_turn_1_hint_reply(event, text, client):
+    await event.reply("Ho l'indizio... Aspetto un attimo e poi schiero!")
     await asyncio.sleep(THINK_TIME) # Tempo per pensare... fingi di non essere un bot...
 
     team = await load_x_from_json("team_lega")
@@ -846,6 +852,7 @@ async def lega_turn_1_hint_reply(event, text, client):
         return pos_da_schierare
 
 async def lega_turn_2_hint_reply(event, text, client):
+    await event.reply("Ho l'indizio... Aspetto un attimo e poi schiero!")
     await asyncio.sleep(THINK_TIME) # Tempo per pensare... fingi di non essere un bot...
 
     team = await load_x_from_json("team_lega")
@@ -864,7 +871,7 @@ async def lega_turn_2_hint_reply(event, text, client):
 
     vincente = one_vs_team_lega(team, enemy_poke, enemy_pl)
 
-    if load_x_from_json("win_1") == False: # Ho perso il primo match, schiero i 3 più forti
+    if (await load_x_from_json("win_1")) == False: # Ho perso il primo match, schiero i 3 più forti
 
         if vincente == None:
             pos_da_schierare = [str(p[4]) for p in team[:3]]
@@ -905,6 +912,7 @@ async def lega_turn_2_hint_reply(event, text, client):
             return pos_da_schierare        
 
 async def lega_turn_3_hint_reply(event, text, client):
+    await event.reply("Ho l'indizio... Aspetto un attimo e poi schiero!")
     await asyncio.sleep(THINK_TIME) # Tempo per pensare... fingi di non essere un bot...
 
     team = await load_x_from_json("team_lega")
