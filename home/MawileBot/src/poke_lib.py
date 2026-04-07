@@ -209,14 +209,17 @@ async def check_route(chat_id):
 
     return data[chat_id]["route"]
 
-def get_casella():
+def get_casella(cutoff = True):
     start = STARTING_DATE
     today = datetime.now().date()
     pausa = EVENTUALE_PAUSA
     casella = int(((today-start).days-pausa)/2)
+    if cutoff:
+        if casella>=len(LvL):
+            return len(LvL)-1
     return casella
 
-def has_lega_ended():
+def has_lega_ended(cutoff = False):
     casella = get_casella()
     #print(casella)
     #print(len(LvL))
@@ -661,12 +664,7 @@ def poke_cell_gym(casella):
         return None
 
 async def poke_cell(cell):
-    start = STARTING_DATE
-    today = datetime.now().date()
-    #print(today, start)
-    offset = cell
-    pausa = EVENTUALE_PAUSA
-    casella = int(((today-start).days-pausa)/2) + offset
+    casella = get_casella()
     multiplier = 5 + 3 * int((casella) / NUM_CASELLE_PER_RIGA)
 
     if casella < 42:
@@ -808,11 +806,8 @@ def poke_evo_level(chat_id,pokemon):
     return lvl
 
 async def poke_cell_specific(route,cell,encounters):
-    start = STARTING_DATE
-    today = datetime.now().date()
-    offset = cell
-    pausa = EVENTUALE_PAUSA
-    casella = int(((today-start).days-pausa)/2) + offset
+    casella = get_casella()
+
     multiplier = 5 + 3 * int((casella) / NUM_CASELLE_PER_RIGA)
 
 
@@ -855,8 +850,6 @@ async def poke_trainer(chat_id,pokemons, is_capopalestra = False):
     with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
         priv_data = json.load(file)
     team = [[pokemon[0], await get_power(pokemon[0], pokemon[1])] for pokemon in priv_data[chat_id]["team"] if pokemon[0]]
-
-    casella = get_casella()
 
     offset = 0
 
