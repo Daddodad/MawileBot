@@ -45,7 +45,7 @@ from poke_lib import calculate_bonus_answer, random_pokemon, random_player, get_
 from poke_lib import add_new_player, poke_lega_single, poke_lega_all, poke_gym, poke_exist, poke_dex1, poke_dex2, poke_cell
 from poke_lib import add_route,check_route, poke_check_if_evo, poke_fight, poke_counter, has_a_team, poke_gym_test, poke_lega_team_team
 from poke_lib import automatic_card_reader, gym_types, gym_cell, poke_cell_gym, load_fonts,randomly_shiny, similar_pokemon_name
-from poke_lib import has_lega_ended
+from poke_lib import has_lega_ended, get_poke_bst
 
 # ----------------------------------------------------------------- GENERIC COMMANDS --------------------------------------------------------------------------------
 # Custom exception for unauthorized access
@@ -1145,13 +1145,14 @@ def get_cell_handlers():
 
 # ---------------------------------------------------------------------------- LEGA ----------------------------------------------------------------------------------
 
-READ_POKEMON, READ_TRAINER, COUNTER_READ_POKEMON, READ_LEGA_TEAM = range(4)
+READ_POKEMON, READ_TRAINER, COUNTER_READ_POKEMON, READ_LEGA_TEAM, READ_LEGA_INDIZIO = range(5)
 
 # Define callback data
 BEST_POKEMON = 'best_pokemon'
 ONE_VS_TEAM = 'one_vs_team'
 LEGA_COUNTERS = 'lega_counters'
 LEGA_TEAM_VS_TEAM = 'lega_team_vs_team'
+LEGA_INDIZIO = 'lega_indizio'
 CHANGE_MULT = "change_mult"
 REDO_LEGA_SINGLE = "redo_lega"
 MULT_PREFIX = "mult_"
@@ -1165,9 +1166,10 @@ async def lega_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except:
         pass
     keyboard = [
-        [InlineKeyboardButton("I Migliori Pokèmon", callback_data=BEST_POKEMON)],
-        [InlineKeyboardButton("Counters", callback_data=LEGA_COUNTERS)],
+        #[InlineKeyboardButton("I Migliori Pokèmon", callback_data=BEST_POKEMON)],
+        #[InlineKeyboardButton("Counters", callback_data=LEGA_COUNTERS)],
         #[InlineKeyboardButton("1 vs Team", callback_data=ONE_VS_TEAM)],
+        [InlineKeyboardButton("Team vs Indizio", callback_data=LEGA_INDIZIO)],
         [InlineKeyboardButton("Team vs Team", callback_data=LEGA_TEAM_VS_TEAM)]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -1202,6 +1204,14 @@ async def lega_button_callback(update: Update, context: ContextTypes.DEFAULT_TYP
         await query.edit_message_text(text)
         context.user_data.clear()
         return READ_LEGA_TEAM
+    elif query.data == LEGA_INDIZIO:
+        text = "Dimmi il Pokèmon e la sua potenza, come nell'esempio:\n\n"
+        rpoke = random_pokemon()
+        maxrpokepow = await get_poke_bst(rpoke)
+        text += f'\n{rpoke} {random.randint(1, maxrpokepow)}'
+        await query.edit_message_text(text)
+        context.user_data.clear()
+        return READ_LEGA_INDIZIO
 
 async def lega_single_get_trainer(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.user_data['enemy_trainer'] = update.message.text
@@ -1336,6 +1346,60 @@ async def lega_team_main(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         return ConversationHandler.END
     """
 
+async def lega_indizio_main(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+
+    context.user_data['counter_team'] = parse_pokemon_message(update.message.text)
+
+    for pokeee,_ in context.user_data['counter_team']:
+        if poke_exist(pokeee) == False:
+            await update.message.reply_text(f'Mh... Sei sicuro {pokeee} esista? Prova a ripetermelo..')
+            return READ_LEGA_INDIZIO
+        
+    for i, [pokeee,powww] in enumerate(context.user_data['counter_team']):
+        pokeee_bst = await get_poke_bst(pokeee)
+        approx = powww / pokeee_bst * 100
+
+        base = int(round(approx))
+        candidates = [lvl for lvl in [base - 1, base, base + 1] if 1 <= lvl <= 100]
+        valid_lvls = [
+            lvl for lvl in candidates
+            if round(lvl * pokeee_bst / 100) == powww
+        ]
+        if valid_lvls:
+            pokeee_lvl_int = min(valid_lvls, key=lambda x: abs(x - approx))
+        else:
+            # fallback (rare edge case)
+            pokeee_lvl_int = min(100, round(approx))
+
+        if powww > pokeee_bst:
+            await update.message.reply_text(
+                "⚠️ WARNING: Secondo i miei calcoli, questa potenza non è possibile per il pokemon indicato (Troppo alta!)... Arrotondo al massimo possibile."
+            )
+        elif (await get_power(pokeee, pokeee_lvl_int) != powww):
+            await update.message.reply_text(
+                "⚠️ WARNING: Secondo i miei calcoli, questa potenza non è possibile per il pokemon indicato... Arrotondo alla più vicina."
+            )
+        context.user_data['counter_team'][i] = [pokeee, pokeee_lvl_int]
+
+    await update.message.reply_text('Buona fortuna per lo scontro. E attendi il prossimo messaggio...')
+
+    #TEST PART
+    #print('OK', context.user_data['counter_team'])
+    chat_id = update.effective_chat.id
+
+    image_path = await poke_lega_team_team(str(chat_id), context.user_data['counter_team'])
+    
+    # Open the image file
+    cap = "Ecco il risultato del tuo team contro la squadra che mi hai inviato"
+    with open(image_path, 'rb') as image_file:
+        # Send a new message with the image
+        await context.bot.send_photo(
+            chat_id=chat_id,
+            photo=image_file,
+            caption=cap
+        )
+    return ConversationHandler.END
+
 async def show_command_lega_single(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.callback_query
     await query.answer()
@@ -1370,7 +1434,7 @@ async def lega_single_button_handler(update: Update, context: ContextTypes.DEFAU
 
 def get_lega_conversation_handler():
     return ConversationHandler(
-        entry_points=[CallbackQueryHandler(lega_button_callback, pattern=f"^{BEST_POKEMON}|{LEGA_COUNTERS}|{ONE_VS_TEAM}|{LEGA_TEAM_VS_TEAM}$")],
+        entry_points=[CallbackQueryHandler(lega_button_callback, pattern=f"^{BEST_POKEMON}|{LEGA_COUNTERS}|{ONE_VS_TEAM}|{LEGA_TEAM_VS_TEAM}|{LEGA_INDIZIO}$")],
         states={
             READ_TRAINER: [MessageHandler(filters.TEXT & ~filters.COMMAND, lega_single_get_trainer)],
             READ_POKEMON: [
@@ -1378,7 +1442,8 @@ def get_lega_conversation_handler():
                 CallbackQueryHandler(lega_single_button_handler),
             ],
             COUNTER_READ_POKEMON: [MessageHandler(filters.TEXT & ~filters.COMMAND, counter_main)],
-            READ_LEGA_TEAM: [MessageHandler(filters.TEXT & ~filters.COMMAND, lega_team_main)]
+            READ_LEGA_TEAM: [MessageHandler(filters.TEXT & ~filters.COMMAND, lega_team_main)],
+            READ_LEGA_INDIZIO: [MessageHandler(filters.TEXT & ~filters.COMMAND, lega_indizio_main)],
         },
         fallbacks=[
             CommandHandler("cancel", cancel),
