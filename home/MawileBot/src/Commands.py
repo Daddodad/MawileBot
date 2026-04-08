@@ -1159,7 +1159,7 @@ async def lega_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await id_check(update)
     await curse_player(update, context)
     chat_id=str(update.effective_chat.id)
-    if has_a_team(chatid):  
+    if has_a_team(chat_id):  
         try:
             print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /lega')
         except:
