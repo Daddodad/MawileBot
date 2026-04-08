@@ -76,7 +76,7 @@ TARGET_TIMES = [
     dtime(22, 30),
 ]
 
-THINK_TIME = 10 #420
+THINK_TIME = 420 #420
 
 async def scheduled_job(client):
 
