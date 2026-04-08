@@ -438,7 +438,7 @@ async def show_command_help(update: Update, context: ContextTypes.DEFAULT_TYPE) 
         text = "Il comando /start inizia la conversazione principale con Sableye\. ma se sei già qui non credo serva spiegartelo\."
     elif query.data == HELP_BONUS:
         text = "Il comando /bonus calcola i bonus nel combattimento tra due Pokémon\.\nQuando usi /bonus, ti verranno chiesti i Pokémon\.\n" \
-        f'Per esempio, rispondigli "{random_pokemon()} {random_pokemon()}" per sapere chi la spunterebbe\.' \
+        f'Per esempio, rispondigli "{random_pokemon(troll = False)} {random_pokemon(troll = False)}" per sapere chi la spunterebbe\.' \
         '\nIl moltiplicatore usato dipende dalla giornata, ma può essere cambiato seguendo le istruzioni\.\nE attento a non sbagliare i nomi\.'
     elif query.data == HELP_LEGA:
         text = "Il comando /lega da varie possibilità utili per combattimenti in endgame\." \
@@ -450,7 +450,7 @@ async def show_command_help(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     elif query.data == HELP_TEAM:
         text = "Il comando /team ti permette di creare e modificare a tuo piacimento la tua squadra, così da poterla testare contro palestre, selvatici, allenatori e altri giocatori\."
     elif query.data == HELP_DEX:
-        r = random_pokemon()
+        r = random_pokemon(troll = False)
         text =f'La sintassi del comando /dex è, per esempio, "/dex {r}"'
     elif query.data == HELP_FIGHT:
         text = "Il comando /fight ti permette di testare la tua squadra contro le prossime ostilità\." \
@@ -544,10 +544,7 @@ async def gym(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await update.message.reply_text("Scegli che palestra affrontare.", reply_markup=reply_markup)
 
     else:
-        if random.random()>0.05:
-            await update.message.reply_text("Non hai un team... come pensi di battere una palestra!")
-        else:
-            await update.message.reply_text("Che cazzo mi chiedi la palestra se non so che Pokémon hai.")
+        await update.message.reply_text("Non hai un team... come pensi di battere una palestra!")
 
 async def gym_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     query = update.callback_query
@@ -1161,19 +1158,23 @@ CHANGE_POKEMON = "change_pokemon"
 async def lega_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await id_check(update)
     await curse_player(update, context)
-    try:
-        print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /lega')
-    except:
-        pass
-    keyboard = [
-        #[InlineKeyboardButton("I Migliori Pokèmon", callback_data=BEST_POKEMON)],
-        #[InlineKeyboardButton("Counters", callback_data=LEGA_COUNTERS)],
-        #[InlineKeyboardButton("1 vs Team", callback_data=ONE_VS_TEAM)],
-        [InlineKeyboardButton("Team vs Indizio", callback_data=LEGA_INDIZIO)],
-        [InlineKeyboardButton("Team vs Team", callback_data=LEGA_TEAM_VS_TEAM)]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text("Scegli cosa calcolare:", reply_markup=reply_markup)
+    chat_id=str(update.effective_chat.id)
+    if has_a_team(chatid):  
+        try:
+            print(update.effective_chat.username,' (',update.effective_chat.id,',',update.effective_user.first_name,') called /lega')
+        except:
+            pass
+        keyboard = [
+            #[InlineKeyboardButton("I Migliori Pokèmon", callback_data=BEST_POKEMON)],
+            #[InlineKeyboardButton("Counters", callback_data=LEGA_COUNTERS)],
+            #[InlineKeyboardButton("1 vs Team", callback_data=ONE_VS_TEAM)],
+            [InlineKeyboardButton("Team vs Indizio", callback_data=LEGA_INDIZIO)],
+            [InlineKeyboardButton("Team vs Team", callback_data=LEGA_TEAM_VS_TEAM)]
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        await update.message.reply_text("Scegli cosa calcolare:", reply_markup=reply_markup)
+    else:
+        await update.message.reply_text("Non hai un team... come sei arrivato alla lega!?!")
 
 async def lega_button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
@@ -1200,13 +1201,13 @@ async def lega_button_callback(update: Update, context: ContextTypes.DEFAULT_TYP
     elif query.data == LEGA_TEAM_VS_TEAM:
         text = 'Dimmi una lista di pokemon (coi livelli). La struttura deve essere come nel seguente esempio:\n'
         for i in range(random.randint(3, 9)):
-            text += f'\n{random_pokemon()} {random.randint(1, 101)}'
+            text += f'\n{random_pokemon(troll = True)} {random.randint(1, 101)}'
         await query.edit_message_text(text)
         context.user_data.clear()
         return READ_LEGA_TEAM
     elif query.data == LEGA_INDIZIO:
         text = "Dimmi il Pokèmon e la sua potenza, come nell'esempio:\n\n"
-        rpoke = random_pokemon()
+        rpoke = random_pokemon(troll = True)
         maxrpokepow = await get_poke_bst(rpoke)
         text += f'\n{rpoke} {random.randint(1, maxrpokepow)}'
         await query.edit_message_text(text)

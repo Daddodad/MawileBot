@@ -125,7 +125,10 @@ async def similar_pokemon_name(pokemon_probable_name):
 
     return await most_similar(pokemon_probable_name.lower(), choices)
 
-def random_pokemon():
+def random_pokemon(troll = False):
+    if troll:
+        if random.random() > 0.99:
+            return random.choice(["Totti", "Batistuta" , "Pirlo", "Nicolussi-Caviglia"])
     r = int(random.randrange(1025))+1
     return poke.get(dex = r).name.capitalize()
 
