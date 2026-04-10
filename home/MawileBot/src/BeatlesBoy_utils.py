@@ -33,7 +33,7 @@ tipi_to_types = {
 
 async def find_evo_at_level_x(pokemon, level_x):
 
-    pokemon = await similar_pokemon_name(pokemon.lower())
+    pokemon = await similar_pokemon_name(pokemon.lower(), r = False)
     pokemon_x = pokemon.lower()
 
     with open(ENV_PATH+f"/even_evo_file.json", 'r') as ef:
@@ -73,7 +73,7 @@ async def pokemon_utility(pokemon,lvl):
     with open(ENV_PATH+f"/even_evo_file.json", 'r') as ef:
         evo_dict = json.load(ef)  
         
-    pokemon = await similar_pokemon_name(pokemon.lower())
+    pokemon = await similar_pokemon_name(pokemon.lower(), r = False)
     max_bst = await get_poke_bst(await find_evo_at_level_x(pokemon, 100))
 
     print(f"BST di {await find_evo_at_level_x(pokemon, 100)} a livello 100: {max_bst}")
@@ -143,7 +143,7 @@ async def filter_team(team, remove_100=False, nilb = False):
         utilities = []
         lvl_100 = []
         for index, (poke, lvl) in enumerate(team):
-            #poke = await similar_pokemon_name(poke.lower()) #Sarchiapone
+            #poke = await similar_pokemon_name(poke.lower() , r = False) #Sarchiapone
             u = await pokemon_utility(poke,lvl)
             if remove_100 and lvl == 100:
                 lvl_100.append((poke, lvl, u, await get_power(poke, lvl), index+1))
@@ -201,7 +201,7 @@ async def extract_pokemon_and_pl(text):
 
     # print(emojis[0])
     # print(emojis[1] if len(emojis)>1 else None)
-    pokemon = await similar_pokemon_name(pokemon.lower())
+    pokemon = await similar_pokemon_name(pokemon.lower(), r = False)
     pokemon = await check_alt_forms(pokemon,
                                     EMOJI_TO_TYPE.get(emojis[0],None),
                                     EMOJI_TO_TYPE.get(emojis[1],None) if len(emojis) >1 else None
@@ -246,7 +246,7 @@ async def extract_pokemon_and_pl_lega(text):
         if ord(ch) > 127: # Emoji e simboli speciali
             emojis.append(ch)
 
-    pokemon_cleaned = await similar_pokemon_name(pokemon_final_name)
+    pokemon_cleaned = await similar_pokemon_name(pokemon_final_name, r = False)
     
     type1 = EMOJI_TO_TYPE.get(emojis[0], None) if len(emojis) > 0 else None
     type2 = EMOJI_TO_TYPE.get(emojis[1], None) if len(emojis) > 1 else None
@@ -318,7 +318,7 @@ async def process_pokemon_side(side_text):
     type1 = EMOJI_TO_TYPE.get(emojis[0]) if len(emojis) > 0 else None
     type2 = EMOJI_TO_TYPE.get(emojis[1]) if len(emojis) > 1 else None
 
-    pokemon_cleaned = await similar_pokemon_name(p_name)
+    pokemon_cleaned = await similar_pokemon_name(p_name, r = False)
     pokemon_final = await check_alt_forms(pokemon_cleaned, type1, type2)
     
     return pokemon_final
@@ -444,7 +444,7 @@ async def read_pokemons_from_trainer(text):
 
     for r in result:
         print(r)
-        r[0] = await similar_pokemon_name(r[0].lower())
+        r[0] = await similar_pokemon_name(r[0].lower(), r = False)
         print(r)
         r[0] = await check_alt_forms(r[0],r[1],r[2])
 
@@ -567,7 +567,7 @@ async def process_and_reply(event, client, media_list, pokemon_vectors):
 
 async def clean_pokemon_name(p):
     p = p.replace("shiny","")
-    p = await similar_pokemon_name(p)
+    p = await similar_pokemon_name(p, r = False)
     return p
 
 async def match_vector(vector, pokemon_vectors):

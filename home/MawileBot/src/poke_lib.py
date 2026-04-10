@@ -119,11 +119,7 @@ def poke_exist(pokea):
         return False
     return False
 
-async def similar_pokemon_name(pokemon_probable_name):
-    with open(ENV_PATH+'/pokemon_list.json', 'r', encoding="utf-8") as f:
-        choices = json.load(f)
 
-    return await most_similar(pokemon_probable_name.lower(), choices)
 
 def random_pokemon(troll = False):
     if troll:
@@ -1745,6 +1741,12 @@ most_similar_cache = {  'morpeko': ['morpeko-full-belly','morpeko-hangry'],
                         "hooh" : "ho-oh",
                         "ho oh" : "ho-oh",}
 
+async def similar_pokemon_name(pokemon_probable_name, r = True):
+    with open(ENV_PATH+'/pokemon_list.json', 'r', encoding="utf-8") as f:
+        choices = json.load(f)
+
+    return await most_similar(pokemon_probable_name.lower(), choices, r)
+
 async def most_similar(query, choices, r = True):
     query_norm = query.lower().strip().replace("\ufe0f", "")
     query = query_norm
@@ -1859,7 +1861,7 @@ async def automatic_card_reader(image, only_name = False):
                         errors.append('00')
                 else:
 
-                    pokemon_name = await similar_pokemon_name(pokemon_probable_name)
+                    pokemon_name = await similar_pokemon_name(pokemon_probable_name, r = False)
                     pokemon_name = await check_alt_forms(pokemon_name.lower(),*typing)
 
                     if round((await get_poke_bst(pokemon_name))*int(pokemon_probable_level)/100) != int(pokemon_probable_power):
