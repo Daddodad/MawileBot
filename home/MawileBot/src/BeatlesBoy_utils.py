@@ -589,7 +589,7 @@ async def match_vector(vector, pokemon_vectors):
     return exact_match if exact_match else best_name, best_dist
 
 #### LEGA UTILS ####
-def  reset_lega_info(begin = True):
+def reset_lega_info(begin = True):
     json_path = os.path.join(ENV_PATH, "BeatlesBoy_info.json")
     print("Dumping JSON to (reset lega):", json_path)
     with open(json_path, "r", encoding="utf-8") as f:

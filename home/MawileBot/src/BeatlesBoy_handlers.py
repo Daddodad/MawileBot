@@ -301,7 +301,7 @@ async def reply_to_text(event, text, client):
     elif "Schieramento ricevuto! Attendi che il tuo avversario faccia lo stesso per visualizzare i risultati" in text:
         pass
     elif "Giornata di gioco conclusa!" in text:
-        pass
+        delete_recent_messages(event, client, limit = 5)
     elif "Allenatore, benvenuto nella prossima zona!" in text:
         pass
     elif "VITTORIE:" in text:  # Ignore pvp results
@@ -988,3 +988,18 @@ async def compile_answer_lega(event, text, client, vittoria):
             await dump_x_in_json(False, "win_2")
 
     await dump_x_in_json(fase_lega+1, "fase_lega")
+
+
+async def delete_recent_messages(event, client, limit = 5):
+    messages = await client.get_messages(
+        event.chat_id,
+        min_id=event.id,
+    )
+
+    to_delete = [
+        msg.id for msg in messages
+        if not (msg.text and "Ecco un resoconto" in msg.text)
+    ]
+
+    if to_delete:
+        await client.delete_messages(event.chat_id, to_delete)
