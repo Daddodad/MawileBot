@@ -309,8 +309,7 @@ async def get_poke_bst(pokemon):
         return 465 + bst_bonus
     if pokemon.lower() in ["fearow"]:
         return 462 + bst_bonus
-    if pokemon.lower() in ["persian", 
-                           #"persian-alola", 
+    if pokemon.lower() in ["persian", "persian-alola", 
                            "qwilfish", 
                            #"qwilfish-hisui",
                            "pelipper", "kecleon", "rotom", "minior",
