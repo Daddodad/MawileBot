@@ -50,7 +50,8 @@ from BeatlesBoy_utils import (
     poke_cell,
     process_and_reply,
     calculate_best_strategy,
-    reset_lega_info
+    reset_lega_info,
+    extract_all_matches_pvp
 )
 
 # if os.path.exists('/home/SableyeBot/src'):
@@ -161,6 +162,8 @@ async def scheduled_job(client):
                 pass
             elif "NON HO FINITO DI LAVORARE!" in last_message_text:
                 pass
+            elif "Schieramento ricevuto!" in last_message_text:
+                pass
             else:
                 # try: 
                 #     answered = await reply_to_text(last_message, last_message_text,client)
@@ -186,7 +189,13 @@ def register_handlers(client):
         # ---- TEXT HANDLING ----
         if event.text:
             try:
-                await reply_to_text(event, event.text, client)
+                outcome, clean_up = await reply_to_text(event, event.text, client)
+                if outcome:
+                    await dump_x_in_json((await load_x_from_json('clean_up'))+clean_up, "clean_up")
+                    # if clean_up>0:
+                    #     await delete_messages_after(event, client, limit = clean_up, exclude = "Ecco il resoconto")
+                    # elif clean_up<0:
+                    #     await delete_messages_before(event, client, limit = clean_up, exclude = "Ecco il resoconto")
             except Exception as e:
                 await event.reply(f"[Handlers] ❌ ERROR in message_handler: {e}")
 
@@ -195,33 +204,48 @@ async def reply_to_text(event, text, client):
     await asyncio.sleep(1)  # wait for 10 seconds before replying
     if "non è possibile iscriversi" in text:
         await event.reply("Cos'è, ti prendi gioco di me? 😠")
-        return True
+        return True, 0
     elif "Allenatore, hai incontrato" in text:
         da_schierare = await replies_to_wild_pokemon(event, text, client)
         await event.reply(str(da_schierare))
-        return True
+        return True, 5
     elif "Allenatore, sei in una zona potenziament" in text:
         da_allenare = await replies_to_potenziamento(event, text, client)
         await event.reply(str(da_allenare))
-        return True
+        return True, 6 
     elif "Buongiorno Allenatore, e benvenuto in questo viaggio nel mondo dei Pokèmon!" in text:
-        await event.reply('0')
-        return True
+        await event.reply('0') 
+        return True, 3
     elif "Ottimo, hai completato tutte le sfide odierne!" in text:
-        await event.reply("Finito. Ora posso riposare! 😴💤")
-        return True
+        await delete_messages_before(event, client, limit = (await load_x_from_json("clean_up")), exclude = "Finito. Ora posso riposare!")
+        catt = await load_x_from_json("catture")
+        batt = await load_x_from_json("battaglie")
+        message = "Finito. Ora posso riposare! 😴💤.\n"
+        if catt != []:
+            message += "\nHo catturato:\n"+"".join(catt)
+        if batt != []:
+            message += "\nNelle battaglie, in ordine:\n"+"".join(batt)
+        await event.reply(message)
+        await dump_x_in_json([], "catture")
+        await dump_x_in_json([], "battaglie")
+        return True, 2
     elif "Allenatore, sfiderai ⚔ un altro Giocatore;" in text:
         da_schierare = await replies_to_pvp(event, text, client)
         await event.reply(str(da_schierare))
-        return True
+        await dump_x_in_json(len(str(da_schierare)), "num_enemies")
+        return True, 5
     elif "vuoi aggiungerlo in squadra?" in text:
-        dopo_cattura = await replies_to_vittoria(event,text,client)
+        (dopo_cattura, name) = (await replies_to_vittoria(event,text,client))
         await event.reply(str(dopo_cattura))
-        return True       
+        if str(dopo_cattura)!="0":
+            l = (await load_x_from_json("catture"))
+            l.append(f"\t{name}\n")
+            await dump_x_in_json(l,"catture")
+        return True, 5      
     elif "Allenatore, dovrai affrontare" in text:
         da_schierare = await replies_to_trainer(event, text, client, is_capopalestra = False)
         await event.reply(str(da_schierare))
-        return True
+        return True, 5 + len(str(da_schierare))
     elif "Allenatore, ora dovrai affrontare il Capopalestra" in text:
         images = []
         if event.grouped_id:  
@@ -240,7 +264,7 @@ async def reply_to_text(event, text, client):
                 images.append(event.media)
         da_schierare = await replies_to_trainer(event, text, client, is_capopalestra = True, images = images)
         await event.reply(str(da_schierare))
-        return True
+        return True, 12
     
 
     #### LEGA HANDLERS ####
@@ -254,11 +278,13 @@ async def reply_to_text(event, text, client):
         else:
             da_schierare = await lega_turn_1_no_hint(event, text, client)
             await event.reply(str(da_schierare))
-    elif "Purtroppo, con le vittorie raggiunte dal tuo avversario, sei stato sconfitto!" in text:
+        return True, 0
+    elif "Purtroppo, con le vittorie raggiunte dal tuo avversario, sei stato sconfitto" in text:
         reset_lega_info(begin=False)
-    elif "Congratulazioni, grazie al tuo numero di match vinti e singoli Pokemon battuti hai vinto e passato il turno!" in text:
+        return True, 0
+    elif "Congratulazioni, grazie al tuo numero di match vinti e singoli Pokemon battuti hai vinto" in text:
         reset_lega_info(begin=False)
-
+        return True, 0
     elif "Il tuo avversario ha schierato, puoi chiedere l'indizio!" in text:
         fase_lega = await load_x_from_json("fase_lega")
         if fase_lega == 1:
@@ -268,6 +294,7 @@ async def reply_to_text(event, text, client):
         if fase_lega == 3:
             indizio = await lega_hint_ask()
         await event.reply(str(indizio))
+        return True, 0
     elif "Ecco il Pokemon schierato ne" in text:
         fase_lega = await load_x_from_json("fase_lega")
         if fase_lega == 1:
@@ -277,6 +304,7 @@ async def reply_to_text(event, text, client):
         if fase_lega == 3:
             da_schierare = await lega_turn_3_hint_reply(event, text, client)
         await event.reply(str(da_schierare))
+        return True, 0
     elif "Bene, via al prossimo match!" in text:
         if "Aspetta che il tuo avversario schieri per poter chiedere l'indizio!" in text:
             pass
@@ -287,36 +315,52 @@ async def reply_to_text(event, text, client):
             if fase_lega == 3:
                 da_schierare = await lega_turn_3_no_hint(event, text, client)
             await event.reply(str(da_schierare))
+        return True, 0
     elif "Match vinto!" in text:
         await compile_answer_lega(event, text, client, vittoria=True)
+        return True, 0
     elif "Match perso!" in text:
         await compile_answer_lega(event, text, client, vittoria=False)
-
+        return True, 0
 
     #### LEGA HANDLERS ####
 
-
-    elif " è salito al livello " in text:
-        pass
     elif "Schieramento ricevuto! Attendi che il tuo avversario faccia lo stesso per visualizzare i risultati" in text:
-        pass
+        await delete_messages_before(event, client, limit = (await load_x_from_json("clean_up")), exclude = "Finito. Ora posso riposare!")
+        await dump_x_in_json(0, "clean_up")
+        return True, ((await load_x_from_json("num_enemies"))+1)
     elif "Giornata di gioco conclusa!" in text:
-        delete_recent_messages(event, client, limit = 5)
+        return True, 1
     elif "Allenatore, benvenuto nella prossima zona!" in text:
-        pass
-    elif "VITTORIE:" in text:  # Ignore pvp results
-        pass
-    elif "SCONFITTE:" in text:  # Ignore pvp results
-        pass
-    elif "PAREGGI:" in text:  # Ignore pvp results
-        pass
+        return True, 1
+    elif "VITTORIE:"  in text or "SCONFITTE:"  in text or "PAREGGI:"  in text:
+        (
+        vittorie_sx,  vittorie_dx,
+        sconfitte_sx, sconfitte_dx,
+        pareggi_sx,   pareggi_dx,
+        ) =  await extract_all_matches_pvp(text)
+        l = await load_x_from_json("battaglie")
+        for p in vittorie_dx:
+            l.append(f"Ho sconfitto un {p}!\n")
+        for p in sconfitte_dx:
+            l.append(f"Ho perso contro un {p}...\n")
+        for p in pareggi_dx:
+            l.append(f"Ho pareggiato contro un {p}?\n")
+        l.append('\n')
+        await dump_x_in_json(l,"battaglie")
+        return True, 0
+    
+    elif " è salito al livello " in text:
+        return True, 0
     elif "Ecco la card del tuo avversario!" in text:
-        pass
+        return True, 0
     elif "Ecco la tua card aggiornata!" in text:
-        pass
+        return True, 0
+    elif "Finito. Ora posso riposare!" in text:
+        return True, 0
     else: 
         await event.reply("❓Non ho capito❓")
-    return False
+    return False, 0
     
 async def load_team_from_json(event, client):
     json_path = os.path.join(ENV_PATH, "BeatlesBoy_info.json")
@@ -621,29 +665,29 @@ async def replies_to_vittoria(event, text, client):
 
         if name.lower() == 'sableye' and 'sableye' not in [p[0] for p in team]:
             await event.reply(f"Sono io! via {less_useful[0].capitalize()}, non mi servi più!")
-            return await drop_the_useless(useful,useless,lvl_100)
+            return await drop_the_useless(useful,useless,lvl_100), name
     
         if less_useful[2]<= pokemon_u: # First check utility
             to_be_dropped = await drop_the_useless(useful,useless,lvl_100) 
             catch, livelli_rimanenti = (await check_if_training_pokemon(less_useful, (name, level)))
             if catch:
                 await event.reply(f"È chiaramente più utile di {less_useful[0].capitalize()}, lo prendo!")
-                return to_be_dropped        
+                return to_be_dropped  , name      
             else: 
                 await event.reply(f"L'utilità è maggiore, ma non recupera {less_useful[0].capitalize()} in {livelli_rimanenti} livelli (livelli rimanenti stimati / 6).")
-                return to_return
+                return to_return, name
 
     # Non ho nemmeno 6 pokemon...
     if count<6:
         if random.random() >0.5:
             await event.reply(f"Non ho nemmeno 6 pokémon... ma non mi sembra così utile questo...")
-            return to_return
+            return to_return, name
         else:
             await event.reply('Non ho nemmeno 6 pokémon... e lui mi piace un sacco!')
             dopo_cattura = await drop_the_useless(useful,useless,lvl_100)
-        return dopo_cattura 
+        return dopo_cattura , name
     
-    return to_return
+    return to_return, name
 
 async def replies_to_trainer(event, text, client, is_capopalestra, images = None):
     _, enemy_powers, capopalestra_powers, multiplier, _ = await poke_cell(0)
@@ -990,16 +1034,57 @@ async def compile_answer_lega(event, text, client, vittoria):
     await dump_x_in_json(fase_lega+1, "fase_lega")
 
 
-async def delete_recent_messages(event, client, limit = 5):
+async def delete_messages_before(event, client, limit=5, exclude=""):
+    print(f"[delete] Fetching last {limit} messages BEFORE id={event.id} in chat {event.chat_id}...")
+
     messages = await client.get_messages(
         event.chat_id,
-        min_id=event.id,
+        max_id=event.id,  # messages BEFORE the event
+        limit=limit
     )
 
-    to_delete = [
-        msg.id for msg in messages
-        if not (msg.text and "Ecco un resoconto" in msg.text)
-    ]
+    #print(f"[delete] Found {len(messages)} messages")
+
+    to_delete = []
+    for msg in messages:
+        if exclude and msg.text and exclude in msg.text:
+            #print(f"[delete] Skipping protected message id={msg.id}: '{msg.text[:50]}'")
+            continue
+        #print(f"[delete] Marking for deletion id={msg.id}: '{str(msg.text)[:50]}'")
+        to_delete.append(msg.id)
+
+    #print(f"[delete] Deleting {len(to_delete)} messages: {to_delete}")
 
     if to_delete:
         await client.delete_messages(event.chat_id, to_delete)
+        #print("[delete] Done.")
+    else:
+        print("[delete] Nothing to delete.")
+
+
+async def delete_messages_after(event, client, limit=5, exclude=""):
+    #print(f"[delete] Fetching last {limit} messages AFTER id={event.id} in chat {event.chat_id}...")
+
+    messages = await client.get_messages(
+        event.chat_id,
+        min_id=event.id,  # messages AFTER the event
+        limit=limit
+    )
+
+    #print(f"[delete] Found {len(messages)} messages")
+
+    to_delete = []
+    for msg in messages:
+        if exclude and msg.text and exclude in msg.text:
+            #print(f"[delete] Skipping protected message id={msg.id}: '{msg.text[:50]}'")
+            continue
+        #print(f"[delete] Marking for deletion id={msg.id}: '{str(msg.text)[:50]}'")
+        to_delete.append(msg.id)
+
+    #print(f"[delete] Deleting {len(to_delete)} messages: {to_delete}")
+
+    if to_delete:
+        await client.delete_messages(event.chat_id, to_delete)
+        #print("[delete] Done.")
+    else:
+        print("[delete] Nothing to delete.")

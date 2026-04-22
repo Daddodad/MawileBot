@@ -10,11 +10,11 @@
     ],
     [
       "regidrago",
-      63
+      64
     ],
     [
       "krookodile",
-      94
+      100
     ],
     [
       "slowbro",
@@ -22,126 +22,29 @@
     ],
     [
       "sableye",
-      26
+      28
     ],
     [
       "scovillain",
-      63
+      64
     ],
     [
       "keldeo-resolute",
-      67
+      71
     ],
     [
       "cosmoem",
       47
     ]
   ],
-  "fase_lega": 1,
+  "fase_lega": 0,
   "indizio_chiesto": 0,
   "win_1": false,
   "win_2": false,
-  "enemy_team_lega": [
-    [
-      "cinderace",
-      0
-    ],
-    [
-      "hatterene",
-      0
-    ],
-    [
-      "grafaiai",
-      0
-    ],
-    [
-      "kyogre",
-      0
-    ],
-    [
-      "kingambit",
-      0
-    ],
-    [
-      "latios",
-      0
-    ],
-    [
-      "ferrothorn",
-      0
-    ],
-    [
-      "seismitoad",
-      0
-    ],
-    [
-      "glastrier",
-      0
-    ]
-  ],
-  "team_lega": [
-    [
-      "samurott-hisui",
-      100,
-      9.81,
-      528,
-      1
-    ],
-    [
-      "krookodile",
-      94,
-      8.19,
-      488,
-      4
-    ],
-    [
-      "keldeo-resolute",
-      67,
-      7.56,
-      389,
-      8
-    ],
-    [
-      "pelipper",
-      100,
-      6.77,
-      440,
-      2
-    ],
-    [
-      "regidrago",
-      63,
-      6.02,
-      353,
-      3
-    ],
-    [
-      "scovillain",
-      63,
-      5.26,
-      306,
-      7
-    ],
-    [
-      "slowbro",
-      56,
-      4.42,
-      274,
-      5
-    ],
-    [
-      "cosmoem",
-      47,
-      2.71,
-      188,
-      9
-    ],
-    [
-      "sableye",
-      26,
-      1.92,
-      99,
-      6
-    ]
-  ]
+  "enemy_team_lega": [],
+  "team_lega": [],
+  "clean_up": 26,
+  "num_enemies": 4,
+  "catture": [],
+  "battaglie": []
 }

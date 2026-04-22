@@ -282,6 +282,51 @@ async def extract_all_matches_lega(text):
             
     return colonna_sinistra, colonna_destra
 
+async def extract_all_matches_pvp(text):
+    vittorie_sx, vittorie_dx = [], []
+    sconfitte_sx, sconfitte_dx = [], []
+    pareggi_sx, pareggi_dx = [], []
+
+    section_map = {
+        "VITTORIE:":   (vittorie_sx,  vittorie_dx),
+        "SCONFITTE:":  (sconfitte_sx, sconfitte_dx),
+        "PAREGGI:":    (pareggi_sx,   pareggi_dx),
+    }
+    current_left, current_right = None, None
+
+    for line in text.splitlines():
+        line = line.strip()
+
+        # Detect section headers
+        upper = line.upper()
+        if upper in section_map:
+            current_left, current_right = section_map[upper]
+            continue
+
+        # Skip match lines if no section has been declared yet
+        if current_left is None:
+            continue
+
+        if " vs " in line:
+            parts = line.split(" vs ")
+            if len(parts) < 2:
+                continue
+
+            left_raw  = parts[0].lstrip("- ").strip()
+            right_raw = parts[1].strip()
+
+            info_sx = await process_pokemon_side(left_raw)
+            info_dx = await process_pokemon_side(right_raw)
+
+            current_left.append(info_sx)
+            current_right.append(info_dx)
+
+    return (
+        vittorie_sx,  vittorie_dx,
+        sconfitte_sx, sconfitte_dx,
+        pareggi_sx,   pareggi_dx,
+    )
+
 async def process_pokemon_side(side_text):
     side_text = side_text.lstrip("- ").strip()
     
