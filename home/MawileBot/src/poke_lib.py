@@ -39,11 +39,11 @@ from datetime import datetime, date
 # NUM_CASELLE_PER_RIGA = 7
 
 LvL = [ 5,  6,  7,  8,  10, 12,
-        12, 14, 15, 17, 18, 20,
-        20, 22, 24, 25, 27, 28,
+        12, 13, 15, 17, 18, 20,
+        20, 21, 23, 25, 26, 28,
         29, 31, 33, 36, 39, 41,
-        41, 44, 46, 49, 51, 54,
-        54, 57, 59, 62, 65, 67]
+        42, 44, 47, 49, 51, 54,
+        55, 57, 60, 63, 65, 67]
 
 coeff = [3, 3.5, 4, 4.5, 5, 5.5]
 NUM_CASELLE_PER_RIGA = 6
@@ -52,7 +52,7 @@ NUM_CASELLE_PER_RIGA = 6
 #################################   VARIABILI GLOBALI DA CAMBIARE OGNI LEGA ##################
 ##############################################################################################
 
-STARTING_DATE = date(2026,1,24)  # Data di inizio della lega, da cambiare ogni lega (metti il giorno prima, la prima casella dura solo 1)
+STARTING_DATE = date(2026,4,21)  # Data di inizio della lega, da cambiare ogni lega (metti il giorno prima, la prima casella dura solo 1)
 
 EVENTUALE_PAUSA = 1  # Giorni di pausa in una lega (mettili quando inizia la pausa)
 
@@ -278,9 +278,9 @@ async def get_poke_bst(pokemon):
     if pokemon.lower() in ["hariyama", "vespiquen", "garbodor", "trevenant"]:
         return 479 + bst_bonus
     if pokemon.lower() in ["swanna"]:
-        return 478 + bst_bonus  
+        return 478 + bst_bonus
     if pokemon.lower() in ["galvantula", "furfrou"]:
-        return 477 + bst_bonus    
+        return 477 + bst_bonus
     if pokemon.lower() in ["stunfisk"]:
         return 476 + bst_bonus
     if pokemon.lower() in ["xatu", "torkoal", "grumpig", "cinccino", "alomomola", "klefki",
@@ -309,8 +309,8 @@ async def get_poke_bst(pokemon):
         return 465 + bst_bonus
     if pokemon.lower() in ["fearow"]:
         return 462 + bst_bonus
-    if pokemon.lower() in ["persian", "persian-alola", 
-                           "qwilfish", 
+    if pokemon.lower() in ["persian", "persian-alola",
+                           "qwilfish",
                            #"qwilfish-hisui",
                            "pelipper", "kecleon", "rotom", "minior",
                         "perrserker", "morpeko", "wigglytuff", "togedemaru", "pincurchin",
@@ -328,14 +328,14 @@ async def get_poke_bst(pokemon):
     if pokemon.lower() in ["chatot", "vivillon"]:
         return 451 + bst_bonus
     if pokemon.lower() in ["sudowoodo", "corsola",
-                            #"corsola-galar", 
+                            #"corsola-galar",
                             "medicham", "bibarel", "pyukumuku", "parasect",
                        "wobbuffett", "plusle", "minun", "spidops", "ariados", "delcatty",
                        "butterfree", "beedrill", "beautifly", "ledian", "dustox"]:
         return 450 + bst_bonus
     if pokemon.lower() in ["sableye", "mawile", "farfetchd", "unown", "delibird", "luvdisc"]:
         return 445 + bst_bonus
-    
+
 
     if pokemon.lower() == "archeops":
         return 495 + bst_bonus
@@ -1877,7 +1877,7 @@ async def automatic_card_reader(image, only_name = False):
                 pokemon_probable_level = compare_with_saved_data_json(splits)
                 pokemon_probable_level.replace('O','0')
                 pokemon_probable_level.replace('o','0')
-                
+
                 box_width = 120
                 box_height = 47
                 left = 760 + col * 345
