@@ -333,6 +333,8 @@ async def reply_to_text(event, text, client):
         return True, 1
     elif "Allenatore, benvenuto nella prossima zona!" in text:
         return True, 1
+    elif "Allenatore, benvenuto nella prima zona!" in text:
+        return True, 1
     elif "VITTORIE:"  in text or "SCONFITTE:"  in text or "PAREGGI:"  in text:
         (
         vittorie_sx,  vittorie_dx,
@@ -357,6 +359,10 @@ async def reply_to_text(event, text, client):
     elif "Ecco la tua card aggiornata!" in text:
         return True, 0
     elif "Finito. Ora posso riposare!" in text:
+        return True, 0
+    elif "Complimenti! Hai catturato" in text:
+        return True, 0
+    elif "Avendogli dimostrato la tua forza" in text:
         return True, 0
     else: 
         await event.reply("❓Non ho capito❓")
