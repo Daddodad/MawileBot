@@ -270,6 +270,73 @@ async def get_poke_bst(pokemon):
         bst_bonus = 50
     bst = sum(poke.get(name=pokemon).base_stats)
 
+    if pokemon.lower() in ["pidgeot", "skuntank", "crabominable", "veluza", "dachsbun",
+                           "oricorio-baile", "oricorio-pom-pom", "oricorio-pau", "oricorio-sensu",
+                           "mimikyu", "dewgong", "kingler", "manectric", "cacturne", "gastrodon", "sawsbuck", "bruxish",
+                           "cramorant", "frosmoth", "indeedee-male", "indeedee-female", "tatsugiri-curly", "tatsugiri-droopy", "tatsugiri-stretchy"]:
+        return 480 + bst_bonus
+    if pokemon.lower() in ["hariyama", "vespiquen", "garbodor", "trevenant"]:
+        return 479 + bst_bonus
+    if pokemon.lower() in ["swanna"]:
+        return 478 + bst_bonus  
+    if pokemon.lower() in ["galvantula", "furfrou"]:
+        return 477 + bst_bonus    
+    if pokemon.lower() in ["stunfisk"]:
+        return 476 + bst_bonus
+    if pokemon.lower() in ["xatu", "torkoal", "grumpig", "cinccino", "alomomola", "klefki",
+                           "falinks", "stonjourner", "eiscue", "maushold", "rabsca",
+                           "whiscash", "crawdaunt", "swalot", "meowstic-male", "meowstic-female", "forretress", "skarmory",
+                           "stantler", "absol", "throh", "sawk"]:
+        return 475 + bst_bonus
+    if pokemon.lower() in ["amoonguss", "ribombee"]:
+        return 474 + bst_bonus
+    if pokemon.lower() in ["aromatisse"]:
+        return 472 + bst_bonus
+    if pokemon.lower() in ["maractus"]:
+        return 471 + bst_bonus
+    if pokemon.lower() in ["mr-mime", "lanturn", "jumpluff", "breloom", "sharpedo", "camerupt",
+                           "lunatone", "solrock", "tropius", "lumineon",   "basculin-red-striped",  "basculin-white-striped",  "basculin-blue-striped", "greedent",
+                           "eldegoss", "zangoose", "seviper", "ninjask", "primeape", "hitmonlee",
+                           "hitmonchan", "jynx", "hitmontop", "swellow", "banette", "chimecho",
+                           "thievul"]:
+        return 470 + bst_bonus
+    if pokemon.lower() in ["masquerain", "carnivine", "araquanid"]:
+        return 469 + bst_bonus
+    if pokemon.lower() in ["noctowl", "purugly"]:
+        return 467 + bst_bonus
+    if pokemon.lower() in ["sandslash", "venomoth", "seaking", "granbull", "cherrim", "lokix",
+                           "klawf", "arbok", "liepard", "audino"]:
+        return 465 + bst_bonus
+    if pokemon.lower() in ["fearow"]:
+        return 462 + bst_bonus
+    if pokemon.lower() in ["persian", "persian-alola", 
+                           "qwilfish", 
+                           #"qwilfish-hisui",
+                           "pelipper", "kecleon", "rotom", "minior",
+                        "perrserker", "morpeko", "wigglytuff", "togedemaru", "pincurchin",
+                        "dedenne", "quagsire", "magcargo", "volbeat", "illumise", "clodsire"]:
+        return 460 + bst_bonus
+    if pokemon.lower() in ["emolga"]:
+        return 458 + bst_bonus
+    if pokemon.lower() in ["dugtrio", "dugtrio-alola", "marowak", "marowak-alola", "sunflora", "wugtrio",
+                        "wormadam-sandy","wormadam-plant", "wormadam-trash", "mothim",
+                        "diggersby", "azumarill", "mightyena", "linoone", "castform", "watchog",
+                        "gumshoos", "squawkabilly", "furret"]:
+        return 455 + bst_bonus
+    if pokemon.lower() in ["raticate", "raticate-alola"]:
+        return 453 + bst_bonus
+    if pokemon.lower() in ["chatot", "vivillon"]:
+        return 451 + bst_bonus
+    if pokemon.lower() in ["sudowoodo", "corsola",
+                            #"corsola-galar", 
+                            "medicham", "bibarel", "pyukumuku", "parasect",
+                       "wobbuffett", "plusle", "minun", "spidops", "ariados", "delcatty",
+                       "butterfree", "beedrill", "beautifly", "ledian", "dustox"]:
+        return 450 + bst_bonus
+    if pokemon.lower() in ["sableye", "mawile", "farfetchd", "unown", "delibird", "luvdisc"]:
+        return 445 + bst_bonus
+    
+
     if pokemon.lower() == "archeops":
         return 495 + bst_bonus
     if pokemon.lower() == "type-null":
