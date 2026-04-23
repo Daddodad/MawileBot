@@ -69,9 +69,6 @@ async def pokemon_utility(pokemon,lvl):
     if pokemon is  None:
         return 0
     #TODO: implement a better utility function
-
-    with open(ENV_PATH+f"/even_evo_file.json", 'r') as ef:
-        evo_dict = json.load(ef)  
         
     pokemon = await similar_pokemon_name(pokemon.lower(), r = False)
     max_bst = await get_poke_bst(await find_evo_at_level_x(pokemon, 100))

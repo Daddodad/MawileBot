@@ -105,7 +105,7 @@
             "metapod"
         ],
         [
-            28,
+            25,
             "butterfree"
         ]
     ],
@@ -116,7 +116,7 @@
             "caterpie"
         ],
         [
-            28,
+            25,
             "butterfree"
         ]
     ],
@@ -127,7 +127,7 @@
             "caterpie"
         ],
         [
-            28,
+            25,
             "metapod"
         ]
     ],
@@ -138,7 +138,7 @@
             "kakuna"
         ],
         [
-            28,
+            25,
             "beedrill"
         ]
     ],
@@ -149,7 +149,7 @@
             "weedle"
         ],
         [
-            28,
+            25,
             "beedrill"
         ]
     ],
@@ -160,7 +160,7 @@
             "weedle"
         ],
         [
-            28,
+            25,
             "kakuna"
         ]
     ],
@@ -200,56 +200,56 @@
     "rattata": [
         "base",
         [
-            30,
+            28,
             "raticate"
         ]
     ],
     "raticate": [
         "last",
         [
-            30,
+            28,
             "rattata"
         ]
     ],
     "rattata-alola": [
         "base",
         [
-            30,
+            28,
             "raticate-alola"
         ]
     ],
     "raticate-alola": [
         "last",
         [
-            30,
+            28,
             "rattata-alola"
         ]
     ],
     "spearow": [
         "base",
         [
-            31,
+            30,
             "fearow"
         ]
     ],
     "fearow": [
         "last",
         [
-            31,
+            30,
             "spearow"
         ]
     ],
     "ekans": [
         "base",
         [
-            32,
+            31,
             "arbok"
         ]
     ],
     "arbok": [
         "last",
         [
-            32,
+            31,
             "ekans"
         ]
     ],
@@ -265,14 +265,10 @@
         ]
     ],
     "pikachu": [
-        "mid",
-        [
-            11,
-            "pichu"
-        ],
+        "base",
         [
             40,
-            "raichu"
+            "raichu-alola"
         ]
     ],
     "raichu": [
@@ -289,10 +285,6 @@
     "raichu-alola": [
         "last",
         [
-            11,
-            "pichu"
-        ],
-        [
             40,
             "pikachu"
         ]
@@ -300,28 +292,28 @@
     "sandshrew": [
         "base",
         [
-            34,
+            33,
             "sandslash"
         ]
     ],
     "sandslash": [
         "last",
         [
-            34,
+            33,
             "sandshrew"
         ]
     ],
     "sandshrew-alola": [
         "base",
         [
-            34,
+            33,
             "sandslash-alola"
         ]
     ],
     "sandslash-alola": [
         "last",
         [
-            34,
+            33,
             "sandshrew-alola"
         ]
     ],
@@ -459,7 +451,7 @@
             "jigglypuff"
         ],
         [
-            36,
+            35,
             "wigglytuff"
         ]
     ],
@@ -470,7 +462,7 @@
             "igglybuff"
         ],
         [
-            36,
+            35,
             "wigglytuff"
         ]
     ],
@@ -481,7 +473,7 @@
             "igglybuff"
         ],
         [
-            36,
+            35,
             "jigglypuff"
         ]
     ],
@@ -565,14 +557,14 @@
     "paras": [
         "base",
         [
-            32,
+            29,
             "parasect"
         ]
     ],
     "parasect": [
         "last",
         [
-            32,
+            29,
             "paras"
         ]
     ],
@@ -593,70 +585,70 @@
     "diglett": [
         "base",
         [
-            30,
+            29,
             "dugtrio"
         ]
     ],
     "dugtrio": [
         "last",
         [
-            30,
+            29,
             "diglett"
         ]
     ],
     "diglett-alola": [
         "base",
         [
-            30,
+            29,
             "dugtrio-alola"
         ]
     ],
     "dugtrio-alola": [
         "last",
         [
-            30,
+            29,
             "diglett-alola"
         ]
     ],
     "meowth": [
         "base",
         [
-            33,
+            32,
             "persian"
         ]
     ],
     "persian": [
         "last",
         [
-            33,
+            32,
             "meowth"
         ]
     ],
     "meowth-alola": [
         "base",
         [
-            33,
+            32,
             "persian-alola"
         ]
     ],
     "persian-alola": [
         "last",
         [
-            33,
+            32,
             "meowth-alola"
         ]
     ],
     "meowth-galar": [
         "base",
         [
-            33,
+            32,
             "perrserker"
         ]
     ],
     "perrserker": [
         "last",
         [
-            33,
+            32,
             "meowth-galar"
         ]
     ],
@@ -1272,21 +1264,21 @@
     "cubone": [
         "base",
         [
-            33,
+            32,
             "marowak-alola"
         ]
     ],
     "marowak": [
         "last",
         [
-            33,
+            32,
             "cubone"
         ]
     ],
     "marowak-alola": [
         "last",
         [
-            33,
+            32,
             "cubone"
         ]
     ],
@@ -1469,14 +1461,14 @@
     "goldeen": [
         "base",
         [
-            35,
+            34,
             "seaking"
         ]
     ],
     "seaking": [
         "last",
         [
-            35,
+            34,
             "goldeen"
         ]
     ],
@@ -1921,56 +1913,56 @@
     "sentret": [
         "base",
         [
-            28,
+            26,
             "furret"
         ]
     ],
     "furret": [
         "last",
         [
-            28,
+            26,
             "sentret"
         ]
     ],
     "hoothoot": [
         "base",
         [
-            32,
+            31,
             "noctowl"
         ]
     ],
     "noctowl": [
         "last",
         [
-            32,
+            31,
             "hoothoot"
         ]
     ],
     "ledyba": [
         "base",
         [
-            31,
+            28,
             "ledian"
         ]
     ],
     "ledian": [
         "last",
         [
-            31,
+            28,
             "ledyba"
         ]
     ],
     "spinarak": [
         "base",
         [
-            31,
+            28,
             "ariados"
         ]
     ],
     "ariados": [
         "last",
         [
-            31,
+            28,
             "spinarak"
         ]
     ],
@@ -2075,7 +2067,7 @@
             "marill"
         ],
         [
-            36,
+            34,
             "azumarill"
         ]
     ],
@@ -2086,7 +2078,7 @@
             "azurill"
         ],
         [
-            36,
+            34,
             "azumarill"
         ]
     ],
@@ -2097,21 +2089,21 @@
             "azurill"
         ],
         [
-            36,
+            34,
             "marill"
         ]
     ],
     "bonsly": [
         "base",
         [
-            32,
+            30,
             "sudowoodo"
         ]
     ],
     "sudowoodo": [
         "last",
         [
-            32,
+            30,
             "bonsly"
         ]
     ],
@@ -2165,14 +2157,14 @@
     "sunkern": [
         "base",
         [
-            31,
+            30,
             "sunflora"
         ]
     ],
     "sunflora": [
         "last",
         [
-            31,
+            30,
             "sunkern"
         ]
     ],
@@ -2193,28 +2185,28 @@
     "wooper": [
         "base",
         [
-            28,
+            27,
             "quagsire"
         ]
     ],
     "quagsire": [
         "last",
         [
-            28,
+            27,
             "wooper"
         ]
     ],
     "wooper-paldea": [
         "base",
         [
-            28,
+            27,
             "clodsire"
         ]
     ],
     "clodsire": [
         "last",
         [
-            28,
+            27,
             "wooper-paldea"
         ]
     ],
@@ -2249,14 +2241,14 @@
     "wynaut": [
         "base",
         [
-            31,
+            28,
             "wobbuffet"
         ]
     ],
     "wobbuffet": [
         "last",
         [
-            31,
+            28,
             "wynaut"
         ]
     ],
@@ -2319,14 +2311,14 @@
     "snubbull": [
         "base",
         [
-            34,
+            33,
             "granbull"
         ]
     ],
     "granbull": [
         "last",
         [
-            34,
+            33,
             "snubbull"
         ]
     ],
@@ -2386,7 +2378,7 @@
     "ursaring": [
         "base",
         [
-            29,
+            27,
             "wormadam-trash"
         ]
     ],
@@ -2404,14 +2396,14 @@
     "slugma": [
         "base",
         [
-            30,
+            29,
             "magcargo"
         ]
     ],
     "magcargo": [
         "last",
         [
-            30,
+            29,
             "slugma"
         ]
     ],
@@ -2667,28 +2659,28 @@
     "poochyena": [
         "base",
         [
-            29,
+            27,
             "mightyena"
         ]
     ],
     "mightyena": [
         "last",
         [
-            29,
+            27,
             "poochyena"
         ]
     ],
     "zigzagoon": [
         "base",
         [
-            30,
+            28,
             "linoone"
         ]
     ],
     "linoone": [
         "last",
         [
-            30,
+            28,
             "zigzagoon"
         ]
     ],
@@ -2732,7 +2724,7 @@
             "cascoon"
         ],
         [
-            28,
+            25,
             "dustox"
         ]
     ],
@@ -2743,7 +2735,7 @@
             "wurmple"
         ],
         [
-            28,
+            25,
             "beautifly"
         ]
     ],
@@ -2754,7 +2746,7 @@
             "wurmple"
         ],
         [
-            28,
+            25,
             "silcoon"
         ]
     ],
@@ -2765,7 +2757,7 @@
             "wurmple"
         ],
         [
-            28,
+            25,
             "dustox"
         ]
     ],
@@ -2776,7 +2768,7 @@
             "wurmple"
         ],
         [
-            28,
+            25,
             "cascoon"
         ]
     ],
@@ -2863,14 +2855,14 @@
     "wingull": [
         "base",
         [
-            32,
+            31,
             "pelipper"
         ]
     ],
     "pelipper": [
         "last",
         [
-            32,
+            31,
             "wingull"
         ]
     ],
@@ -2921,14 +2913,14 @@
     "surskit": [
         "base",
         [
-            32,
+            31,
             "masquerain"
         ]
     ],
     "masquerain": [
         "last",
         [
-            32,
+            31,
             "surskit"
         ]
     ],
@@ -3049,14 +3041,14 @@
     "skitty": [
         "base",
         [
-            31,
+            28,
             "delcatty"
         ]
     ],
     "delcatty": [
         "last",
         [
-            31,
+            28,
             "skitty"
         ]
     ],
@@ -3096,14 +3088,14 @@
     "meditite": [
         "base",
         [
-            32,
+            30,
             "medicham"
         ]
     ],
     "medicham": [
         "last",
         [
-            32,
+            30,
             "meditite"
         ]
     ],
@@ -3706,28 +3698,28 @@
     "bidoof": [
         "base",
         [
-            30,
+            28,
             "bibarel"
         ]
     ],
     "bibarel": [
         "last",
         [
-            30,
+            28,
             "bidoof"
         ]
     ],
     "kricketot": [
         "base",
         [
-            27,
+            24,
             "kricketune"
         ]
     ],
     "kricketune": [
         "last",
         [
-            27,
+            24,
             "kricketot"
         ]
     ],
@@ -3795,35 +3787,35 @@
     "burmy": [
         "base",
         [
-            20,
+            27,
             "mothim"
         ]
     ],
     "wormadam-plant": [
         "last",
         [
-            29,
+            27,
             "burmy"
         ]
     ],
     "wormadam-sandy": [
         "last",
         [
-            29,
+            27,
             "burmy"
         ]
     ],
     "wormadam-trash": [
         "last",
         [
-            29,
+            27,
             "ursaring"
         ]
     ],
     "mothim": [
         "last",
         [
-            20,
+            27,
             "burmy"
         ]
     ],
@@ -3914,14 +3906,14 @@
     "glameow": [
         "base",
         [
-            34,
+            33,
             "purugly"
         ]
     ],
     "purugly": [
         "last",
         [
-            34,
+            33,
             "glameow"
         ]
     ],
@@ -4197,14 +4189,14 @@
     "patrat": [
         "base",
         [
-            31,
+            29,
             "watchog"
         ]
     ],
     "watchog": [
         "last",
         [
-            31,
+            29,
             "patrat"
         ]
     ],
@@ -4244,14 +4236,14 @@
     "purrloin": [
         "base",
         [
-            32,
+            31,
             "liepard"
         ]
     ],
     "liepard": [
         "last",
         [
-            32,
+            31,
             "purrloin"
         ]
     ],
@@ -4394,14 +4386,14 @@
     "woobat": [
         "base",
         [
-            33,
+            32,
             "swoobat"
         ]
     ],
     "swoobat": [
         "last",
         [
-            33,
+            32,
             "woobat"
         ]
     ],
@@ -5403,22 +5395,18 @@
         ]
     ],
     "froakie": [
-        "base",
-        [
-            26,
-            "frogadier"
-        ],
-        [
-            47,
-            "greninja"
-        ]
-    ],
-    "frogadier": [
         "mid",
         [
             26,
             "froakie"
         ],
+        [
+            26,
+            "froakie"
+        ]
+    ],
+    "frogadier": [
+        "base",
         [
             47,
             "greninja"
@@ -5427,10 +5415,6 @@
     "greninja": [
         "last",
         [
-            26,
-            "froakie"
-        ],
-        [
             47,
             "frogadier"
         ]
@@ -5438,14 +5422,14 @@
     "bunnelby": [
         "base",
         [
-            30,
+            28,
             "diggersby"
         ]
     ],
     "diggersby": [
         "last",
         [
-            30,
+            28,
             "bunnelby"
         ]
     ],
@@ -5489,7 +5473,7 @@
             "spewpa"
         ],
         [
-            28,
+            26,
             "vivillon"
         ]
     ],
@@ -5500,7 +5484,7 @@
             "scatterbug"
         ],
         [
-            28,
+            26,
             "vivillon"
         ]
     ],
@@ -5511,7 +5495,7 @@
             "scatterbug"
         ],
         [
-            28,
+            26,
             "spewpa"
         ]
     ],
@@ -6071,14 +6055,14 @@
     "yungoos": [
         "base",
         [
-            30,
+            28,
             "gumshoos"
         ]
     ],
     "gumshoos": [
         "last",
         [
-            30,
+            28,
             "yungoos"
         ]
     ],
@@ -6202,14 +6186,14 @@
     "dewpider": [
         "base",
         [
-            32,
+            31,
             "araquanid"
         ]
     ],
     "araquanid": [
         "last",
         [
-            32,
+            31,
             "dewpider"
         ]
     ],
@@ -6230,14 +6214,14 @@
     "morelull": [
         "base",
         [
-            32,
+            29,
             "shiinotic"
         ]
     ],
     "shiinotic": [
         "last",
         [
-            32,
+            29,
             "morelull"
         ]
     ],
@@ -7224,28 +7208,28 @@
     "tarountula": [
         "base",
         [
-            28,
+            25,
             "spidops"
         ]
     ],
     "spidops": [
         "last",
         [
-            28,
+            25,
             "tarountula"
         ]
     ],
     "nymble": [
         "base",
         [
-            29,
+            28,
             "lokix"
         ]
     ],
     "lokix": [
         "last",
         [
-            29,
+            28,
             "nymble"
         ]
     ],
@@ -7559,14 +7543,14 @@
     "wiglett": [
         "base",
         [
-            29,
+            28,
             "wugtrio"
         ]
     ],
     "wugtrio": [
         "last",
         [
-            29,
+            28,
             "wiglett"
         ]
     ],
