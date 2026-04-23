@@ -206,6 +206,27 @@ async def reply_to_text(event, text, client):
         await event.reply("Cos'è, ti prendi gioco di me? 😠")
         return True, 0
     elif "Allenatore, hai incontrato" in text:
+
+        # ADD POSSIBLE MEGA TO THE MEGA LIST
+        # images = []
+        # if event.grouped_id:  
+        #     album_messages = await client.get_messages(
+        #         event.chat_id,
+        #         ids=None,
+        #         min_id=event.id - 10,
+        #         max_id=event.id + 10
+        #     )
+
+        #     for msg in album_messages:
+        #         if msg.grouped_id == event.grouped_id and msg.media:
+        #             images.append(msg.media)
+        # else:
+        #     if event.media:
+        #         images.append(event.media)
+        # with open(os.path.join(ENV_PATH, "pokemon_vectors_9.json"), "r", encoding="utf-8") as f:
+        #     pokemon_vectors = json.load(f)
+        # pokemon_found = (await process_and_reply(event, client, images, pokemon_vectors))[:-1]
+
         da_schierare = await replies_to_wild_pokemon(event, text, client)
         await event.reply(str(da_schierare))
         return True, 5
@@ -215,6 +236,7 @@ async def reply_to_text(event, text, client):
         return True, 6 
     elif "Buongiorno Allenatore, e benvenuto in questo viaggio nel mondo dei Pokèmon!" in text:
         await event.reply('0') 
+        await dump_x_in_json([],"mega")
         return True, 3
     elif "Ottimo, hai completato tutte le sfide odierne!" in text:
         await delete_messages_before(event, client, limit = (await load_x_from_json("clean_up")), exclude = "Finito. Ora posso riposare!")
@@ -435,6 +457,7 @@ async def load_team_and_check_card(event, client):
 
 async def replies_to_wild_pokemon(event, text, client):
     pokemon, pl = await extract_pokemon_and_pl(text)
+    
     await event.reply(f"Ho incontrato {pokemon.capitalize()} con PL {pl}.\n\nAspettando la FOTO del team... 20 secondi massimo ⏳")
 
     team = await load_team_and_check_card(event, client)
