@@ -51,7 +51,9 @@ from BeatlesBoy_utils import (
     process_and_reply,
     calculate_best_strategy,
     reset_lega_info,
-    extract_all_matches_pvp
+    extract_all_matches_pvp,
+    load_x_from_json,
+    dump_x_in_json
 )
 
 # if os.path.exists('/home/SableyeBot/src'):
@@ -406,21 +408,7 @@ async def dump_team_in_json(team, event, client):
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)
 
-async def dump_x_in_json(x, x_name):
-    json_path = os.path.join(ENV_PATH, "BeatlesBoy_info.json")
-    print(f"Dumping {x_name} to:", json_path)
-    with open(json_path, "r", encoding="utf-8") as f:
-        data = json.load(f)
-    data[x_name] = x
-    with open(json_path, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
 
-async def load_x_from_json(x_name):
-    json_path = os.path.join(ENV_PATH, "BeatlesBoy_info.json")
-    print(f"Loading {x_name} from:", json_path)
-    with open(json_path, "r", encoding="utf-8") as f:
-        x = (json.load(f))[x_name]
-    return x
 
 async def load_team_and_check_card(event, client):
     await asyncio.sleep(20)  # aspetta 20 sec
@@ -617,8 +605,6 @@ async def check_if_training_pokemon(less_useful, pokemon_da_catturare):
 
     print(f"livelli rimanenti: {livelli_rimanenti}, drop_liv: {drop_liv}, catch_liv: {catch_liv}")
 
-    pari_liv = min(100 -drop_liv, catch_liv)
-
     drop_mon = await find_evo_at_level_x(drop_mon.lower(), drop_liv)
     catch_mon = await find_evo_at_level_x(catch_mon.lower(), catch_liv)
 
@@ -626,6 +612,11 @@ async def check_if_training_pokemon(less_useful, pokemon_da_catturare):
 
     drop_power = (await get_poke_bst(drop_mon))*int(drop_liv)/100
     catch_power = (await get_poke_bst(catch_mon))*int(catch_liv)/100
+
+    # TODO: FIX (incorporate the level better, do not assume it's mega (or assume it?))
+    if catch_mon in (await load_x_from_json("mega")):
+        max_bst = await get_poke_bst(catch_mon+'-mega')
+        catch_power = (max_bst)*int(catch_liv)/100
    
     print(drop_power, catch_power)
 

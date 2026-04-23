@@ -1,51 +1,69 @@
 {
   "team": [
     [
-      "samurott-hisui",
-      100
+      "chespin",
+      7
     ],
     [
-      "pelipper",
-      100
+      "unown",
+      5
     ],
     [
-      "regidrago",
-      64
+      "pancham",
+      5
     ],
     [
-      "krookodile",
-      100
+      "crabrawler",
+      5
     ],
     [
-      "slowbro",
-      56
+      null,
+      1
     ],
     [
-      "sableye",
-      28
+      null,
+      1
     ],
     [
-      "scovillain",
-      64
+      null,
+      1
     ],
     [
-      "keldeo-resolute",
-      71
+      null,
+      1
     ],
     [
-      "cosmoem",
-      47
+      null,
+      1
     ]
   ],
-  "mega":["chespin", "quilladin", "chesnaught", "fennekin", "braixen", "delphox", "froakie", "frogadier", "geninja", "crabrawler", "crabominable"],
+  "mega": [
+    "chesnaught",
+    "delphox",
+    "geninja",
+    "crabominable",
+    "altaria",
+    "camerupt",
+    "manectric",
+    "clefable",
+    "scovillain"
+  ],
   "fase_lega": 0,
   "indizio_chiesto": 0,
   "win_1": false,
   "win_2": false,
   "enemy_team_lega": [],
   "team_lega": [],
-  "clean_up": 26,
+  "clean_up": 71,
   "num_enemies": 4,
-  "catture": [],
+  "catture": [
+    "\tCrabrawler\n",
+    "\tCrabrawler\n",
+    "\tCrabrawler\n",
+    "\tCrabrawler\n",
+    "\tCrabrawler\n",
+    "\tCrabrawler\n",
+    "\tCrabrawler\n"
+  ],
   "battaglie": []
 }

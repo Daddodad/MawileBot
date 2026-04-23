@@ -31,6 +31,22 @@ tipi_to_types = {
     'Terra': 'Ground','Volante': 'Flying','Psico': 'Psychic','Coleottero': 'Bug','Roccia': 'Rock','Spettro': 'Ghost','Drago': 'Dragon','Buio': 'Dark','Acciaio': 'Steel','Folletto': 'Fairy'
 }
 
+async def dump_x_in_json(x, x_name):
+    json_path = os.path.join(ENV_PATH, "BeatlesBoy_info.json")
+    print(f"Dumping {x_name} to:", json_path)
+    with open(json_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    data[x_name] = x
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2)
+
+async def load_x_from_json(x_name):
+    json_path = os.path.join(ENV_PATH, "BeatlesBoy_info.json")
+    print(f"Loading {x_name} from:", json_path)
+    with open(json_path, "r", encoding="utf-8") as f:
+        x = (json.load(f))[x_name]
+    return x
+
 async def find_evo_at_level_x(pokemon, level_x):
 
     pokemon = await similar_pokemon_name(pokemon.lower(), r = False)
@@ -71,9 +87,16 @@ async def pokemon_utility(pokemon,lvl):
     #TODO: implement a better utility function
         
     pokemon = await similar_pokemon_name(pokemon.lower(), r = False)
-    max_bst = await get_poke_bst(await find_evo_at_level_x(pokemon, 100))
+    fully_evo = await find_evo_at_level_x(pokemon, 100)
+    max_bst = await get_poke_bst(fully_evo)
+    if fully_evo in (await load_x_from_json("mega")):
+        max_bst = await get_poke_bst(fully_evo+'-mega')
+        print(f"BST di Mega {await find_evo_at_level_x(pokemon, 100)} a livello 100: {max_bst}")
 
-    print(f"BST di {await find_evo_at_level_x(pokemon, 100)} a livello 100: {max_bst}")
+    else:
+        print(f"BST di {await find_evo_at_level_x(pokemon, 100)} a livello 100: {max_bst}")
+
+
     utility_bst = max_bst/620*10
     utility_lvl = lvl/10
 
