@@ -60,8 +60,7 @@ NUM_CASELLE_PER_RIGA = 6
 ##############################################################################################
 
 STARTING_DATE = date(2026,4,21)  # Data di inizio della lega, da cambiare ogni lega (metti il giorno prima, la prima casella dura solo 1)
-
-EVENTUALE_PAUSA = 1  # Giorni di pausa in una lega (mettili quando inizia la pausa)
+EVENTUALE_PAUSA = 0  # TOGLILA OGNI NUOVA LEGAAAAAAAAAAAA! Giorni di pausa in una lega (mettili quando inizia la pausa)
 
 ###############################################################################################
 ###############################################################################################
