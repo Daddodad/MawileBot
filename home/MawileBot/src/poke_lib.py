@@ -1812,7 +1812,17 @@ most_similar_cache = {  'morpeko': ['morpeko-full-belly','morpeko-hangry'],
                         "oh" : "ho-oh",
                         "ho" : "ho-oh",
                         "hooh" : "ho-oh",
-                        "ho oh" : "ho-oh",}
+                        "ho oh" : "ho-oh",
+                        "oricorio": ["oricorio-baile","oricorio-pom-pom","oricorio-pau","oricorio-sensu"],
+                        "oricorio cheerdance" : "oricorio-pom-pom",
+                        "oricorio flamenco" : "oricorio-baile",
+                        "oricorio ula" : "oricorio-pau",
+                        "oricorio buyo" : "oricorio-sensu",
+                        "oricoriocheerdance" : "oricorio-pom-pom",
+                        "oricorioflamenco" : "oricorio-baile",
+                        "oricorioula" : "oricorio-pau",
+                        "oricoriobuyo" : "oricorio-sensu",
+                        }
 
 async def similar_pokemon_name(pokemon_probable_name, r = True):
     with open(ENV_PATH+'/pokemon_list.json', 'r', encoding="utf-8") as f:
