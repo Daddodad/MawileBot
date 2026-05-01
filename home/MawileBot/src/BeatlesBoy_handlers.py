@@ -259,11 +259,11 @@ async def reply_to_text(event, text, client):
         await dump_x_in_json(len(str(da_schierare)), "num_enemies")
         return True, 5
     elif "vuoi aggiungerlo in squadra?" in text:
-        (dopo_cattura, name) = (await replies_to_vittoria(event,text,client))
+        (dopo_cattura, name, poke_u) = (await replies_to_vittoria(event,text,client))
         await event.reply(str(dopo_cattura))
         if str(dopo_cattura)!="0":
             l = (await load_x_from_json("catture"))
-            l.append(f"\t{name}\n")
+            l.append(f"\t{name} ({poke_u})\n")
             await dump_x_in_json(l,"catture")
         return True, 5      
     elif "Allenatore, dovrai affrontare" in text:
@@ -682,7 +682,7 @@ async def replies_to_vittoria(event, text, client):
 
         if name.lower() == 'sableye' and 'sableye' not in [p[0] for p in team]:
             await event.reply(f"Sono io! via {less_useful[0].capitalize()}, non mi servi più!")
-            return await drop_the_useless(useful,useless,lvl_100), name
+            return await drop_the_useless(useful,useless,lvl_100), name, pokemon_u
     
         if less_useful[2]<= pokemon_u: # First check utility
             to_be_dropped = await drop_the_useless(useful,useless,lvl_100) 
@@ -692,22 +692,22 @@ async def replies_to_vittoria(event, text, client):
                 catch, livelli_rimanenti = (await check_if_training_pokemon(less_useful, (name, level)))
             if catch:
                 await event.reply(f"È chiaramente più utile di {less_useful[0].capitalize()}, lo prendo!")
-                return to_be_dropped  , name      
+                return to_be_dropped  , name, pokemon_u     
             else: 
                 await event.reply(f"L'utilità è maggiore, ma non recupera {less_useful[0].capitalize()} in {livelli_rimanenti} livelli (livelli rimanenti stimati / 6).")
-                return to_return, name
+                return to_return, name, pokemon_u
 
     # Non ho nemmeno 6 pokemon...
     if count<6:
         if random.random() >0.5:
             await event.reply(f"Non ho nemmeno 6 pokémon... ma non mi sembra così utile questo...")
-            return to_return, name
+            return to_return, name, pokemon_u
         else:
             await event.reply('Non ho nemmeno 6 pokémon... e lui mi piace un sacco!')
             dopo_cattura = await drop_the_useless(useful,useless,lvl_100)
-        return dopo_cattura , name
+        return dopo_cattura , name, pokemon_u
     
-    return to_return, name
+    return to_return, name, pokemon_u
 
 async def replies_to_trainer(event, text, client, is_capopalestra, images = None):
     _, enemy_powers, capopalestra_powers, multiplier, _ = await poke_cell(0)
