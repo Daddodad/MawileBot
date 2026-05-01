@@ -44,6 +44,7 @@ from BeatlesBoy_utils import (
     filter_team,
     find_evo_at_level_x,
     lega_utility,
+    load_team_from_json_simple,
     one_vs_team_lega,
     pokemon_utility,
     read_pokemons_from_trainer,
@@ -413,7 +414,7 @@ async def dump_team_in_json(team, event, client):
 async def load_team_and_check_card(event, client):
     await asyncio.sleep(20)  # aspetta 20 sec
 
-    team = await load_team_from_json(event, client)
+    team = await load_team_from_json_simple()
 
     # recupera l'ultimo messaggio della chat
     messages = await client.get_messages(
@@ -610,8 +611,8 @@ async def check_if_training_pokemon(less_useful, pokemon_da_catturare):
 
     print(drop_mon, catch_mon)
 
-    drop_power = (await get_poke_bst(drop_mon))*int(drop_liv)/100
-    catch_power = (await get_poke_bst(catch_mon))*int(catch_liv)/100
+    drop_power = round((await get_poke_bst(drop_mon))*int(drop_liv)/100)
+    catch_power = round((await get_poke_bst(catch_mon))*int(catch_liv)/100)
 
     # TODO: FIX (incorporate the level better, do not assume it's mega (or assume it?))
     if catch_mon in (await load_x_from_json("mega")):
@@ -646,7 +647,7 @@ async def replies_to_vittoria(event, text, client):
 
     await event.reply(f"Vittoria! Catturo o no {name} di livello {level} (utility {pokemon_u})? Decidiamo...")
 
-    team = await load_team_from_json(event, client)
+    team = await load_team_from_json_simple()
     useful, useless, lvl_100 = await filter_team(team, remove_100 = False) # Non tolgo i lvl 100 ! altrimenti faccio solo catture inutili!
     useful_n_100, _u, _100 = await filter_team(team, remove_100 = True, nilb = True) # Tolgo i lvl 100 e aggiungo nilb SOLO per la scelta di distribuzione dei livelli.
 

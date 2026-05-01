@@ -2,23 +2,19 @@
   "team": [
     [
       "chespin",
-      7
+      13
+    ],
+    [
+      "hatenna",
+      13
+    ],
+    [
+      "milcery",
+      9
     ],
     [
       "unown",
-      5
-    ],
-    [
-      "pancham",
-      5
-    ],
-    [
-      "crabrawler",
-      5
-    ],
-    [
-      null,
-      1
+      15
     ],
     [
       null,
@@ -56,14 +52,6 @@
   "team_lega": [],
   "clean_up": 71,
   "num_enemies": 4,
-  "catture": [
-    "\tCrabrawler\n",
-    "\tCrabrawler\n",
-    "\tCrabrawler\n",
-    "\tCrabrawler\n",
-    "\tCrabrawler\n",
-    "\tCrabrawler\n",
-    "\tCrabrawler\n"
-  ],
+  "catture": [],
   "battaglie": []
 }

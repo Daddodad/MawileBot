@@ -47,6 +47,13 @@ async def load_x_from_json(x_name):
         x = (json.load(f))[x_name]
     return x
 
+async def load_team_from_json_simple():
+    json_path = os.path.join(ENV_PATH, "BeatlesBoy_info.json")
+    print("Loading team from:", json_path)
+    with open(json_path, "r", encoding="utf-8") as f:
+        team = (json.load(f))["team"]
+    return team
+
 async def find_evo_at_level_x(pokemon, level_x):
 
     pokemon = await similar_pokemon_name(pokemon.lower(), r = False)
@@ -115,32 +122,52 @@ def win_perc_over_gym(gym_type, low_power, pokemon, power, multiplier):
     for t in all_types_combo:
         types2 = poke.get(name=pokemon).types
         bonus = calculate_bonus_via_types(t, types2 ,multiplier)
+        # print(f"Types: {t}, Bonus: {bonus}, Power: {power}, Low Power: {low_power}")
         if power - bonus[0] + bonus[1] > low_power:
             wins += 1
     return wins / len(all_types_combo)
 
 async def next_gym_bonus(pokemon, lvl, catch = False):
+
     gym_type,multiplier,casella_gym = (await next_gym())
-    power = await get_poke_bst(pokemon)*lvl/100
     _, _, enemy_powers, multiplier, _ = poke_cell_gym(casella_gym)
     low_power = min(enemy_powers)
+
+    # if the average win percentage of the current team is already above 66%, we can skip the bonus calculation for a new catch
+    if catch == True:
+        try: 
+            team = (await load_team_from_json_simple())
+        except:
+            team = [["chespin",7],["unown",5],["pancham",5],
+                    ["sableye",5],["skorupi",5]]
+        w_p = []
+        for (p, l) in team:
+            if p is not None:
+                pp = round(await get_poke_bst(p)*(l+3)/100)
+                w_p.append(win_perc_over_gym(gym_type, low_power, p, pp, multiplier))
+
+        w_p = sorted(w_p, reverse=True)[:6]
+        w_p += [0] * (6 - len(w_p))
+        avg_win_perc = sum(w_p) / len(w_p)
+        if avg_win_perc > 0.66:
+            return 0
+
+    # IF NOT, we need a new pokemn ASAP!
+     
+    power = round(await get_poke_bst(pokemon)*lvl/100)
     win_perc = win_perc_over_gym(gym_type, low_power, pokemon, power, multiplier)
     print(f"Win percentage against next gym: {win_perc*100:.2f}%")
 
-    lvl += 5
-    gym_type,multiplier,casella_gym = (await next_gym())
-    power = await get_poke_bst(pokemon)*lvl/100
-    _, _, enemy_powers, multiplier, _ = poke_cell_gym(casella_gym)
-    low_power = min(enemy_powers)
-    win_perc_plus5 = win_perc_over_gym(gym_type, low_power, pokemon, power, multiplier)    
+    power_plus5 = round(await get_poke_bst(pokemon)*(lvl+5)/100)
+    win_perc_plus5 = win_perc_over_gym(gym_type, low_power, pokemon, power_plus5, multiplier)
     print(f"Win percentage against next gym: {win_perc_plus5*100:.2f}%")
 
     if win_perc_plus5 > 0.75:
         if win_perc < 0.75:
-            return 3
+            return 5  # This will also boost in training, not only in catches!
         
     if win_perc > 0.75 and catch == True:
-        return 999
+        return 999  # We need to catch this beast!
     
     return 0
 
