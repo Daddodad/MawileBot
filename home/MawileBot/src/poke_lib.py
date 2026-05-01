@@ -1086,6 +1086,7 @@ async def get_wins(pokemon, livello, all_types_combo, multiplier, limits):
                 grey_wins += 1
     else:
         for t in all_types_combo:
+            print(pokemon, livello)
             types2 = poke.get(name=pokemon).types
             bonuses = calculate_bonus_via_types(t, types2, multiplier)
             bonus = bonuses[1] - bonuses[0]
@@ -1121,8 +1122,18 @@ async def poke_gym_test(chat_id, pokemon, livello=0, next=4):
 
     return results
 
-async def get_gym_results(gym, gym_data, pokemon, livello, chat_id):
+async def next_gym():
 
+    casella = get_casella()
+
+    offset = 0
+    while casella+1 > gym_cell()[offset]:
+        offset += 1
+
+    return gym_types()[offset], 5 + 3 * int((casella+offset) / NUM_CASELLE_PER_RIGA), casella+offset
+
+
+async def get_gym_results(gym, gym_data, pokemon, livello, chat_id):
     results = []
 
     if gym_data[gym]["actual_team"] == []:

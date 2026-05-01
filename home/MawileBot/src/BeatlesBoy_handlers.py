@@ -642,7 +642,7 @@ async def extract_name_and_level_from_vittoria(msg: str):
 async def replies_to_vittoria(event, text, client):
     name, level = await extract_name_and_level_from_vittoria(text)
 
-    pokemon_u =  await pokemon_utility(name, level)
+    pokemon_u =  await pokemon_utility(name, level, catch = True)
 
     await event.reply(f"Vittoria! Catturo o no {name} di livello {level} (utility {pokemon_u})? Decidiamo...")
 
@@ -678,9 +678,6 @@ async def replies_to_vittoria(event, text, client):
         if p[0] is not None:
             count+=1
 
-    print('Less useful', less_useful)
-    print('trovato', pokemon_u)
-
     if less_useful[0] is not None:
 
         if name.lower() == 'sableye' and 'sableye' not in [p[0] for p in team]:
@@ -689,7 +686,10 @@ async def replies_to_vittoria(event, text, client):
     
         if less_useful[2]<= pokemon_u: # First check utility
             to_be_dropped = await drop_the_useless(useful,useless,lvl_100) 
-            catch, livelli_rimanenti = (await check_if_training_pokemon(less_useful, (name, level)))
+            if pokemon_u > 99:
+                (catch, livelli_rimanenti) = (True, 0)
+            else:
+                catch, livelli_rimanenti = (await check_if_training_pokemon(less_useful, (name, level)))
             if catch:
                 await event.reply(f"È chiaramente più utile di {less_useful[0].capitalize()}, lo prendo!")
                 return to_be_dropped  , name      

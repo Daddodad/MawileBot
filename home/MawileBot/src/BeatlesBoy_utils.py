@@ -22,7 +22,7 @@ from poke_lib import (
                         automatic_card_reader, calculate_bonus, calculate_bonus_via_types, 
                         get_power, poke_cell, similar_pokemon_name,
                         get_poke_bst, EMOJI_TO_TYPE,
-                        check_alt_forms
+                        check_alt_forms, next_gym, poke_cell_gym, generate_all_types_combo
                       )
 
 
@@ -81,7 +81,7 @@ async def find_evo_at_level_x(pokemon, level_x):
 
     return pokemon_x
 
-async def pokemon_utility(pokemon,lvl):
+async def pokemon_utility(pokemon,lvl, catch = False):
     if pokemon is  None:
         return 0
     #TODO: implement a better utility function
@@ -101,7 +101,48 @@ async def pokemon_utility(pokemon,lvl):
     utility_lvl = lvl/10
 
     utility = utility_bst * 0.7 + utility_lvl * 0.3
-    return round(utility, 2)  # 0-10 scale
+
+    try:
+        utility += await next_gym_bonus(pokemon, lvl, catch)
+    except Exception as e:
+        print(f"Error calculating next gym bonus: {e}")
+        
+    return round(utility, 2)  # 0-10 scale (except bonus next gym)
+
+def win_perc_over_gym(gym_type, low_power, pokemon, power, multiplier):
+    all_types_combo = generate_all_types_combo(gym_type)
+    wins = 0
+    for t in all_types_combo:
+        types2 = poke.get(name=pokemon).types
+        bonus = calculate_bonus_via_types(t, types2 ,multiplier)
+        if power - bonus[0] + bonus[1] > low_power:
+            wins += 1
+    return wins / len(all_types_combo)
+
+async def next_gym_bonus(pokemon, lvl, catch = False):
+    gym_type,multiplier,casella_gym = (await next_gym())
+    power = await get_poke_bst(pokemon)*lvl/100
+    _, _, enemy_powers, multiplier, _ = poke_cell_gym(casella_gym)
+    low_power = min(enemy_powers)
+    win_perc = win_perc_over_gym(gym_type, low_power, pokemon, power, multiplier)
+    print(f"Win percentage against next gym: {win_perc*100:.2f}%")
+
+    lvl += 5
+    gym_type,multiplier,casella_gym = (await next_gym())
+    power = await get_poke_bst(pokemon)*lvl/100
+    _, _, enemy_powers, multiplier, _ = poke_cell_gym(casella_gym)
+    low_power = min(enemy_powers)
+    win_perc_plus5 = win_perc_over_gym(gym_type, low_power, pokemon, power, multiplier)    
+    print(f"Win percentage against next gym: {win_perc_plus5*100:.2f}%")
+
+    if win_perc_plus5 > 0.75:
+        if win_perc < 0.75:
+            return 3
+        
+    if win_perc > 0.75 and catch == True:
+        return 999
+    
+    return 0
 
 async def lega_utility_core (poke, lvl, power, enemy_team):
     mod = 0
