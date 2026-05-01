@@ -1019,7 +1019,7 @@ async def dex_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     except:
         pass
     if not context.args:
-        await update.message.reply_text("Devi specificare un Pokémon... guarda /help...")
+        await update.effective_message.reply_text("Devi specificare un Pokémon... guarda /help...")
         return
 
     pokemon_name = ' '.join(context.args)
@@ -1028,14 +1028,14 @@ async def dex_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     else:
         pokemon = await similar_pokemon_name(pokemon_name.lower())
         if pokemon.lower()!=pokemon_name.lower():
-            await update.message.reply_text(f"Assumo che con {pokemon_name} intendessi {pokemon.capitalize()}...")
+            await update.effective_message.reply_text(f"Assumo che con {pokemon_name} intendessi {pokemon.capitalize()}...")
         pokemon_name = pokemon
 
     dex_entry = await poke_dex2(pokemon_name)
-    await update.message.reply_text(dex_entry)
+    await update.effective_message.reply_text(dex_entry)
 
     dex_entry = await poke_dex1(pokemon_name)
-    await update.message.reply_text(dex_entry)
+    await update.effective_message.reply_text(dex_entry)
 
 
 # -------------------------------------------------------------------------- CELL --------------------------------------------------------
