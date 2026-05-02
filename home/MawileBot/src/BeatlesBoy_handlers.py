@@ -648,7 +648,7 @@ async def replies_to_vittoria(event, text, client):
     await event.reply(f"Vittoria! Catturo o no {name} di livello {level} (utility {pokemon_u})? Decidiamo...")
 
     team = await load_team_from_json_simple()
-    useful, useless, lvl_100 = await filter_team(team, remove_100 = False) # Non tolgo i lvl 100 ! altrimenti faccio solo catture inutili!
+    useful, useless, lvl_100 = await filter_team(team, remove_100 = False, drop = True) # Non tolgo i lvl 100 ! altrimenti faccio solo catture inutili!
     useful_n_100, _u, _100 = await filter_team(team, remove_100 = True, nilb = True) # Tolgo i lvl 100 e aggiungo nilb SOLO per la scelta di distribuzione dei livelli.
 
     to_return = '0'

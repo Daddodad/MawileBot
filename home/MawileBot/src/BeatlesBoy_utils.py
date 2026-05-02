@@ -88,7 +88,7 @@ async def find_evo_at_level_x(pokemon, level_x):
 
     return pokemon_x
 
-async def pokemon_utility(pokemon,lvl, catch = False):
+async def pokemon_utility(pokemon,lvl, catch = False, drop = False):
     if pokemon is  None:
         return 0
     #TODO: implement a better utility function
@@ -110,7 +110,7 @@ async def pokemon_utility(pokemon,lvl, catch = False):
     utility = utility_bst * 0.7 + utility_lvl * 0.3
 
     try:
-        utility += await next_gym_bonus(pokemon, lvl, catch)
+        utility += await next_gym_bonus(pokemon, lvl, catch, drop)
     except Exception as e:
         print(f"Error calculating next gym bonus: {e}")
         
@@ -127,7 +127,7 @@ def win_perc_over_gym(gym_type, low_power, pokemon, power, multiplier):
             wins += 1
     return wins / len(all_types_combo)
 
-async def next_gym_bonus(pokemon, lvl, catch = False):
+async def next_gym_bonus(pokemon, lvl, catch = False, drop = False):
 
     gym_type,multiplier,casella_gym = (await next_gym())
     _, _, enemy_powers, multiplier, _ = poke_cell_gym(casella_gym)
@@ -164,10 +164,13 @@ async def next_gym_bonus(pokemon, lvl, catch = False):
 
     if win_perc_plus5 > 0.75:
         if win_perc < 0.75:
-            return 5  # This will also boost in training, not only in catches!
+            return 5  # This will also boost in training, not only the catches!
         
     if win_perc > 0.75 and catch == True:
         return 999  # We need to catch this beast!
+    
+    if win_perc > 0.75 and drop == True:
+        return 5 # Do not drop this beast!
     
     return 0
 
@@ -226,13 +229,13 @@ async def lega_utility(team, enemy_team, first_time = False):
     return team_u
 
 
-async def filter_team(team, remove_100=False, nilb = False):
+async def filter_team(team, remove_100=False, nilb = False, drop = False):
     if team:
         utilities = []
         lvl_100 = []
         for index, (poke, lvl) in enumerate(team):
             #poke = await similar_pokemon_name(poke.lower() , r = False) #Sarchiapone
-            u = await pokemon_utility(poke,lvl)
+            u = await pokemon_utility(poke,lvl, drop=drop)
             if remove_100 and lvl == 100:
                 lvl_100.append((poke, lvl, u, await get_power(poke, lvl), index+1))
             else:
