@@ -450,8 +450,9 @@ async def replies_to_wild_pokemon(event, text, client):
     await event.reply(f"Ho incontrato {pokemon.capitalize()} con PL {pl}.\n\nAspettando la FOTO del team... 20 secondi massimo ⏳")
 
     team = await load_team_and_check_card(event, client)
+    print("STO CHIAMANDO FILTER TEAM CON")
     useful, useless, lvl_100 = await filter_team(team, remove_100 = True, nilb = True)
-
+    print("Useful:", useful)
     try:
         winning_options = await calculate_winning_options_selvatico(pokemon, pl, useful)
         if winning_options is None or len(winning_options) == 0:
