@@ -450,9 +450,8 @@ async def replies_to_wild_pokemon(event, text, client):
     await event.reply(f"Ho incontrato {pokemon.capitalize()} con PL {pl}.\n\nAspettando la FOTO del team... 20 secondi massimo ⏳")
 
     team = await load_team_and_check_card(event, client)
-    print("STO CHIAMANDO FILTER TEAM CON")
-    useful, useless, lvl_100 = await filter_team(team, remove_100 = True, nilb = True)
-    print("Useful:", useful)
+    useful, useless, lvl_100 = await filter_team(team, remove_100 = True, nilb = True, data = {"lvlup": True, "catch": False, "drop": True})
+
     try:
         winning_options = await calculate_winning_options_selvatico(pokemon, pl, useful)
         if winning_options is None or len(winning_options) == 0:
@@ -493,7 +492,7 @@ async def replies_to_pvp(event, text, client):
     n_schierabili = await extract_number_of_pvp_choices(text)
 
     team = await load_team_and_check_card(event, client)
-    useful, useless, lvl_100 = await filter_team(team, remove_100 = True)
+    useful, useless, lvl_100 = await filter_team(team, remove_100 = True, data = {"lvlup": True, "catch": False, "drop": True})
     useful.sort( key = lambda x: x[3], reverse=True )  # ordina per power decrescente
     lvl_100.sort( key = lambda x: x[3], reverse=True )  # ordina per power decrescente
     useless.sort( key = lambda x: x[3], reverse=True )  # ordina per power decrescente
@@ -536,7 +535,7 @@ async def replies_to_potenziamento(event, text, client):
     await event.reply(f"Ho incontrato potenziamento coi tipi {tipi}.\n\nAspettando la FOTO del team... 20 secondi massimo ⏳")
 
     team = await load_team_and_check_card(event, client)    
-    useful, useless, lvl_100 = await filter_team(team, remove_100 = True, nilb = True)
+    useful, useless, lvl_100 = await filter_team(team, remove_100 = True, nilb = True, data = {"lvlup": True, "catch": False, "drop": False})
     try:
         potenziabili = await calculate_potenziabili(tipi, useful)
         # Perchè dovrebbe dare il potenziamento a gente inutile o al 100?!?!
@@ -644,13 +643,14 @@ async def extract_name_and_level_from_vittoria(msg: str):
 async def replies_to_vittoria(event, text, client):
     name, level = await extract_name_and_level_from_vittoria(text)
 
-    pokemon_u =  await pokemon_utility(name, level, catch = True)
+    pokemon_u =  await pokemon_utility(name, level, data = {"lvlup": True, "catch": True, "drop": False})
 
     await event.reply(f"Vittoria! Catturo o no {name} di livello {level} (utility {pokemon_u})? Decidiamo...")
 
     team = await load_team_from_json_simple()
-    useful, useless, lvl_100 = await filter_team(team, remove_100 = False, drop = True) # Non tolgo i lvl 100 ! altrimenti faccio solo catture inutili!
-    useful_n_100, _u, _100 = await filter_team(team, remove_100 = True, nilb = True) # Tolgo i lvl 100 e aggiungo nilb SOLO per la scelta di distribuzione dei livelli.
+    useful, useless, lvl_100 =                   await filter_team(team, remove_100 = False,             data = {"lvlup": False, "catch": False, "drop": False}) # Non tolgo i lvl 100 ! UTILITY PURA!
+    useful_drop, useless_drop, lvl_100_drop =    await filter_team(team, remove_100 = False,             data = {"lvlup": True,  "catch": False, "drop": True})  # Aggiungo un boost ai pokemon che mi servono per la palestra, anche se altrestì inutili!
+    useful_n_100, _u, _100 =                     await filter_team(team, remove_100 = True, nilb = True, data = {"lvlup": True,  "catch": False, "drop": False}) # Tolgo i lvl 100 e aggiungo nilb SOLO per la scelta di distribuzione dei livelli.
 
     to_return = '0'
     if "te schierato salirà di ben" in text:
@@ -683,11 +683,11 @@ async def replies_to_vittoria(event, text, client):
     if less_useful[0] is not None:
 
         if name.lower() == 'sableye' and 'sableye' not in [p[0] for p in team]:
-            await event.reply(f"Sono io! via {less_useful[0].capitalize()}, non mi servi più!")
-            return await drop_the_useless(useful,useless,lvl_100), name, pokemon_u
+            await event.reply(f"Sono io!")
+            return await drop_the_useless(useful_drop,useless_drop,lvl_100_drop), name, pokemon_u
     
         if less_useful[2]<= pokemon_u: # First check utility
-            to_be_dropped = await drop_the_useless(useful,useless,lvl_100) 
+            to_be_dropped = await drop_the_useless(useful_drop,useless_drop,lvl_100_drop) 
             if pokemon_u > 99:
                 (catch, livelli_rimanenti) = (True, 0)
             else:
@@ -706,7 +706,7 @@ async def replies_to_vittoria(event, text, client):
             return to_return, name, pokemon_u
         else:
             await event.reply('Non ho nemmeno 6 pokémon... e lui mi piace un sacco!')
-            dopo_cattura = await drop_the_useless(useful,useless,lvl_100)
+            dopo_cattura = await drop_the_useless(useful_drop,useless_drop,lvl_100_drop)
         return dopo_cattura , name, pokemon_u
     
     return to_return, name, pokemon_u
@@ -752,7 +752,7 @@ async def replies_to_trainer(event, text, client, is_capopalestra, images = None
 
     team = await load_team_and_check_card(event, client) 
   
-    useful, useless, lvl_100 = await filter_team(team, remove_100 = True, nilb = True)
+    useful, useless, lvl_100 = await filter_team(team, remove_100 = True, nilb = True, data = {"lvlup": True, "catch": False, "drop": False})
 
     try:
         p_of_victory, best_schieramento = await calculate_best_strategy(useful,enemy_team, enemy_powers, multiplier)

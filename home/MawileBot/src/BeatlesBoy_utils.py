@@ -88,7 +88,7 @@ async def find_evo_at_level_x(pokemon, level_x):
 
     return pokemon_x
 
-async def pokemon_utility(pokemon,lvl, catch = False, drop = False):
+async def pokemon_utility(pokemon,lvl, data = {"lvlup": False, "catch": False, "drop": False}):
     if pokemon is  None:
         return 0
     #TODO: implement a better utility function
@@ -110,7 +110,7 @@ async def pokemon_utility(pokemon,lvl, catch = False, drop = False):
     utility = utility_bst * 0.7 + utility_lvl * 0.3
 
     try:
-        utility += await next_gym_bonus(pokemon, lvl, catch, drop)
+        utility += await next_gym_bonus(pokemon, lvl, **data)
     except Exception as e:
         print(f"Error calculating next gym bonus: {e}")
         
@@ -127,14 +127,14 @@ def win_perc_over_gym(gym_type, low_power, pokemon, power, multiplier):
             wins += 1
     return wins / len(all_types_combo)
 
-async def next_gym_bonus(pokemon, lvl, catch = False, drop = False):
+async def next_gym_bonus(pokemon, lvl, **event):
 
     gym_type,multiplier,casella_gym = (await next_gym())
     _, _, enemy_powers, multiplier, _ = poke_cell_gym(casella_gym)
     low_power = min(enemy_powers)
 
     # if the average win percentage of the current team is already above 66%, we can skip the bonus calculation for a new catch
-    if catch == True:
+    if event.get("catch") == True:
         try: 
             team = (await load_team_from_json_simple())
         except:
@@ -163,14 +163,14 @@ async def next_gym_bonus(pokemon, lvl, catch = False, drop = False):
     print(f"Win percentage against next gym: {win_perc_plus5*100:.2f}%")
 
     if win_perc_plus5 > 0.75:
-        if win_perc < 0.75:
+        if win_perc < 0.75 and event.get("lvlup") == True:
             return 5  # This will also boost in training, not only the catches!
         
-    if win_perc > 0.75 and catch == True:
+    if win_perc > 0.75 and event.get("catch") == True:
         return 999  # We need to catch this beast!
     
-    if win_perc > 0.75 and drop == True:
-        return 5 # Do not drop this beast!
+    if win_perc > 0.75 and event.get("drop") == True:
+        return 999 # Do not drop this beast!
     
     return 0
 
@@ -229,13 +229,13 @@ async def lega_utility(team, enemy_team, first_time = False):
     return team_u
 
 
-async def filter_team(team, remove_100=False, nilb = False, drop = False):
+async def filter_team(team, remove_100=False, nilb = False, data = {"lvlup": False, "catch": False, "drop": False}):
     if team:
         utilities = []
         lvl_100 = []
         for index, (poke, lvl) in enumerate(team):
             #poke = await similar_pokemon_name(poke.lower() , r = False) #Sarchiapone
-            u = await pokemon_utility(poke,lvl, drop=drop)
+            u = await pokemon_utility(poke,lvl, data = data)
             if remove_100 and lvl == 100:
                 lvl_100.append((poke, lvl, u, await get_power(poke, lvl), index+1))
             else:
