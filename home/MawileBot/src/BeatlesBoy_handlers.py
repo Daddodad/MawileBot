@@ -450,7 +450,7 @@ async def replies_to_wild_pokemon(event, text, client):
     await event.reply(f"Ho incontrato {pokemon.capitalize()} con PL {pl}.\n\nAspettando la FOTO del team... 20 secondi massimo ⏳")
 
     team = await load_team_and_check_card(event, client)
-    useful, useless, lvl_100 = await filter_team(team, remove_100 = True, nilb = True, data = {"lvlup": True, "catch": False, "drop": True})
+    useful, useless, lvl_100 = await filter_team(team, remove_100 = True, nilb = True, data = {"lvlup": True, "catch": False, "drop": False})
 
     try:
         winning_options = await calculate_winning_options_selvatico(pokemon, pl, useful)
@@ -492,7 +492,7 @@ async def replies_to_pvp(event, text, client):
     n_schierabili = await extract_number_of_pvp_choices(text)
 
     team = await load_team_and_check_card(event, client)
-    useful, useless, lvl_100 = await filter_team(team, remove_100 = True, data = {"lvlup": True, "catch": False, "drop": True})
+    useful, useless, lvl_100 = await filter_team(team, remove_100 = True, data = {"lvlup": True, "catch": False, "drop": False})
     useful.sort( key = lambda x: x[3], reverse=True )  # ordina per power decrescente
     lvl_100.sort( key = lambda x: x[3], reverse=True )  # ordina per power decrescente
     useless.sort( key = lambda x: x[3], reverse=True )  # ordina per power decrescente
