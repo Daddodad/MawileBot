@@ -133,7 +133,7 @@ async def next_gym_bonus(pokemon, lvl, **event):
     _, _, enemy_powers, multiplier, _ = poke_cell_gym(casella_gym)
     low_power = min(enemy_powers)
 
-    # if the average win percentage of the current team is already above 66%, we can skip the bonus calculation for a new catch
+    # if the average win percentage of the current team is already above 66%, we can skip the bonus calculation for a new catch (don't really need to)
     if event.get("catch") == True:
         try: 
             team = (await load_team_from_json_simple())
@@ -143,7 +143,7 @@ async def next_gym_bonus(pokemon, lvl, **event):
         w_p = []
         for (p, l) in team:
             if p is not None:
-                pp = round(await get_poke_bst(p)*(l+3)/100)
+                pp = round(await get_poke_bst(await find_evo_at_level_x(p, l+3))*(l+3)/100)
                 w_p.append(win_perc_over_gym(gym_type, low_power, p, pp, multiplier))
 
         w_p = sorted(w_p, reverse=True)[:6]
@@ -158,7 +158,7 @@ async def next_gym_bonus(pokemon, lvl, **event):
     win_perc = win_perc_over_gym(gym_type, low_power, pokemon, power, multiplier)
     print(f"Win percentage against next gym: {win_perc*100:.2f}%")
 
-    power_plus5 = round(await get_poke_bst(pokemon)*(lvl+5)/100)
+    power_plus5 = round(await get_poke_bst(await find_evo_at_level_x(pokemon, lvl+5))*(lvl+5)/100)
     win_perc_plus5 = win_perc_over_gym(gym_type, low_power, pokemon, power_plus5, multiplier)
     print(f"Win percentage against next gym: {win_perc_plus5*100:.2f}%")
 
@@ -170,7 +170,7 @@ async def next_gym_bonus(pokemon, lvl, **event):
         return 999  # We need to catch this beast!
     
     if win_perc > 0.75 and event.get("drop") == True:
-        return 999 # Do not drop this beast!
+        return 200 # Do not drop this beast!
     
     return 0
 
