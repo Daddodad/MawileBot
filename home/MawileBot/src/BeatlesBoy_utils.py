@@ -118,7 +118,6 @@ async def pokemon_utility(pokemon,lvl, data = {"lvlup": False, "catch": False, "
     return round(utility, 2)  # 0-10 scale (except bonus next gym)
 
 def win_perc_over_gym(gym_type, low_power, pokemon, power, multiplier):
-    print(f"\tCalculating win percentage for {pokemon} with power {power} against gym type {gym_type} with low power {low_power} and multiplier {multiplier}")
     all_types_combo = generate_all_types_combo(gym_type)
     wins = 0
     for t in all_types_combo:
@@ -134,6 +133,7 @@ async def next_gym_bonus(pokemon, lvl, **event):
     gym_type,multiplier,casella_gym = (await next_gym())
     _, _, enemy_powers, multiplier, _ = poke_cell_gym(casella_gym)
     low_power = min(enemy_powers)
+    print(f"Next gym type: {gym_type}, casella: {casella_gym}, low power: {low_power}, multiplier: {multiplier}")
 
     # if the average win percentage of the current team is already above 66%, we can skip the bonus calculation for a new catch (don't really need to)
     if event.get("catch") == True:
