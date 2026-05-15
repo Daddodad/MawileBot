@@ -1125,6 +1125,7 @@ async def poke_gym_test(chat_id, pokemon, livello=0, next=4):
 async def next_gym():
 
     casella = get_casella()
+    print('casella:', casella)
 
     offset = 0
     while casella+1 > gym_cell()[offset]:
