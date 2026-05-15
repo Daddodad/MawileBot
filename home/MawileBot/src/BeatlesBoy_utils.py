@@ -131,7 +131,7 @@ def win_perc_over_gym(gym_type, low_power, pokemon, power, multiplier):
 async def next_gym_bonus(pokemon, lvl, **event):
 
     gym_type,multiplier,casella_gym = (await next_gym())
-    _, _, enemy_powers, multiplier, _ = poke_cell_gym(casella_gym)
+    _, _, enemy_powers, multiplier, _ = poke_cell_gym(casella_gym-1)
     low_power = min(enemy_powers)
     print(f"Next gym type: {gym_type}, casella: {casella_gym}, low power: {low_power}, multiplier: {multiplier}")
 
