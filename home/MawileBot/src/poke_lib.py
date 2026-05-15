@@ -1131,7 +1131,7 @@ async def next_gym():
     while casella+1 > gym_cell()[offset]:
         offset += 1
 
-    return gym_types()[offset], 5 + 3 * int((casella+offset) / NUM_CASELLE_PER_RIGA), casella+offset
+    return gym_types()[offset], 5 + 3 * int((casella+offset) / NUM_CASELLE_PER_RIGA), gym_cell()[offset]
 
 
 async def get_gym_results(gym, gym_data, pokemon, livello, chat_id):
