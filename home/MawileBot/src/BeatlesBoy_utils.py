@@ -98,10 +98,11 @@ async def pokemon_utility(pokemon,lvl, data = {"lvlup": False, "catch": False, "
     max_bst = await get_poke_bst(fully_evo)
     if fully_evo in (await load_x_from_json("mega")):
         max_bst = await get_poke_bst(fully_evo+'-mega')
-        print(f"BST di Mega {await find_evo_at_level_x(pokemon, 100)} a livello 100: {max_bst}")
+        #print(f"BST di Mega {await find_evo_at_level_x(pokemon, 100)} a livello 100: {max_bst}")
 
     else:
-        print(f"BST di {await find_evo_at_level_x(pokemon, 100)} a livello 100: {max_bst}")
+        #print(f"BST di {await find_evo_at_level_x(pokemon, 100)} a livello 100: {max_bst}")
+        pass
 
 
     utility_bst = max_bst/620*10
@@ -117,6 +118,7 @@ async def pokemon_utility(pokemon,lvl, data = {"lvlup": False, "catch": False, "
     return round(utility, 2)  # 0-10 scale (except bonus next gym)
 
 def win_perc_over_gym(gym_type, low_power, pokemon, power, multiplier):
+    print(f"\tCalculating win percentage for {pokemon} with power {power} against gym type {gym_type} with low power {low_power} and multiplier {multiplier}")
     all_types_combo = generate_all_types_combo(gym_type)
     wins = 0
     for t in all_types_combo:
@@ -156,11 +158,11 @@ async def next_gym_bonus(pokemon, lvl, **event):
      
     power = round(await get_poke_bst(pokemon)*lvl/100)
     win_perc = win_perc_over_gym(gym_type, low_power, pokemon, power, multiplier)
-    print(f"Win percentage against next gym: {win_perc*100:.2f}%")
+    print(f"{pokemon}: Win percentage against next gym: {win_perc*100:.2f}%")
 
     power_plus5 = round(await get_poke_bst(await find_evo_at_level_x(pokemon, lvl+5))*(lvl+5)/100)
     win_perc_plus5 = win_perc_over_gym(gym_type, low_power, pokemon, power_plus5, multiplier)
-    print(f"Win percentage against next gym: {win_perc_plus5*100:.2f}%")
+    print(f"{pokemon} + 5lvl: Win percentage against next gym: {win_perc_plus5*100:.2f}%")
 
     if win_perc_plus5 > 0.75:
         if win_perc < 0.75 and event.get("lvlup") == True:
