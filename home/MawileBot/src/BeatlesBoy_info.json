@@ -1,36 +1,40 @@
 {
   "team": [
     [
-      "chespin",
-      13
+      "delphox",
+      48
     ],
     [
-      "hatenna",
-      13
+      "togepi",
+      21
     ],
     [
-      "milcery",
-      9
+      "eevee",
+      26
     ],
     [
-      "unown",
-      15
+      "skiddo",
+      19
     ],
     [
-      null,
-      1
+      "crabrawler",
+      18
     ],
     [
-      null,
-      1
+      "wailmer",
+      19
     ],
     [
-      null,
-      1
+      "electrike",
+      23
     ],
     [
-      null,
-      1
+      "bombirdier",
+      19
+    ],
+    [
+      "shinx",
+      20
     ]
   ],
   "mega": [
@@ -50,8 +54,13 @@
   "win_2": false,
   "enemy_team_lega": [],
   "team_lega": [],
-  "clean_up": 71,
+  "clean_up": 122,
   "num_enemies": 4,
-  "catture": [],
+  "catture": [
+    "\tWailmer (11.22)\n",
+    "\tWailmer (11.22)\n",
+    "\tWailmer (11.22)\n",
+    "\tWailmer (11.22)\n"
+  ],
   "battaglie": []
 }

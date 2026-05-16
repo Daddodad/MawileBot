@@ -1,5 +1,7 @@
-### Funzionamento di BeatlesBoy:
+### FAQ BeatlesBoy:
 
+> _COME SONO GESTITE LE MEGA?_
+>>  Malissimo, prossima domanda? (la funzione di calcolo dell'evoluzione dopo un certo livello non le conta. Ovviamente la funzione di bst sì, ma solo se gli passi una mega. Solo utilty, che calcola il massimo potenziale, le conta quando vede l'evo finale del pokemon.)
 ##### Keywords: 
 
 > _UTILITY_: 

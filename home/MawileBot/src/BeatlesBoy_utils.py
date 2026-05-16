@@ -110,12 +110,38 @@ async def pokemon_utility(pokemon,lvl, data = {"lvlup": False, "catch": False, "
 
     utility = utility_bst * 0.7 + utility_lvl * 0.3
 
+
+    try:
+        utility += await malus_inallenabile(pokemon,lvl, **data)
+    except Exception as e:
+        print(f"Error calculating malus inallenabile: {e}")
     try:
         utility += await next_gym_bonus(pokemon, lvl, **data)
     except Exception as e:
         print(f"Error calculating next gym bonus: {e}")
         
     return round(utility, 2)  # 0-10 scale (except bonus next gym)
+async def malus_inallenabile(pokemon, lvl, **event):
+
+    if event.get("catch") == False:
+        return 0
+
+    try:
+        _, enemy_powers, capopalestra_powers, multiplier, _ = await poke_cell(1)
+    except:
+        _, enemy_powers, capopalestra_powers, multiplier, _ = await poke_cell(0)
+
+    low_power = min(enemy_powers)
+    power = round(await get_poke_bst(pokemon)*lvl/100)
+
+    malus = 0
+    while power < low_power and lvl <= 100:
+        malus -=0.05
+        lvl +=1
+        pokemon = await find_evo_at_level_x(pokemon, lvl)
+        power = round(await get_poke_bst(pokemon)*lvl/100)
+
+    return malus
 
 def win_perc_over_gym(gym_type, low_power, pokemon, power, multiplier):
     all_types_combo = generate_all_types_combo(gym_type)
