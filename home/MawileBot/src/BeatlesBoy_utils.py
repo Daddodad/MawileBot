@@ -192,7 +192,8 @@ async def next_gym_bonus(pokemon, lvl, **event):
 
     if win_perc_plus5 > 0.75:
         if win_perc < 0.75 and event.get("lvlup") == True:
-            return 5  # This will also boost in training, not only the catches!
+            return 8  # This will also boost in training, not only the catches!
+                        # Slightly inferior to nilb
         
     if win_perc > 0.75 and event.get("catch") == True:
         return 999  # We need to catch this beast!
