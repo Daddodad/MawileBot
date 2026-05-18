@@ -190,15 +190,15 @@ async def next_gym_bonus(pokemon, lvl, **event):
     win_perc_plus5 = win_perc_over_gym(gym_type, low_power, pokemon, power_plus5, multiplier)
     print(f"{pokemon} + 5lvl: Win percentage against next gym: {win_perc_plus5*100:.2f}%")
 
-    if win_perc_plus5 > 0.75:
-        if win_perc < 0.75 and event.get("lvlup") == True:
+    if win_perc_plus5 > 0.70:
+        if win_perc < 0.70 and event.get("lvlup") == True:
             return 8  # This will also boost in training, not only the catches!
                         # Slightly inferior to nilb
         
-    if win_perc > 0.75 and event.get("catch") == True:
+    if win_perc > 0.70 and event.get("catch") == True:
         return 999  # We need to catch this beast!
     
-    if win_perc > 0.75 and event.get("drop") == True:
+    if win_perc > 0.70 and event.get("drop") == True:
         return 200 # Do not drop this beast!
     
     return 0
