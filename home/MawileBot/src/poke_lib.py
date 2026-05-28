@@ -1834,6 +1834,28 @@ most_similar_cache = {  'morpeko': ['morpeko-full-belly','morpeko-hangry'],
                         "oricorioflamenco" : "oricorio-baile",
                         "oricorioula" : "oricorio-pau",
                         "oricoriobuyo" : "oricorio-sensu",
+                            
+                        "grandizanne": "great-tusk",
+                        "codaurlante": "scream-tail",
+                        "fungofurioso": "brute-bonnet",
+                        "crinealato": "flutter-mane",
+                        "alirasenti": "slither-wing",
+                        "peldisabbia": "sandy-shocks",
+                        "lunaruggente": "roaring-moon",
+                        "acquecrespe": "walking-wake",
+                        "vampeaguzze": "gouging-fire",
+                        "furiatonante": "raging-bolt",
+
+                        "solcoferreo": "iron-treads",
+                        "saccoferreo": "iron-bundle",
+                        "manoferrea": "iron-hands",
+                        "colloferreo": "iron-jugulis",
+                        "falenaferrea": "iron-moth",
+                        "spineferree": "iron-thorns",
+                        "fogliaferrea": "iron-leaves",
+                        "massoferreo": "iron-boulder",
+                        "capoferreo": "iron-crown",
+                        "eroeferreo": "iron-valiant",
                         }
 
 async def similar_pokemon_name(pokemon_probable_name, r = True):
