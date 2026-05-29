@@ -356,6 +356,8 @@ async def get_poke_bst(pokemon):
         return 620 + bst_bonus
     if bst == 600:
         return 580 + bst_bonus
+    if bst == 590:
+        return 555 + bst_bonus
     if bst == 580:
         if pokemon.lower() in  ["entei", "raikou", "suicune"]:
             return 560 + bst_bonus

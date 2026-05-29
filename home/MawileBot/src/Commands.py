@@ -1902,6 +1902,8 @@ async def team_update(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
                 return ConversationHandler.END  
             else:
                 message = 'Team aggiornato:\n\n'
+                print_warning = 0
+                print_error = 0
                 for x,y in zip(secret_data,errors):
                     if x[0] != None:
                         try:
@@ -1911,14 +1913,22 @@ async def team_update(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
                         message+=f'{x[0]}'
                         if y == '10':
                             message += " (⚠️)"  
-                            await update.message.reply_text("⚠️ WARNING: Non sono sicuro di star leggendo bene questo nome... Ma se ho ragione, non c'è alcun problema!")
+                            if print_warning == 0:
+                                await update.message.reply_text("⚠️ WARNING: Non sono sicuro di star leggendo bene questo nome... Ma se ho ragione, non c'è alcun problema!")
+                                print_warning = 1
                         if y == '11':
                             message += " (⚠️🔞)" 
-                            await update.message.reply_text("⚠️ WARNING: Non sono sicuro di star leggendo bene questo nome... Ma se ho ragione, non c'è alcun problema!")
-                            await update.message.reply_text("🔞 ERROR: Secondo i miei calcoli, la potenza di questo Pokèmon è diversa... Questo mi farà sicuramente sballare i conti, tienilo a mente!")
+                            if print_warning == 0:
+                                await update.message.reply_text("⚠️ WARNING: Non sono sicuro di star leggendo bene questo nome... Ma se ho ragione, non c'è alcun problema!")
+                                print_warning = 1
+                            if print_error == 0:
+                                await update.message.reply_text("🔞 ERROR: Secondo i miei calcoli, la potenza di questo Pokèmon è diversa... Questo mi farà sicuramente sballare i conti, tienilo a mente!")
+                                print_error = 1
                         if y == '01':
                             message += " (🔞)" 
-                            await update.message.reply_text("🔞 ERROR: Secondo i miei calcoli, la potenza di questo Pokèmon è diversa... Questo mi farà sicuramente sballare i conti, tienilo a mente!")
+                            if print_error == 0:
+                                await update.message.reply_text("🔞 ERROR: Secondo i miei calcoli, la potenza di questo Pokèmon è diversa... Questo mi farà sicuramente sballare i conti, tienilo a mente!")
+                                print_error = 1
                         message +=  f' lvl {x[1]}\n' 
                 if 'Sableye' in message:
                     await update.message.reply_text('Ottima scelta comunque... Non ti deluderò!')
