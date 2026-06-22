@@ -38,7 +38,7 @@ except FileNotFoundError:
         with open(file_path, "w") as f:
             f.write("{}")
         data = "{}"
-        
+
 from datetime import datetime, date
 # Lega a 42 caselle
 # LvL = [5, 6, 7, 8, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 27, 29, 30, 31, 33, 36, 38, 41, 43, 45, 46, 49, 51, 54, 56, 58, 61, 62, 64, 66, 69, 71, 74, 76]
@@ -345,6 +345,8 @@ async def get_poke_bst(pokemon):
 
     if pokemon.lower() == "archeops":
         return 495 + bst_bonus
+    if pokemon.lower() == "archen":
+        return 355 + bst_bonus
     if pokemon.lower() == "type-null":
         return 535 + bst_bonus
     if pokemon.lower() in ["keldeo-resolute", "keldeo-ordinary"]:
@@ -366,6 +368,8 @@ async def get_poke_bst(pokemon):
         if 'regi' in pokemon.lower():
             return 560 + bst_bonus
         if pokemon.lower() in  ["spectrier", "glastrier"]:
+            return 560 + bst_bonus
+        if pokemon.lower() in ['virizion', 'cobalion', 'terrakion']:
             return 560 + bst_bonus
         else:
             return 570 + bst_bonus

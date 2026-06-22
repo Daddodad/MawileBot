@@ -281,7 +281,9 @@ async def filter_team(team, remove_100=False, nilb = False, data = {"lvlup": Fal
                     utilities[i] = (p[0], p[1], p[2] + 10, p[3], p[4])
             utilities.sort(key=lambda x: x[2], reverse=True)
 
-        return utilities[:6], utilities[6:], lvl_100
+        num_utils = max(1, 6 - len(lvl_100))
+        num_utils = min(num_utils, len(utilities))
+        return utilities[:num_utils], utilities[num_utils:], lvl_100
     else:
         return [], [], []
 
