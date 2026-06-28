@@ -42,6 +42,7 @@ In generale, nelle situazioni:
 >**CATTURA**:
 >>Tra gli _USEFUL_, scegli il meno utile. 
 >>Se anche la potenza tra *x* livelli dati stimati del Pokèmon da catturare è superiore a quella del Pokèmon meno utile, allora catturalo!
+>>Al pokemon da catturare viene applicato un malus nel caso non sia allenabile.
 >>+ *x* è (caselle rimanenti) *2 *1.5.
 >>+ Se non ci sono nemmeno 6 Pokèmon in squadra, allora cattura a caso (50% di prob.).
 >>+ Chi viene tolto dalla squadra? Se ci stanno slot vuoti, uno di quelli. Altrimenti, il meno utile di _USEFUL_+_USELESS_+LVL100 (Assumo che supera la potenza tra *x* livelli stimati, caso limite).
