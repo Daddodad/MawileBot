@@ -359,7 +359,7 @@ async def get_poke_bst(pokemon):
     if bst == 600:
         return 580 + bst_bonus
     if bst == 590:
-        if pokemon.lower() in ['gouging-fire', 'walking-wake', 'raging-bolt']:
+        if pokemon.lower() in ['iron-crown','iron-leaf','iron-boulder','gouging-fire', 'walking-wake', 'raging-bolt']:
             return 555 + bst_bonus
         return 570 + bst_bonus
     if bst == 580:
@@ -371,8 +371,7 @@ async def get_poke_bst(pokemon):
             return 560 + bst_bonus
         if pokemon.lower() in ['virizion', 'cobalion', 'terrakion']:
             return 560 + bst_bonus
-        else:
-            return 570 + bst_bonus
+        return 570 + bst_bonus
     if bst == 570:
         return 555 + bst_bonus
     non_leg_w_550_bst = ["florges", "arcanine", "arcanine-hisui","ursaluna-bloodmoon","silvally","palafin","palafin-hero","slaking", ]
@@ -1843,7 +1842,7 @@ most_similar_cache = {  'morpeko': ['morpeko-full-belly','morpeko-hangry'],
                         "oricorioflamenco" : "oricorio-baile",
                         "oricorioula" : "oricorio-pau",
                         "oricoriobuyo" : "oricorio-sensu",
-                            
+
                         "grandizanne": "great-tusk",
                         "codaurlante": "scream-tail",
                         "fungofurioso": "brute-bonnet",
