@@ -262,7 +262,7 @@ async def reply_to_text(event, text, client):
     elif "vuoi aggiungerlo in squadra?" in text:
         (dopo_cattura, name, poke_u) = (await replies_to_vittoria(event,text,client))
         await event.reply(str(dopo_cattura))
-        if str(dopo_cattura)!="0":
+        if "0" not in str(dopo_cattura):
             l = (await load_x_from_json("catture"))
             l.append(f"\t{name} ({poke_u})\n")
             await dump_x_in_json(l,"catture")
@@ -753,7 +753,9 @@ async def replies_to_trainer(event, text, client, is_capopalestra, images = None
     team = await load_team_and_check_card(event, client) 
   
     useful, useless, lvl_100 = await filter_team(team, remove_100 = True, nilb = True, data = {"lvlup": True, "catch": False, "drop": False})
-
+    useful.sort( key = lambda x: x[3], reverse=False )  # ordina per power 
+    lvl_100.sort( key = lambda x: x[3], reverse=False )  # ordina per power 
+    useless.sort( key = lambda x: x[3], reverse=False )  # ordina per power 
     try:
         p_of_victory, best_schieramento = await calculate_best_strategy(useful,enemy_team, enemy_powers, multiplier)
         if 0 in p_of_victory:   # Si può fare di meglio?

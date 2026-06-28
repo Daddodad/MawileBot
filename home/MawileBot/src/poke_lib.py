@@ -38,7 +38,7 @@ except FileNotFoundError:
         with open(file_path, "w") as f:
             f.write("{}")
         data = "{}"
-        
+
 from datetime import datetime, date
 # Lega a 42 caselle
 # LvL = [5, 6, 7, 8, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 27, 29, 30, 31, 33, 36, 38, 41, 43, 45, 46, 49, 51, 54, 56, 58, 61, 62, 64, 66, 69, 71, 74, 76]
@@ -59,8 +59,8 @@ NUM_CASELLE_PER_RIGA = 6
 #################################   VARIABILI GLOBALI DA CAMBIARE OGNI LEGA ##################
 ##############################################################################################
 
+EVENTUALE_PAUSA = 4  # TOGLILA OGNI NUOVA LEGAAAAAAAAAAAA! Giorni di pausa in una lega (mettili quando inizia la pausa)
 STARTING_DATE = date(2026,4,21)  # Data di inizio della lega, da cambiare ogni lega (metti il giorno prima, la prima casella dura solo 1)
-EVENTUALE_PAUSA = 0  # TOGLILA OGNI NUOVA LEGAAAAAAAAAAAA! Giorni di pausa in una lega (mettili quando inizia la pausa)
 
 ###############################################################################################
 ###############################################################################################
@@ -345,6 +345,8 @@ async def get_poke_bst(pokemon):
 
     if pokemon.lower() == "archeops":
         return 495 + bst_bonus
+    if pokemon.lower() == "archen":
+        return 355 + bst_bonus
     if pokemon.lower() == "type-null":
         return 535 + bst_bonus
     if pokemon.lower() in ["keldeo-resolute", "keldeo-ordinary"]:
@@ -356,12 +358,18 @@ async def get_poke_bst(pokemon):
         return 620 + bst_bonus
     if bst == 600:
         return 580 + bst_bonus
+    if bst == 590:
+        if pokemon.lower() in ['gouging-fire', 'walking-wake', 'raging-bolt']:
+            return 555 + bst_bonus
+        return 570 + bst_bonus
     if bst == 580:
         if pokemon.lower() in  ["entei", "raikou", "suicune"]:
             return 560 + bst_bonus
         if 'regi' in pokemon.lower():
             return 560 + bst_bonus
         if pokemon.lower() in  ["spectrier", "glastrier"]:
+            return 560 + bst_bonus
+        if pokemon.lower() in ['virizion', 'cobalion', 'terrakion']:
             return 560 + bst_bonus
         else:
             return 570 + bst_bonus
@@ -1783,6 +1791,7 @@ most_similar_cache = {  'morpeko': ['morpeko-full-belly','morpeko-hangry'],
                         "kyurembianco" : "kyurem-white",
                         "kyuremnero" : "kyurem-black",
                         "meowstic" :["meowstic-female","meowstic-male"],
+                        "pyroar" : ["pyroar-male"],
                         "aegislash" : ["aegislash-shield","aegislash-blade"],
                         "pumpkaboo" : ["pumpkaboo-average","pumpkaboo-small","pumpkaboo-large","pumpkaboo-super"],
                         "gourgeists" : ["gourgeist-average","gourgeist-small","gourgeist-large","gourgeist-super"],
@@ -1834,6 +1843,28 @@ most_similar_cache = {  'morpeko': ['morpeko-full-belly','morpeko-hangry'],
                         "oricorioflamenco" : "oricorio-baile",
                         "oricorioula" : "oricorio-pau",
                         "oricoriobuyo" : "oricorio-sensu",
+                            
+                        "grandizanne": "great-tusk",
+                        "codaurlante": "scream-tail",
+                        "fungofurioso": "brute-bonnet",
+                        "crinealato": "flutter-mane",
+                        "alirasenti": "slither-wing",
+                        "peldisabbia": "sandy-shocks",
+                        "lunaruggente": "roaring-moon",
+                        "acquecrespe": "walking-wake",
+                        "vampeaguzze": "gouging-fire",
+                        "furiatonante": "raging-bolt",
+
+                        "solcoferreo": "iron-treads",
+                        "saccoferreo": "iron-bundle",
+                        "manoferrea": "iron-hands",
+                        "colloferreo": "iron-jugulis",
+                        "falenaferrea": "iron-moth",
+                        "spineferree": "iron-thorns",
+                        "fogliaferrea": "iron-leaves",
+                        "massoferreo": "iron-boulder",
+                        "capoferreo": "iron-crown",
+                        "eroeferreo": "iron-valiant",
                         }
 
 async def similar_pokemon_name(pokemon_probable_name, r = True):
