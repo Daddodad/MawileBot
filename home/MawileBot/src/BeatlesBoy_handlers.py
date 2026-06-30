@@ -536,6 +536,7 @@ async def replies_to_potenziamento(event, text, client):
 
     team = await load_team_and_check_card(event, client)    
     useful, useless, lvl_100 = await filter_team(team, remove_100 = True, nilb = True, data = {"lvlup": True, "catch": False, "drop": False})
+    print("useful for potenziamento: ",useful)
     try:
         potenziabili = await calculate_potenziabili(tipi, useful)
         # Perchè dovrebbe dare il potenziamento a gente inutile o al 100?!?!
@@ -755,7 +756,8 @@ async def replies_to_trainer(event, text, client, is_capopalestra, images = None
     useful, useless, lvl_100 = await filter_team(team, remove_100 = True, nilb = True, data = {"lvlup": True, "catch": False, "drop": False})
     useful.sort( key = lambda x: x[3], reverse=False )  # ordina per power 
     lvl_100.sort( key = lambda x: x[3], reverse=False )  # ordina per power 
-    useless.sort( key = lambda x: x[3], reverse=False )  # ordina per power 
+    useless.sort( key = lambda x: x[3], reverse=True )  # ordina per power (do i livelli prima al più forte, non prioritizzo gente indietro) 
+    print('\n Incontro Selvatici, le squadre sono:\n', "useful", useful, "\nuseless", useless, "\nlvl_100",lvl_100)
     try:
         p_of_victory, best_schieramento = await calculate_best_strategy(useful,enemy_team, enemy_powers, multiplier)
         if 0 in p_of_victory:   # Si può fare di meglio?

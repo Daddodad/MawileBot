@@ -270,19 +270,21 @@ async def filter_team(team, remove_100=False, nilb = False, data = {"lvlup": Fal
             else:
                 utilities.append((poke, lvl, u, await get_power(poke, lvl), index+1))
         utilities.sort(key=lambda x: x[2], reverse=True)
+
+        num_utils = max(1, 6 - len(lvl_100))
+        num_utils = min(num_utils, len(utilities))
+
         if nilb:
             try:
                 _, enemy_powers, capopalestra_powers, multiplier, _ = await poke_cell(1)
             except:
                 _, enemy_powers, capopalestra_powers, multiplier, _ = await poke_cell(0)
-            for i in range(min(6, len(utilities))):
+            for i in range(num_utils):
                 p = utilities[i]
                 if p[3] < enemy_powers[0]:
                     utilities[i] = (p[0], p[1], p[2] + 10, p[3], p[4])
             utilities.sort(key=lambda x: x[2], reverse=True)
 
-        num_utils = max(1, 6 - len(lvl_100))
-        num_utils = min(num_utils, len(utilities))
         return utilities[:num_utils], utilities[num_utils:], lvl_100
     else:
         return [], [], []
