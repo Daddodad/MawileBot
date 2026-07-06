@@ -524,7 +524,26 @@ TYPE_EMOJI_LIST = {
         'Fairy': '🧚'
     }
 
-EMOJI_TO_TYPE = {v: k for k, v in TYPE_EMOJI_LIST.items()}
+EMOJI_TO_TYPE = {
+    '⚪': 'Normal',
+    '🔥': 'Fire',
+    '💧': 'Water',
+    '⚡': 'Electric',
+    '🍃': 'Grass',
+    '❄': 'Ice',
+    '💪': 'Fighting',
+    '☠': 'Poison',
+    '🟠': 'Ground',
+    '🦅': 'Flying',
+    '🔮': 'Psychic',
+    '🐛': 'Bug',
+    '⛰': 'Rock',
+    '👻': 'Ghost',
+    '🐉': 'Dragon',
+    '⚫': 'Dark',
+    '🔩': 'Steel',
+    '🧚': 'Fairy',
+}
 
 def get_type_emoji(type_name):
     return TYPE_EMOJI_LIST.get(type_name, '❓')

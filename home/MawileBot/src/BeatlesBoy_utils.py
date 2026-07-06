@@ -318,19 +318,17 @@ async def extract_pokemon_and_pl(text):
         middle = stat_line.replace(pokemon, "")
         middle = middle.split("PL")[0]
 
-        for ch in middle:
-            # emoji / symbols live here
-            if ord(ch) > 127:
-                emojis.append(ch)
+        emojis = [ch for ch in middle if ch in EMOJI_TO_TYPE]
 
     # print(emojis[0])
     # print(emojis[1] if len(emojis)>1 else None)
     pokemon = await similar_pokemon_name(pokemon.lower(), r = False)
+    #print('\n Emoji 1: ', emojis[0],'Emoji 2', emojis[1] if len(emojis)>1 else None, '\n')
     pokemon = await check_alt_forms(pokemon,
                                     EMOJI_TO_TYPE.get(emojis[0],None),
                                     EMOJI_TO_TYPE.get(emojis[1],None) if len(emojis) >1 else None
                                     )
-    print('Letto ',pokemon, pl, EMOJI_TO_TYPE.get(emojis[0],None), EMOJI_TO_TYPE.get(emojis[1],None) if len(emojis) >1 else None)
+    print('\nEXTRACT POKEMON AND PL: ',pokemon, pl, EMOJI_TO_TYPE.get(emojis[0],None), EMOJI_TO_TYPE.get(emojis[1],None) if len(emojis) >1 else None)
 
     return pokemon, pl
 

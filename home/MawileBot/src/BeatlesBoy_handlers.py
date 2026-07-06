@@ -10,6 +10,7 @@ from PIL import Image
 from telethon import events
 import asyncio
 import random
+import traceback
 import configparser
 from telethon.tl.types import Message
 
@@ -200,7 +201,12 @@ def register_handlers(client):
                     # elif clean_up<0:
                     #     await delete_messages_before(event, client, limit = clean_up, exclude = "Ecco il resoconto")
             except Exception as e:
-                await event.reply(f"[Handlers] ❌ ERROR in message_handler: {e}")
+                tb = traceback.format_exc()
+                await event.reply(
+                    f"[Handlers] ❌ ERROR in message_handler:\n"
+                    f"{type(e).__name__}: {e}\n\n"
+                    f"{tb}"
+                )
 
 
 async def reply_to_text(event, text, client):
@@ -312,6 +318,7 @@ async def reply_to_text(event, text, client):
         return True, 0
     elif "Il tuo avversario ha schierato, puoi chiedere l'indizio!" in text:
         fase_lega = await load_x_from_json("fase_lega")
+        indizio = None
         if fase_lega == 1:
             indizio = await lega_hint_ask()
         if fase_lega == 2:
@@ -942,7 +949,7 @@ async def lega_turn_2_hint_reply(event, text, client):
     vincente = one_vs_team_lega(team, enemy_poke, enemy_pl)
 
     if (await load_x_from_json("win_1")) == False: # Ho perso il primo match, schiero i 3 più forti
-
+        print('sono arrivato qui')
         if vincente == None:
             pos_da_schierare = [str(p[4]) for p in team[:3]]
             return ''.join(pos_da_schierare)
