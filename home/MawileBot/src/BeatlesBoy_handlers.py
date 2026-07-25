@@ -949,25 +949,37 @@ async def lega_turn_2_hint_reply(event, text, client):
     vincente = one_vs_team_lega(team, enemy_poke, enemy_pl)
 
     if (await load_x_from_json("win_1")) == False: # Ho perso il primo match, schiero i 3 più forti
-        print('sono arrivato qui')
-        if vincente == None:
-            pos_da_schierare = [str(p[4]) for p in team[:3]]
-            return ''.join(pos_da_schierare)
-        else:
 
-            for i,pp in enumerate(team):
-                if pp[0] == vincente[0] and pp[4] == vincente[4]:
-                    team.pop(i)
-                    break
+        try:
+            if vincente == None:
+                pos_da_schierare = [str(p[4]) for p in team[:3]]
+                return ''.join(pos_da_schierare)
+            else:
 
-            pos_vincente = str(vincente[4])
-            if indizio_chiesto == 1:
-                pos_da_schierare = pos_vincente + str(team[0][4]) + str(team[5][4])
-            if indizio_chiesto == 2:
-                pos_da_schierare = str(team[0][4]) + pos_vincente + str(team[5][4])
-            if indizio_chiesto == 3:
-                pos_da_schierare = str(team[0][4]) + str(team[5][4]) + pos_vincente
-            return pos_da_schierare
+                for i,pp in enumerate(team):
+                    if pp[0] == vincente[0] and pp[4] == vincente[4]:
+                        team.pop(i)
+                        break
+
+                pos_vincente = str(vincente[4])
+                if indizio_chiesto == 1:
+                    pos_da_schierare = pos_vincente + str(team[0][4]) + str(team[4][4])
+                if indizio_chiesto == 2:
+                    pos_da_schierare = str(team[0][4]) + pos_vincente + str(team[4][4])
+                if indizio_chiesto == 3:
+                    pos_da_schierare = str(team[0][4]) + str(team[4][4]) + pos_vincente
+                return pos_da_schierare
+        except Exception as e:
+            import traceback
+            print("Error 11:", e)
+            print("Traceback:")
+            traceback.print_exc()
+            print(f"vincente = {vincente}")
+            print(f"indizio_chiesto = {indizio_chiesto}")
+            print(f"len(team) after pop = {len(team)}")
+            print(f"team = {team}")
+            raise
+
     else:
         if vincente == None:
             pos_da_schierare = [str(p[4]) for p in team[-3:]]
@@ -1055,13 +1067,25 @@ async def compile_answer_lega(event, text, client, vittoria):
         await event.reply("Ho vinto! Aggiorno le squadre...")
         if fase_lega == 1:
             await dump_x_in_json(True, "win_1")
+            l = await load_x_from_json("battaglie")
+            l.append('Ho vinto la prima battaglia!\n')
+            await dump_x_in_json(l,"battaglie")
         elif fase_lega == 2:
+            l = await load_x_from_json("battaglie")
+            l.append('Ho vinto la seconda battaglia!\n')
+            await dump_x_in_json(l,"battaglie")
             await dump_x_in_json(True, "win_2")
     else:
         await event.reply("Ho perso! Aggiorno le squadre...")
         if fase_lega == 1:
+            l = await load_x_from_json("battaglie")
+            l.append('Ho perso la seconda battaglia....\n')
+            await dump_x_in_json(l,"battaglie")
             await dump_x_in_json(False, "win_1")
         elif fase_lega == 2:
+            l = await load_x_from_json("battaglie")
+            l.append('Ho perso la seconda battaglia...\n')
+            await dump_x_in_json(l,"battaglie")
             await dump_x_in_json(False, "win_2")
 
     await dump_x_in_json(fase_lega+1, "fase_lega")

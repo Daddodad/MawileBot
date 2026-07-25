@@ -45,12 +45,12 @@ from datetime import datetime, date
 # coeff = [3, 3.5, 4, 4.5, 5, 5.5]
 # NUM_CASELLE_PER_RIGA = 7
 
-LvL = [ 5,  6,  7,  8,  10, 12,
-        12, 13, 15, 17, 18, 20,
-        20, 21, 23, 25, 26, 28,
-        29, 31, 33, 36, 39, 41,
-        42, 44, 47, 49, 51, 54,
-        55, 57, 59, 62, 65, 67]
+LvL = [ 5,  6,  7,  8,  10, 11,
+        11, 13, 15, 16, 18, 20,
+        20, 22 ,23, 24, 26, 28,
+        28, 31, 34, 36, 39, 41,
+        41, 44, 46, 49, 52, 54,
+        54, 57, 59, 62, 65, 67]
 
 coeff = [3, 3.5, 4, 4.5, 5, 5.5]
 NUM_CASELLE_PER_RIGA = 6
@@ -60,7 +60,7 @@ NUM_CASELLE_PER_RIGA = 6
 ##############################################################################################
 
 EVENTUALE_PAUSA = 4  # TOGLILA OGNI NUOVA LEGAAAAAAAAAAAA! Giorni di pausa in una lega (mettili quando inizia la pausa)
-STARTING_DATE = date(2026,4,21)  # Data di inizio della lega, da cambiare ogni lega (metti il giorno prima, la prima casella dura solo 1)
+STARTING_DATE = date(2026,7,25)  # Data di inizio della lega, da cambiare ogni lega (metti il giorno prima, la prima casella dura solo 1)
 
 ###############################################################################################
 ###############################################################################################
