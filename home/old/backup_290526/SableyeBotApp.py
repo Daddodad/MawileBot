@@ -23,7 +23,13 @@ from src.Commands import (
     get_meme_conversation_handler
 )
 
-TOKEN = '7119226556:AAErwxsF7x0rksunnoKp3_ItLcQPfQdlqlM'
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CONFIG_PATH = os.path.join(BASE_DIR, "config.ini")
+config = configparser.ConfigParser()
+config.read(CONFIG_PATH)
+TOKEN = config["SableyeBot"]["bot_token"]
+
 app = Flask(__name__)
 
 loop = asyncio.new_event_loop()

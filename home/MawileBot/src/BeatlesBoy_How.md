@@ -10,7 +10,7 @@
 > _USEFUL, USELESS, LVL100_: 
 >>Divisione della squadra in 3 blocchi: 
 >>LVL100 contiene i Pokèmon lvl 100 
->>USEFUL massimo 6 tra i rimanenti con utilità più alta
+>>USEFUL massimo 6 (dipende dalla riga in cui mi trovo e dai lvl100) tra i rimanenti con utilità più alta
 >>USELESS i rimanenti. 
 
 > _NOBODY IS LEFT BEHIND_ 
@@ -44,7 +44,7 @@ In generale, nelle situazioni:
 >>Se anche la potenza tra *x* livelli dati stimati del Pokèmon da catturare è superiore a quella del Pokèmon meno utile, allora catturalo!
 >>Al pokemon da catturare viene applicato un malus nel caso non sia allenabile.
 >>+ *x* è (caselle rimanenti) *2 *1.5.
->>+ Se non ci sono nemmeno 6 Pokèmon in squadra, allora cattura a caso (50% di prob.).
+>>+ Se non ci sono nemmeno 4 Pokèmon in squadra, allora cattura a caso (50% di prob.).
 >>+ Chi viene tolto dalla squadra? Se ci stanno slot vuoti, uno di quelli. Altrimenti, il meno utile di _USEFUL_+_USELESS_+LVL100 (Assumo che supera la potenza tra *x* livelli stimati, caso limite).
 >>+ Non butta mai via Sableye. Cattura sempre Sableye se non ne ha.
 

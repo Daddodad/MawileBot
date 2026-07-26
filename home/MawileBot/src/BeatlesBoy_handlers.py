@@ -707,13 +707,13 @@ async def replies_to_vittoria(event, text, client):
                 await event.reply(f"L'utilità è maggiore, ma non recupera {less_useful[0].capitalize()} in {livelli_rimanenti} livelli (livelli rimanenti stimati / 6).")
                 return to_return, name, pokemon_u
 
-    # Non ho nemmeno 6 pokemon...
-    if count<6:
+    # Non ho nemmeno 4 pokemon...
+    if count<4:
         if random.random() >0.5:
-            await event.reply(f"Non ho nemmeno 6 pokémon... ma non mi sembra così utile questo...")
+            await event.reply(f"Non ho nemmeno 4 pokémon... ma non mi sembra così utile questo...")
             return to_return, name, pokemon_u
         else:
-            await event.reply('Non ho nemmeno 6 pokémon... e lui mi piace un sacco!')
+            await event.reply('Non ho nemmeno 4 pokémon... e lui mi piace un sacco!')
             dopo_cattura = await drop_the_useless(useful_drop,useless_drop,lvl_100_drop)
         return dopo_cattura , name, pokemon_u
     

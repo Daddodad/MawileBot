@@ -22,7 +22,8 @@ from poke_lib import (
                         automatic_card_reader, calculate_bonus, calculate_bonus_via_types, 
                         get_power, poke_cell, similar_pokemon_name,
                         get_poke_bst, EMOJI_TO_TYPE,
-                        check_alt_forms, next_gym, poke_cell_gym, generate_all_types_combo
+                        check_alt_forms, next_gym, poke_cell_gym, generate_all_types_combo,
+                        get_casella
                       )
 
 
@@ -271,7 +272,18 @@ async def filter_team(team, remove_100=False, nilb = False, data = {"lvlup": Fal
                 utilities.append((poke, lvl, u, await get_power(poke, lvl), index+1))
         utilities.sort(key=lambda x: x[2], reverse=True)
 
-        num_utils = max(1, 6 - len(lvl_100))
+        # NEL PRIMO-SECONDO PERCORSO, PUNTA A 4 POKEMON FORTI
+        # NEL TERZO-QUARTO, ESPANDI A 5
+        # NEL QUINTO-SESTO, ESPANDI A 6
+        casella = get_casella()
+        if casella <=12:
+            num_utils = 4
+        elif casella <=24:
+            num_utils = 5
+        else: 
+            num_utils = 6
+
+        num_utils = max(1, num_utils - len(lvl_100))
         num_utils = min(num_utils, len(utilities))
 
         if nilb:
