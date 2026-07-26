@@ -111,6 +111,13 @@ async def pokemon_utility(pokemon,lvl, data = {"lvlup": False, "catch": False, "
 
     utility = utility_bst * 0.7 + utility_lvl * 0.3
 
+    try:
+        # bonus fully evo all'inizio
+        current_bst = await get_poke_bst(fully_evo)
+        if current_bst > 450 and get_casella()<=12:
+            utility+=1
+    except Exception as e:
+        print(f"Error calculating bonus fullyevo: {e}")
 
     try:
         utility += await malus_inallenabile(pokemon,lvl, **data)
