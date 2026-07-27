@@ -511,17 +511,20 @@ async def gym_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
         await safe_edit(query, f"Il moltiplicatore della palestra sarà {temp_multi}\n\nAttendi per la foto...")
         image_path, numero_pokemon = await poke_gym(str(chat_id), gym_type)
+        result_send = None
         try:
             cap = f"Ecco il risultato del tuo team contro la palestra {gym_type.capitalize()}.\n\n🔴: batte la fascia media ({enemy_powers[0]})\n🟡: batte la fascia forte ({enemy_powers[2]})\n🟢: batte la fascia molto forte ({enemy_powers[4]})"
             with open(image_path, 'rb') as image_file:
-                await safe_photo(context, chat_id, image_file, caption=cap)
-        except:
-            with open(image_path, 'rb') as image_file:
-                image = Image.open(image_file)
-                if numero_pokemon == 1:
-                    await safe_send(context, chat_id, "Hai un solo pokémon in squadra... L'immagine è troppo piccola per essere visualizzata correttamente.")
-                else:
-                    await safe_send(context, chat_id, "Qualcosa è andato storto con l'invio dell'immagine...")
+                photo_bytes = image_file.read()
+            result_send = await safe_photo(context, chat_id, photo_bytes, caption=cap)
+        except Exception as e:
+            print('Errore invio foto gym:', e)
+
+        if result_send is None:
+            if numero_pokemon == 1:
+                await safe_send(context, chat_id, "Hai un solo pokémon in squadra... L'immagine è troppo piccola per essere visualizzata correttamente.")
+            else:
+                await safe_send(context, chat_id, "Qualcosa è andato storto con l'invio dell'immagine...")
         return ConversationHandler.END
 
 async def choose_pokemon_gym(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
