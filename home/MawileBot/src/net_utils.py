@@ -15,7 +15,7 @@ Usage:
 
 import asyncio
 import logging
-from telegram.error import NetworkError, TimedOut, RetryAfter
+from telegram.error import NetworkError, TimedOut, RetryAfter, BadRequest
 
 logger = logging.getLogger(__name__)
 
@@ -23,21 +23,22 @@ MAX_RETRIES = 4
 BASE_DELAY  = 1.5   # seconds; doubles on each attempt (1.5 → 3 → 6 → 12)
 
 
-async def _retry(coro_fn):
+async def _retry(coro_fn, context=None):
     """
-    Execute an async callable with exponential back-off retries.
-    coro_fn must be a zero-argument async callable (lambda or functools.partial).
-    Returns the result on success, or None if all retries fail.
+    context: optional description of the call (e.g. the text/kwargs being sent),
+    used only for logging when something fails.
     """
     delay = BASE_DELAY
     for attempt in range(MAX_RETRIES):
         try:
             return await coro_fn()
         except RetryAfter as e:
-            # Telegram told us to wait — honour it exactly.
             wait = e.retry_after + 1
             logger.warning("RetryAfter: sleeping %ss (attempt %d)", wait, attempt + 1)
             await asyncio.sleep(wait)
+        except BadRequest as e:
+            logger.error("BadRequest (not retrying): %s | context=%r", e, context)
+            return None
         except (NetworkError, TimedOut) as e:
             if attempt < MAX_RETRIES - 1:
                 logger.warning("NetworkError (attempt %d/%d): %s — retrying in %.1fs",
@@ -45,7 +46,8 @@ async def _retry(coro_fn):
                 await asyncio.sleep(delay)
                 delay *= 2
             else:
-                logger.error("NetworkError after %d attempts: %s — giving up.", MAX_RETRIES, e)
+                logger.error("NetworkError after %d attempts: %s — giving up. context=%r",
+                             MAX_RETRIES, e, context)
     return None
 
 
@@ -63,10 +65,12 @@ async def safe_reply_sticker(update, sticker, **kwargs):
     return await _retry(lambda: update.message.reply_sticker(sticker, **kwargs))
 
 
-async def safe_send(context, chat_id, text, **kwargs):
+async def safe_send(context_obj, chat_id, text, **kwargs):
     """context.bot.send_message with retries."""
-    return await _retry(lambda: context.bot.send_message(chat_id=chat_id, text=text, **kwargs))
-
+    return await _retry(
+        lambda: context_obj.bot.send_message(chat_id=chat_id, text=text, **kwargs),
+        context={"chat_id": chat_id, "text": text[:200], "kwargs": kwargs}
+    )
 
 async def safe_photo(context, chat_id, photo, caption=None, **kwargs):
     """context.bot.send_photo with retries."""
@@ -98,8 +102,10 @@ async def safe_edit(query, text=None, **kwargs):
     If text is None, calls edit_message_reply_markup instead.
     """
     if text is None:
-        return await _retry(lambda: query.edit_message_reply_markup(**kwargs))
-    return await _retry(lambda: query.edit_message_text(text=text, **kwargs))
+        return await _retry(lambda: query.edit_message_reply_markup(**kwargs),
+                             context={"kwargs": kwargs})
+    return await _retry(lambda: query.edit_message_text(text=text, **kwargs),
+                         context={"text": text, "kwargs": kwargs})
 
 
 async def safe_effective_reply(update, text, **kwargs):
