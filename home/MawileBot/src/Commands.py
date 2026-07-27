@@ -422,7 +422,7 @@ async def show_command_help(update: Update, context: ContextTypes.DEFAULT_TYPE) 
         text += """\n\n L'opzione "Team vs Team" è lo state\-of\-the\-art di una lega a carte scoperte\. Comunica la squadra che strai fronteggiando, e ti darà informazioni su come battere il tuo nemico\!"""
     elif query.data == HELP_GYM:
         text = """Il comando /gym ti permette di testare la tua squadra contro le varie palestre del gioco\. Puoi selezionare una palestra e fronteggiarla con la tua squadra\.\n\nAltrimenti, la funzione "Testa un Pokémon" ti permette di controllare la prestazione di un Pokémon contro varie palestre senza doverlo aggiungere al Team\. Geniale, no\?""" \
-        """Con "Testa un Pokémon", la risposta che otterrai è di questo tipo:\n\n Per ogni palestra:\n - Typing: ~: Avg.bonus >: Min.bonus <: Max.bonus (Min. Lvl)\n⬜: Losses, 🟥: nWins, 🟨: nWins, 🟩: nWins"""
+        """Con "Testa un Pokémon", la risposta che otterrai è di questo tipo:\n\n Per ogni palestra:\n \- Typing: \~: Avg\.bonus \>: Min\.bonus \<: Max\.bonus \(Min\. Lvl\)\n⬜: Losses, 🟥: nWins, 🟨: nWins, 🟩: nWins"""
     elif query.data == HELP_TEAM:
         text = "Il comando /team ti permette di creare e modificare a tuo piacimento la tua squadra, così da poterla testare contro palestre, selvatici, allenatori e altri giocatori\."
     elif query.data == HELP_DEX:
