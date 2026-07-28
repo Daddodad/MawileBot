@@ -582,7 +582,7 @@ def extract_first_number(cell):
     except:
         return None
 
-async def poke_lega_team_team(chat_id, enemies):
+async def poke_lega_team_team(chat_id, enemies, only_bonus = False):
     with open(ENV_PATH+'/secret_player_data.json', 'r') as file:
         priv_data = json.load(file)
     team = [[pokemon[0], await get_power(pokemon[0], pokemon[1])] for pokemon in priv_data[chat_id]["team"] if pokemon[0]]
@@ -1502,7 +1502,17 @@ def create_pokemon_collage(df, type = 'gym', path=None, enemy_powers=None):
                     except:
                         bg = (0,0,0)
 
-                text_image = create_text_image(df[column_name][index], bg,(False,False,False,False))  # White text on blue
+                if power != 0:
+                    text_image = create_text_image(df[column_name][index], bg,(False,False,False,False))  # White text on blue
+                else:
+                    bonus = int(df[column_name][index].split(' ')[1].replace('(','').replace(')',''))
+                    if bonus == 0:
+                        bg = (255,255,255)
+                    elif bonus > 0:
+                        bg = (99, 238, 99)
+                    elif bonus < 0:
+                        bg = (255, 111, 111)               
+                    text_image = create_text_image(df[column_name][index], bg,(False,False,False,False))  # White text on blue
                 collage_image.paste(text_image, position)
 
     # Save or return the final collage image

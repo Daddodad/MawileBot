@@ -416,10 +416,10 @@ async def show_command_help(update: Update, context: ContextTypes.DEFAULT_TYPE) 
         f'Per esempio, rispondigli "{random_pokemon(troll = False)} {random_pokemon(troll = False)}" per sapere chi la spunterebbe\.' \
         '\nIl moltiplicatore usato dipende dalla giornata, ma può essere cambiato seguendo le istruzioni\.\nE attento a non sbagliare i nomi\.'
     elif query.data == HELP_LEGA:
-        text = "Il comando /lega da varie possibilità utili per combattimenti in endgame\." \
-        """\n\nL'opzione "Migliori Pokémon" restituisce il matchup dei pokemon con 500\+ BST con loro stessi\. In pratica, mostra quanto ogni pokemon \(tra i più forti\)""" \
-        " sia avvantaggiato o svantaggiato dal proprio typing\."
-        text += """\n\n L'opzione "Team vs Team" è lo state\-of\-the\-art di una lega a carte scoperte\. Comunica la squadra che strai fronteggiando, e ti darà informazioni su come battere il tuo nemico\!"""
+        text = "Il comando /lega da varie possibilità utili per combattimenti in endgame\."
+        text += """\n\n L'opzione "Team vs Indizio" è calcola la sorte del tuo team contro un indizio\. Comunica il pokèmon che stai affrontando, compreso di potenza, e ti darà informazioni su come battere il tuo nemico\!"""
+        text += """\n\n L'opzione "Team vs Team" è lo state\-of\-the\-art di una lega a carte scoperte\. Comunica la squadra che stai fronteggiando, e ti darà informazioni su come battere il tuo nemico\!"""
+        text += """\n\n L'opzione "Team vs Team (Bonus)" è utile per quantificare l'utilità del tuo team\. Comunica una lista di Pokémon\, e ti dirà tutti i bonus e malus del tuo team\!"""
     elif query.data == HELP_GYM:
         text = """Il comando /gym ti permette di testare la tua squadra contro le varie palestre del gioco\. Puoi selezionare una palestra e fronteggiarla con la tua squadra\. La colonna più a destra indica il numero di livelli necessari per avere almeno tutte le caselle di colore rosso\.\n\nAltrimenti, la funzione "Testa un Pokémon" ti permette di controllare la prestazione di un Pokémon contro varie palestre senza doverlo aggiungere al Team\. Geniale, no\?""" \
         """\nCon "Testa un Pokémon", la risposta che otterrai è di questo tipo:\n\n Per ogni palestra:\n \- Typing: \~: Avg\.bonus \>: Min\.bonus \<: Max\.bonus \(Min\. Lvl\)\n⬜: Losses, 🟥: nWins, 🟨: nWins, 🟩: nWins"""
@@ -427,7 +427,7 @@ async def show_command_help(update: Update, context: ContextTypes.DEFAULT_TYPE) 
         text = "Il comando /team ti permette di creare e modificare a tuo piacimento la tua squadra, così da poterla testare contro palestre, selvatici, allenatori e altri giocatori\."
     elif query.data == HELP_DEX:
         r = random_pokemon(troll=False)
-        text = f'La sintassi del comando /dex è, per esempio, "/dex {r}"'
+        text = f'La sintassi del comando /dex è, per esempio, "/dex {r}\n\nIl primo messaggio ti dà informazioni sul Pokémon\. Il secondo (se arriva), ti dice la \% di matchup favorevoli contro i top100 pokemon non leggendari per bst esistenti\."'
     elif query.data == HELP_FIGHT:
         text = "Il comando /fight ti permette di testare la tua squadra contro le prossime ostilità\." \
         """\n\nL'opzione "Selvatici" permette di mettere alla prova la tua squadra contro dei Pokémon della potenza pari alla prossima casella cattura \(nel caso ci si trovi su una, quella attuale\)\.""" \
@@ -1036,12 +1036,13 @@ def get_cell_handlers():
 
 # ---------------------------------------------------------------------------- LEGA ----------------------------------------------------------------------------------
 
-READ_POKEMON, READ_TRAINER, COUNTER_READ_POKEMON, READ_LEGA_TEAM, READ_LEGA_INDIZIO = range(5)
+READ_POKEMON, READ_TRAINER, COUNTER_READ_POKEMON, READ_LEGA_TEAM, READ_LEGA_INDIZIO, READ_LEGA_TEAM_BONUS = range(6)
 
 BEST_POKEMON = 'best_pokemon'
 ONE_VS_TEAM = 'one_vs_team'
 LEGA_COUNTERS = 'lega_counters'
 LEGA_TEAM_VS_TEAM = 'lega_team_vs_team'
+LEGA_TEAM_VS_TEAM_BONUS = 'lega_team_vs_team_bonus'
 LEGA_INDIZIO = 'lega_indizio'
 CHANGE_MULT = "change_mult"
 REDO_LEGA_SINGLE = "redo_lega"
@@ -1059,7 +1060,9 @@ async def lega_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
             pass
         keyboard = [
             [InlineKeyboardButton("Team vs Indizio", callback_data=LEGA_INDIZIO)],
-            [InlineKeyboardButton("Team vs Team", callback_data=LEGA_TEAM_VS_TEAM)]
+            [InlineKeyboardButton("Team vs Team", callback_data=LEGA_TEAM_VS_TEAM)],
+            [InlineKeyboardButton("Team vs Team (Bonus)", callback_data=LEGA_TEAM_VS_TEAM_BONUS)]
+
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
         await safe_reply(update, "Scegli cosa calcolare:", reply_markup=reply_markup)
@@ -1094,6 +1097,13 @@ async def lega_button_callback(update: Update, context: ContextTypes.DEFAULT_TYP
         await safe_edit(query, text)
         context.user_data.clear()
         return READ_LEGA_TEAM
+    elif query.data == LEGA_TEAM_VS_TEAM_BONUS:
+        text = 'Dimmi una lista di pokemon. La struttura deve essere come nel seguente esempio:\n'
+        for i in range(random.randint(3, 9)):
+            text += f'\n{random_pokemon(troll=True)}'
+        await safe_edit(query, text)
+        context.user_data.clear()
+        return READ_LEGA_TEAM_BONUS
     elif query.data == LEGA_INDIZIO:
         text = "Dimmi il Pokèmon e la sua potenza, come nell'esempio:\n\n"
         rpoke = random_pokemon(troll=True)
@@ -1181,7 +1191,31 @@ def parse_pokemon_message(message):
         pokemon_list.append([name, level])
     return pokemon_list
 
+def parse_pokemon_message(message):
+    parts = message.strip().split()
+    pokemon_list = []
+    for i in range(0, len(parts)):
+        pokemon_list.append([parts[i], 0])
+    return pokemon_list
+    
 async def lega_team_main(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    context.user_data['counter_team'] = parse_pokemon_message(update.message.text)
+
+    for pokeee, liv in context.user_data['counter_team']:
+        if poke_exist(pokeee) == False:
+            await safe_reply(update, f'Mh... Sei sicuro {pokeee} esista? Prova a ripetermi la lista...')
+            return READ_LEGA_TEAM
+
+    await safe_reply(update, 'Buona fortuna per lo scontro. E attendi il prossimo messaggio...')
+
+    chat_id = update.effective_chat.id
+    image_path = await poke_lega_team_team(str(chat_id), context.user_data['counter_team'])
+    cap = "Ecco il risultato del tuo team contro la squadra che mi hai inviato"
+    with open(image_path, 'rb') as image_file:
+        await safe_photo(context, chat_id, image_file, caption=cap)
+    return ConversationHandler.END
+
+async def lega_team_main_bonus(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     context.user_data['counter_team'] = parse_pokemon_message(update.message.text)
 
     for pokeee, liv in context.user_data['counter_team']:
@@ -1279,6 +1313,7 @@ def get_lega_conversation_handler():
             ],
             COUNTER_READ_POKEMON: [MessageHandler(filters.TEXT & ~filters.COMMAND, counter_main)],
             READ_LEGA_TEAM: [MessageHandler(filters.TEXT & ~filters.COMMAND, lega_team_main)],
+            READ_LEGA_TEAM_BONUS: [MessageHandler(filters.TEXT & ~filters.COMMAND, lega_team_main_bonus)],
             READ_LEGA_INDIZIO: [MessageHandler(filters.TEXT & ~filters.COMMAND, lega_indizio_main)],
         },
         fallbacks=[
