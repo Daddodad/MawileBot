@@ -1187,9 +1187,13 @@ def parse_pokemon_message(message):
     pokemon_list = []
     for i in range(0, len(parts), 2):
         name = parts[i]
-        level = int(parts[i + 1])
+        level_str = parts[i + 1] if i + 1 < len(parts) else None
+        try:
+            level = int(level_str)
+        except (TypeError, ValueError):
+            return None, level_str  # signal failure + the offending token
         pokemon_list.append([name, level])
-    return pokemon_list
+    return pokemon_list, None
 
 def parse_pokemon_message_bonus(message):
     parts = message.strip().split()
@@ -1199,13 +1203,17 @@ def parse_pokemon_message_bonus(message):
     return pokemon_list
     
 async def lega_team_main(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    context.user_data['counter_team'] = parse_pokemon_message(update.message.text)
+    parsed, bad_token = parse_pokemon_message(update.message.text)
+    if parsed is None:
+        await safe_reply(update, f'Mh... Ma sei sicuro {bad_token} sia un numero? Prova a ripetermi la lista...')
+        return READ_LEGA_TEAM
+    context.user_data['counter_team'] = parsed
 
     for pokeee, liv in context.user_data['counter_team']:
         if poke_exist(pokeee) == False:
             await safe_reply(update, f'Mh... Sei sicuro {pokeee} esista? Prova a ripetermi la lista...')
             return READ_LEGA_TEAM
-
+        
     await safe_reply(update, 'Buona fortuna per lo scontro. E attendi il prossimo messaggio...')
 
     chat_id = update.effective_chat.id
@@ -1221,7 +1229,7 @@ async def lega_team_main_bonus(update: Update, context: ContextTypes.DEFAULT_TYP
     for pokeee, liv in context.user_data['counter_team']:
         if poke_exist(pokeee) == False:
             await safe_reply(update, f'Mh... Sei sicuro {pokeee} esista? Prova a ripetermi la lista...')
-            return READ_LEGA_TEAM
+            return READ_LEGA_TEAM_BONUS
 
     await safe_reply(update, 'Buona fortuna per lo scontro. E attendi il prossimo messaggio...')
 
@@ -1304,7 +1312,7 @@ async def lega_single_button_handler(update: Update, context: ContextTypes.DEFAU
 
 def get_lega_conversation_handler():
     return ConversationHandler(
-        entry_points=[CallbackQueryHandler(lega_button_callback, pattern=f"^{BEST_POKEMON}|{LEGA_COUNTERS}|{ONE_VS_TEAM}|{LEGA_TEAM_VS_TEAM}|{LEGA_INDIZIO}$")],
+        entry_points=[CallbackQueryHandler(lega_button_callback, pattern=f"^({BEST_POKEMON}|{LEGA_COUNTERS}|{ONE_VS_TEAM}|{LEGA_TEAM_VS_TEAM}|{LEGA_TEAM_VS_TEAM_BONUS}|{LEGA_INDIZIO})$")],
         states={
             READ_TRAINER: [MessageHandler(filters.TEXT & ~filters.COMMAND, lega_single_get_trainer)],
             READ_POKEMON: [
