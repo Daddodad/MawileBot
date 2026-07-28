@@ -1502,15 +1502,15 @@ def create_pokemon_collage(df, type = 'gym', path=None, enemy_powers=None):
                     except:
                         bg = (0,0,0)
 
-                if power != 0:
+                if int(power) != 0:
                     text_image = create_text_image(df[column_name][index], bg,(False,False,False,False))  # White text on blue
                 else:
                     bonus = int(df[column_name][index].split(' ')[1].replace('(','').replace(')',''))
-                    if bonus == 0:
+                    if int(bonus) == 0:
                         bg = (255,255,255)
-                    elif bonus > 0:
+                    elif int(bonus) > 0:
                         bg = (99, 238, 99)
-                    elif bonus < 0:
+                    elif int(bonus) < 0:
                         bg = (255, 111, 111)               
                     text_image = create_text_image(df[column_name][index], bg,(False,False,False,False))  # White text on blue
                 collage_image.paste(text_image, position)

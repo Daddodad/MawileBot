@@ -1191,7 +1191,7 @@ def parse_pokemon_message(message):
         pokemon_list.append([name, level])
     return pokemon_list
 
-def parse_pokemon_message(message):
+def parse_pokemon_message_bonus(message):
     parts = message.strip().split()
     pokemon_list = []
     for i in range(0, len(parts)):
@@ -1216,7 +1216,7 @@ async def lega_team_main(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     return ConversationHandler.END
 
 async def lega_team_main_bonus(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    context.user_data['counter_team'] = parse_pokemon_message(update.message.text)
+    context.user_data['counter_team'] = parse_pokemon_message_bonus(update.message.text)
 
     for pokeee, liv in context.user_data['counter_team']:
         if poke_exist(pokeee) == False:
