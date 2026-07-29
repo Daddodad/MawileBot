@@ -98,6 +98,7 @@ async def pokemon_utility(pokemon,lvl, data = {"lvlup": False, "catch": False, "
     fully_evo = await find_evo_at_level_x(pokemon, 100)
     max_bst = await get_poke_bst(fully_evo)
     if fully_evo in (await load_x_from_json("mega")):
+        print('Mega BOOST!')
         max_bst = await get_poke_bst(fully_evo+'-mega')
         #print(f"BST di Mega {await find_evo_at_level_x(pokemon, 100)} a livello 100: {max_bst}")
 
@@ -110,25 +111,35 @@ async def pokemon_utility(pokemon,lvl, data = {"lvlup": False, "catch": False, "
     utility_lvl = lvl/10
 
     utility = utility_bst * 0.7 + utility_lvl * 0.3
-
+    print('base utility = ', utility)
     try:
         # bonus fully evo all'inizio
-        current_bst = await get_poke_bst(fully_evo)
-        if current_bst > 450 and get_casella()<=12:
+        current_bst = await get_poke_bst(pokemon)
+        if current_bst > 450 and get_casella()<=6:
+            print("bonus fullyevo = +1")
             utility+=1
+        elif current_bst > 450 and get_casella()<=12:
+            print("bonus fullyevo = +0.5")
+            utility+=0.5
     except Exception as e:
         print(f"Error calculating bonus fullyevo: {e}")
 
     try:
-        utility += await malus_inallenabile(pokemon,lvl, **data)
+        malus_in = await malus_inallenabile(pokemon,lvl, **data)
+        utility += malus_in
+        print('malus inallenabile = ', malus_in)
     except Exception as e:
         print(f"Error calculating malus inallenabile: {e}")
+
     try:
-        utility += await next_gym_bonus(pokemon, lvl, **data)
+        next_gym_b = await next_gym_bonus(pokemon, lvl, **data)
+        utility += next_gym_b
+        print('next gym bonus = ', next_gym_b)
     except Exception as e:
         print(f"Error calculating next gym bonus: {e}")
-        
+
     return round(utility, 2)  # 0-10 scale (except bonus next gym)
+
 async def malus_inallenabile(pokemon, lvl, **event):
 
     if event.get("catch") == False:
@@ -167,7 +178,7 @@ async def next_gym_bonus(pokemon, lvl, **event):
     gym_type,multiplier,casella_gym = (await next_gym())
     _, _, enemy_powers, multiplier, _ = poke_cell_gym(casella_gym-1)
     low_power = min(enemy_powers)
-    print(f"Next gym type: {gym_type}, casella: {casella_gym}, low power: {low_power}, multiplier: {multiplier}")
+    #print(f"Next gym type: {gym_type}, casella: {casella_gym}, low power: {low_power}, multiplier: {multiplier}")
 
     # if the average win percentage of the current team is already above 66%, we can skip the bonus calculation for a new catch (don't really need to)
     if event.get("catch") == True:
@@ -192,11 +203,11 @@ async def next_gym_bonus(pokemon, lvl, **event):
      
     power = round(await get_poke_bst(pokemon)*lvl/100)
     win_perc = win_perc_over_gym(gym_type, low_power, pokemon, power, multiplier)
-    print(f"{pokemon}: Win percentage against next gym: {win_perc*100:.2f}%")
+    #print(f"{pokemon}: Win percentage against next gym: {win_perc*100:.2f}%")
 
     power_plus5 = round(await get_poke_bst(await find_evo_at_level_x(pokemon, lvl+5))*(lvl+5)/100)
     win_perc_plus5 = win_perc_over_gym(gym_type, low_power, pokemon, power_plus5, multiplier)
-    print(f"{pokemon} + 5lvl: Win percentage against next gym: {win_perc_plus5*100:.2f}%")
+    #print(f"{pokemon} + 5lvl: Win percentage against next gym: {win_perc_plus5*100:.2f}%")
 
     if win_perc_plus5 > 0.70:
         if win_perc < 0.70 and event.get("lvlup") == True:
