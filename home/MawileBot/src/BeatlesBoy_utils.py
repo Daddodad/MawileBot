@@ -276,48 +276,98 @@ async def lega_utility(team, enemy_team, first_time = False):
         team_u.sort(key=lambda x: x[2], reverse=True)   
     return team_u
 
-
-async def filter_team(team, remove_100=False, nilb = False, data = {"lvlup": False, "catch": False, "drop": False}):
-    if team:
-        utilities = []
-        lvl_100 = []
-        for index, (poke, lvl) in enumerate(team):
-            #poke = await similar_pokemon_name(poke.lower() , r = False) #Sarchiapone
-            u = await pokemon_utility(poke,lvl, data = data)
-            if remove_100 and lvl == 100:
-                lvl_100.append((poke, lvl, u, await get_power(poke, lvl), index+1))
-            else:
-                utilities.append((poke, lvl, u, await get_power(poke, lvl), index+1))
-        utilities.sort(key=lambda x: x[2], reverse=True)
-
-        # NEL PRIMO-SECONDO PERCORSO, PUNTA A 4 POKEMON FORTI
-        # NEL TERZO-QUARTO, ESPANDI A 5
-        # NEL QUINTO-SESTO, ESPANDI A 6
-        casella = get_casella()
-        if casella <=12:
-            num_utils = 4
-        elif casella <=24:
-            num_utils = 5
-        else: 
-            num_utils = 6
-
-        num_utils = max(1, num_utils - len(lvl_100))
-        num_utils = min(num_utils, len(utilities))
-
-        if nilb:
-            try:
-                _, enemy_powers, capopalestra_powers, multiplier, _ = await poke_cell(1)
-            except:
-                _, enemy_powers, capopalestra_powers, multiplier, _ = await poke_cell(0)
-            for i in range(num_utils):
-                p = utilities[i]
-                if p[3] < enemy_powers[0]:
-                    utilities[i] = (p[0], p[1], p[2] + 10, p[3], p[4])
-            utilities.sort(key=lambda x: x[2], reverse=True)
-
-        return utilities[:num_utils], utilities[num_utils:], lvl_100
-    else:
+async def filter_team(team, remove_100=False, nilb=False, data_filter={"lvlup": False, "drop": False}):
+    if not team:
         return [], [], []
+
+    # 1) Trova i pokemon DELLA TUA SQUADRA, SENZA ALCUN BONUS!
+    utilities_clean = []
+    lvl_100 = []
+    for index, (poke, lvl) in enumerate(team):
+        u = await pokemon_utility(poke, lvl, data={"lvlup": False, "catch": False, "drop": False})
+        entry = (poke, lvl, u, await get_power(poke, lvl), index + 1)
+        if remove_100 and lvl == 100:
+            lvl_100.append(entry)
+        else:
+            utilities_clean.append(entry)
+    utilities_clean.sort(key=lambda x: x[2], reverse=True)
+
+    # NEL PRIMO-SECONDO PERCORSO, PUNTA A 4 POKEMON FORTI
+    # NEL TERZO-QUARTO, ESPANDI A 5
+    # NEL QUINTO-SESTO, ESPANDI A 6
+    casella = get_casella()
+    if casella <= 12:
+        num_utils = 4
+    elif casella <= 24:
+        num_utils = 5
+    else:
+        num_utils = 6
+
+    num_utils = max(1, num_utils - len(lvl_100))
+    num_utils = min(num_utils, len(utilities_clean))
+
+    # 2) Seleziona il top-N "di default" (nessun bonus) -> questa e' la base
+    useful_nilb = [e for e in utilities_clean[:num_utils]]  # shallow copy of the slice
+
+    # 3) Applica il nilb SOLO a questi top-N selezionati
+    # Teniamo traccia del delta nilb per indice, cosi' dopo possiamo sommarlo
+    # al delta del bonus senza perdere il valore raw originale.
+    nilb_delta_by_index = {}
+    if nilb:
+        try:
+            _, enemy_powers, capopalestra_powers, multiplier, _ = await poke_cell(1)
+        except Exception:
+            _, enemy_powers, capopalestra_powers, multiplier, _ = await poke_cell(0)
+        for i in range(len(useful_nilb)):
+            p = useful_nilb[i]
+            if p[3] < enemy_powers[0]:
+                nilb_delta_by_index[p[4]] = 10
+                useful_nilb[i] = (p[0], p[1], p[2] + 10, p[3], p[4])
+        useful_nilb.sort(key=lambda x: x[2], reverse=True)
+
+    # 4) Ricalcola le utility su TUTTA la squadra applicando data_filter (bonus)
+    utilities_bonus = []
+    for index, (poke, lvl) in enumerate(team):
+        if remove_100 and lvl == 100:
+            continue
+        u = await pokemon_utility(
+            poke, lvl,
+            data={"lvlup": data_filter['lvlup'], "catch": False, "drop": data_filter['drop']}
+        )
+        utilities_bonus.append((poke, lvl, u, await get_power(poke, lvl), index + 1))
+    utilities_bonus.sort(key=lambda x: x[2], reverse=True)
+
+    # 5) Guarda TUTTI gli elementi (non solo il top-N) e trova quelli la cui utility
+    # e' cambiata per via del bonus (data_filter) rispetto alla versione clean
+    clean_by_index = {e[4]: e for e in utilities_clean}
+    bonus_by_index = {e[4]: e for e in utilities_bonus}
+
+    changed_indices = {
+        idx for idx, bonus_entry in bonus_by_index.items()
+        if idx in clean_by_index and bonus_entry[2] != clean_by_index[idx][2]
+    }
+
+    if changed_indices:
+        # raw + nilb_delta + bonus_delta, cosi' chi prende entrambi i bonus li somma
+        stacked_by_index = {}
+        for idx in changed_indices:
+            raw_entry = clean_by_index[idx]
+            raw = raw_entry[2]
+            nilb_delta = nilb_delta_by_index.get(idx, 0)
+            bonus_delta = bonus_by_index[idx][2] - raw
+            stacked_utility = raw + nilb_delta + bonus_delta
+            stacked_by_index[idx] = (raw_entry[0], raw_entry[1], stacked_utility, raw_entry[3], idx)
+
+        useful_by_index = {e[4]: e for e in useful_nilb}
+        useful_by_index.update(stacked_by_index)  # overwrite existing / add new
+        useful_nilb = list(useful_by_index.values())
+        useful_nilb.sort(key=lambda x: x[2], reverse=True)
+
+    # 6) I rimanenti = utilities_clean meno quelli gia' selezionati
+    final_selected_indices = {e[4] for e in useful_nilb}
+    remaining = [e for e in utilities_clean if e[4] not in final_selected_indices]
+
+    return useful_nilb, remaining, lvl_100
 
 async def extract_pokemon_and_pl(text):
     # Pokémon name (unchanged)

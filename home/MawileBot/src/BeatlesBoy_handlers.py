@@ -457,7 +457,7 @@ async def replies_to_wild_pokemon(event, text, client):
     await event.reply(f"Ho incontrato {pokemon.capitalize()} con PL {pl}.\n\nAspettando la FOTO del team... 20 secondi massimo ⏳")
 
     team = await load_team_and_check_card(event, client)
-    useful, useless, lvl_100 = await filter_team(team, remove_100 = True, nilb = True, data = {"lvlup": True, "catch": False, "drop": False})
+    useful, useless, lvl_100 = await filter_team(team, remove_100 = True, nilb = True, data_filter = {"lvlup": True, "drop": False})
 
     try:
         winning_options = await calculate_winning_options_selvatico(pokemon, pl, useful)
@@ -499,7 +499,7 @@ async def replies_to_pvp(event, text, client):
     n_schierabili = await extract_number_of_pvp_choices(text)
 
     team = await load_team_and_check_card(event, client)
-    useful, useless, lvl_100 = await filter_team(team, remove_100 = True, data = {"lvlup": True, "catch": False, "drop": False})
+    useful, useless, lvl_100 = await filter_team(team, remove_100 = True, data_filter = {"lvlup": True, "drop": False})
     useful.sort( key = lambda x: x[3], reverse=True )  # ordina per power decrescente
     lvl_100.sort( key = lambda x: x[3], reverse=True )  # ordina per power decrescente
     useless.sort( key = lambda x: x[3], reverse=True )  # ordina per power decrescente
@@ -542,7 +542,7 @@ async def replies_to_potenziamento(event, text, client):
     await event.reply(f"Ho incontrato potenziamento coi tipi {tipi}.\n\nAspettando la FOTO del team... 20 secondi massimo ⏳")
 
     team = await load_team_and_check_card(event, client)    
-    useful, useless, lvl_100 = await filter_team(team, remove_100 = True, nilb = True, data = {"lvlup": True, "catch": False, "drop": False})
+    useful, useless, lvl_100 = await filter_team(team, remove_100 = True, nilb = True, data_filter = {"lvlup": True, "drop": False})
     print("useful for potenziamento: ",useful)
     try:
         potenziabili = await calculate_potenziabili(tipi, useful)
@@ -656,9 +656,9 @@ async def replies_to_vittoria(event, text, client):
     await event.reply(f"Vittoria! Catturo o no {name} di livello {level} (utility {pokemon_u})? Decidiamo...")
 
     team = await load_team_from_json_simple()
-    useful, useless, lvl_100 =                   await filter_team(team, remove_100 = False,             data = {"lvlup": False, "catch": False, "drop": False}) # Non tolgo i lvl 100 ! UTILITY PURA!
-    useful_drop, useless_drop, lvl_100_drop =    await filter_team(team, remove_100 = False,             data = {"lvlup": True,  "catch": False, "drop": True})  # Aggiungo un boost ai pokemon che mi servono per la palestra, anche se altrestì inutili!
-    useful_n_100, _u, _100 =                     await filter_team(team, remove_100 = True, nilb = True, data = {"lvlup": True,  "catch": False, "drop": False}) # Tolgo i lvl 100 e aggiungo nilb SOLO per la scelta di distribuzione dei livelli.
+    useful, useless, lvl_100 =                   await filter_team(team, remove_100 = False,             data_filter = {"lvlup": False, "drop": False}) # Non tolgo i lvl 100 ! UTILITY PURA!
+    useful_drop, useless_drop, lvl_100_drop =    await filter_team(team, remove_100 = False,             data_filter = {"lvlup": True,  "drop": True})  # Aggiungo un boost ai pokemon che mi servono per la palestra, anche se altrestì inutili!
+    useful_n_100, _u, _100 =                     await filter_team(team, remove_100 = True, nilb = True, data_filter = {"lvlup": True,  "drop": False}) # Tolgo i lvl 100 e aggiungo nilb SOLO per la scelta di distribuzione dei livelli.
 
     to_return = '0'
     if "te schierato salirà di ben" in text:
@@ -760,7 +760,7 @@ async def replies_to_trainer(event, text, client, is_capopalestra, images = None
 
     team = await load_team_and_check_card(event, client) 
   
-    useful, useless, lvl_100 = await filter_team(team, remove_100 = True, nilb = True, data = {"lvlup": True, "catch": False, "drop": False})
+    useful, useless, lvl_100 = await filter_team(team, remove_100 = True, nilb = True, data_filter = {"lvlup": True, "drop": False})
     useful.sort( key = lambda x: x[2], reverse=False )  # ordina per utility con nilb 
     lvl_100.sort( key = lambda x: x[2], reverse=False )  # ordina per utility con nilb 
     useless.sort( key = lambda x: x[3], reverse=True )  # ordina per power (do i livelli prima al più forte, non prioritizzo gente indietro) 
