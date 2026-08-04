@@ -29,7 +29,7 @@ In generale, nelle situazioni:
 > **CONTRO ALLENATORI**:
 >> Calcola il miglior schieramento percentuale tra gli _USEFUL_. Se uno dei pokemon ha 0% di vincere, aggiunge ad uno ad uno gli USELESS in ordine di utilità e ricalcola finchè nessun pokemon ha 0% o non ha schierato tutti _USEFUL_+_USELESS_. A pari percentuale di vittoria, da priorità ai Pokèmon più utili (Dopo aver applicato _NOBODY IS LEFT BEHIND_).
 >> KNOWN ISSUE: I pokemon che sono utili per le palestre "rubano" slot ai pokemon a cui si applica il nilb. Questo però è inevitabile.
-
+>> FIX: filter team adesso è bella complessa!
 > **CONTRO CAPOPALESTRA**:
 >> Calcola il miglior schieramento percentuale tra gli _USEFUL_. Se non ha il 6-0 assicurato, agginge ad uno ad uno gli _USELESS_ in ordine di utilità e ricalcola. Se non ha il 6-0 assicurato, aggiunge ad uno ad uno i LVL100 in ordine di utilità e ricalcola. A pari percentuale di vittoria, da priorità ai Pokèmon meno potenti, e per ultimi i LVL100 (Seguendo il protocollo _NOBODY IS LEFT BEHIND_).
 
