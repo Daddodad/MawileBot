@@ -761,8 +761,14 @@ async def replies_to_trainer(event, text, client, is_capopalestra, images = None
     team = await load_team_and_check_card(event, client) 
   
     useful, useless, lvl_100 = await filter_team(team, remove_100 = True, nilb = True, data_filter = {"lvlup": True, "drop": False})
-    useful.sort( key = lambda x: x[2], reverse=False )  # ordina per utility con nilb 
-    lvl_100.sort( key = lambda x: x[2], reverse=False )  # ordina per utility con nilb 
+    #useful.sort( key = lambda x: x[2], reverse=False )  # ordina per utility con nilb 
+    useful_good = [x for x in useful if x[2] > 10]
+    useful_random = [x for x in useful if x[2] <= 10]
+    useful_good.sort(key=lambda x: x[2], reverse=True)  
+    if useful_random:
+        random.shuffle(useful_random)
+    useful = useful_good + useful_random
+
     useless.sort( key = lambda x: x[3], reverse=True )  # ordina per power (do i livelli prima al più forte, non prioritizzo gente indietro) 
     print('\n Incontro Selvatici, le squadre sono:\n', "useful", useful, "\nuseless", useless, "\nlvl_100",lvl_100)
     try:
