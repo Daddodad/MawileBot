@@ -1876,6 +1876,7 @@ most_similar_cache = {  'morpeko': ['morpeko-full-belly','morpeko-hangry'],
                         "oricorioflamenco" : "oricorio-baile",
                         "oricorioula" : "oricorio-pau",
                         "oricoriobuyo" : "oricorio-sensu",
+                        "mime" : "mime-jr",
 
                         "grandizanne": "great-tusk",
                         "codaurlante": "scream-tail",
