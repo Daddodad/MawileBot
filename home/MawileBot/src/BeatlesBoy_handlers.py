@@ -671,9 +671,9 @@ async def replies_to_vittoria(event, text, client):
     await event.reply(f"La mia squadra è: {message_utility}")
 
     dopo_cattura = "Non ho capito se catturarlo o no.. Aiuto..."
-    print('\nUseful', useful)
-    print('\nLess useful',useless)
-    print('\nlvl100',lvl_100)
+    #print('\nUseful', useful)
+    #print('\nLess useful',useless)
+    #print('\nlvl100',lvl_100)
 
     if useful:
         less_useful = next(

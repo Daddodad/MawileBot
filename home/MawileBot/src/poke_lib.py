@@ -342,7 +342,8 @@ async def get_poke_bst(pokemon):
     if pokemon.lower() in ["sableye", "mawile", "farfetchd", "unown", "delibird", "luvdisc"]:
         return 445 + bst_bonus
 
-
+    if pokemon.lower() == "cherrim":
+        return 519 + bst_bonus
     if pokemon.lower() == "archeops":
         return 495 + bst_bonus
     if pokemon.lower() == "archen":
