@@ -310,7 +310,7 @@ async def get_poke_bst(pokemon):
         return 469 + bst_bonus
     if pokemon.lower() in ["noctowl", "purugly"]:
         return 467 + bst_bonus
-    if pokemon.lower() in ["sandslash", "venomoth", "seaking", "granbull", "cherrim", "lokix",
+    if pokemon.lower() in ["sandslash", "venomoth", "seaking", "granbull", "lokix",
                            "klawf", "arbok", "liepard", "audino"]:
         return 465 + bst_bonus
     if pokemon.lower() in ["fearow"]:

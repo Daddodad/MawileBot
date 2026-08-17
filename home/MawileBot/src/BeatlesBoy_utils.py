@@ -320,7 +320,7 @@ async def filter_team(team, remove_100=False, nilb=False, data_filter={"lvlup": 
             _, enemy_powers, capopalestra_powers, multiplier, _ = await poke_cell(0)
         for i in range(len(useful_nilb)):
             p = useful_nilb[i]
-            if p[3] < enemy_powers[0]:
+            if p[3] < enemy_powers[1]: # Boosto sopra la mid tier
                 nilb_delta_by_index[p[4]] = 10
                 useful_nilb[i] = (p[0], p[1], p[2] + 10, p[3], p[4])
         useful_nilb.sort(key=lambda x: x[2], reverse=True)
