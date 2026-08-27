@@ -34,7 +34,7 @@ tipi_to_types = {
 
 async def dump_x_in_json(x, x_name):
     json_path = os.path.join(ENV_PATH, "BeatlesBoy_info.json")
-    print(f"Dumping {x_name} to:", json_path)
+    #print(f"Dumping {x_name} to:", json_path)
     with open(json_path, "r", encoding="utf-8") as f:
         data = json.load(f)
     data[x_name] = x
@@ -43,14 +43,14 @@ async def dump_x_in_json(x, x_name):
 
 async def load_x_from_json(x_name):
     json_path = os.path.join(ENV_PATH, "BeatlesBoy_info.json")
-    print(f"Loading {x_name} from:", json_path)
+    #print(f"Loading {x_name} from:", json_path)
     with open(json_path, "r", encoding="utf-8") as f:
         x = (json.load(f))[x_name]
     return x
 
 async def load_team_from_json_simple():
     json_path = os.path.join(ENV_PATH, "BeatlesBoy_info.json")
-    print("Loading team from:", json_path)
+    #print("Loading team from:", json_path)
     with open(json_path, "r", encoding="utf-8") as f:
         team = (json.load(f))["team"]
     return team
@@ -142,8 +142,8 @@ async def pokemon_utility(pokemon,lvl, data = {"lvlup": False, "catch": False, "
 
 async def malus_inallenabile(pokemon, lvl, **event):
 
-    if event.get("catch") == False:
-        return 0
+    # if event.get("catch") == False:
+    #     return 0
 
     try:
         _, enemy_powers, capopalestra_powers, multiplier, _ = await poke_cell(1)
