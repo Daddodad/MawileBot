@@ -42,10 +42,10 @@
     "alakazam",
     "froslass",
     "glalie",
-    "gallade" ,
-    "gardevoir" ,
-    "lucario" ,
-    "meowstic" ,
+    "gallade",
+    "gardevoir",
+    "lucario",
+    "meowstic",
     "victrebell",
     "clefable"
   ],
@@ -55,9 +55,8 @@
   "win_2": false,
   "enemy_team_lega": [],
   "team_lega": [],
-  "clean_up": 122,
+  "clean_up": 127,
   "num_enemies": 4,
-  "catture": [
-  ],
+  "catture": [],
   "battaglie": []
 }
