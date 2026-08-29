@@ -24,8 +24,11 @@ else:
     
 from src.BeatlesBoy_handlers import register_handlers, scheduled_job
 
-SESSION_PATH = os.path.join(BASE_DIR, 'sessions', 'userbot')
-client = TelegramClient(SESSION_PATH, API_ID, API_HASH)
+client = TelegramClient(
+    'home/MawileBot/sessions/userbot',
+    API_ID,
+    API_HASH
+)
 
 async def main():
     await client.start()
