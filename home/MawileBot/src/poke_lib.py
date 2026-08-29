@@ -277,7 +277,7 @@ def add_new_player(update: Update):
     return False
 
 async def get_poke_bst(pokemon):
-    print("\nCalcolando il bst di ", pokemon)
+    #print("\nCalcolando il bst di ", pokemon)
     bst_bonus = 0
     if "-mega" in pokemon:
         pokemon = pokemon.split('-')[0]

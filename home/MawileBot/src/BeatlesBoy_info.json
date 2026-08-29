@@ -1,40 +1,40 @@
 {
   "team": [
     [
-      "delphox",
-      48
+      "monferno",
+      29
     ],
     [
-      "togepi",
+      "abomasnow",
+      45
+    ],
+    [
+      "riolu",
+      30
+    ],
+    [
+      "kirlia",
       21
     ],
     [
-      "eevee",
-      26
+      "absol",
+      24
     ],
     [
-      "skiddo",
-      19
+      "miltank",
+      75
     ],
     [
-      "crabrawler",
+      "dipplin",
+      38
+    ],
+    [
+      "mantyke",
       18
     ],
     [
-      "wailmer",
-      19
-    ],
-    [
-      "electrike",
-      23
-    ],
-    [
-      "bombirdier",
-      19
-    ],
-    [
-      "shinx",
-      20
+      "wimpod",
+      8
     ]
   ],
   "mega": [
@@ -55,7 +55,7 @@
   "win_2": false,
   "enemy_team_lega": [],
   "team_lega": [],
-  "clean_up": 127,
+  "clean_up": 169,
   "num_enemies": 4,
   "catture": [],
   "battaglie": []
