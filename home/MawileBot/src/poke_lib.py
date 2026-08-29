@@ -1,4 +1,11 @@
 import pypokedex as poke
+
+_orig = poke.pokemon.Pokemon._extract_sprites
+@staticmethod
+def _safe_extract_sprites(all_sprites):
+    return _orig({k: v for k, v in all_sprites.items() if "_" in k})
+poke.pokemon.Pokemon._extract_sprites = _safe_extract_sprites
+
 import numpy as np
 import random
 from telegram import Update
@@ -270,6 +277,7 @@ def add_new_player(update: Update):
     return False
 
 async def get_poke_bst(pokemon):
+    print("\nCalcolando il bst di ", pokemon)
     bst_bonus = 0
     if "-mega" in pokemon:
         pokemon = pokemon.split('-')[0]
