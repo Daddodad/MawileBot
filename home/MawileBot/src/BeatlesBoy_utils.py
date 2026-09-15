@@ -89,7 +89,7 @@ async def find_evo_at_level_x(pokemon, level_x):
 
     return pokemon_x
 
-async def pokemon_utility(pokemon,lvl, data = {"lvlup": False, "catch": False, "drop": False}):
+async def pokemon_utility(pokemon,lvl, data = {"lvlup": False, "catch": False, "drop": False}, verbose = False):
     if pokemon is  None:
         return 0
     #TODO: implement a better utility function
@@ -98,12 +98,15 @@ async def pokemon_utility(pokemon,lvl, data = {"lvlup": False, "catch": False, "
     fully_evo = await find_evo_at_level_x(pokemon, 100)
     max_bst = await get_poke_bst(fully_evo)
     if fully_evo in (await load_x_from_json("mega")):
-        print('Mega BOOST!')
+        if verbose:
+            print('Mega BOOST!')
         max_bst = await get_poke_bst(fully_evo+'-mega')
-        #print(f"BST di Mega {await find_evo_at_level_x(pokemon, 100)} a livello 100: {max_bst}")
+        if verbose:
+            print(f"BST di Mega {await find_evo_at_level_x(pokemon, 100)} a livello 100: {max_bst}")
 
     else:
-        #print(f"BST di {await find_evo_at_level_x(pokemon, 100)} a livello 100: {max_bst}")
+        if verbose:
+            print(f"BST di {await find_evo_at_level_x(pokemon, 100)} a livello 100: {max_bst}")
         pass
 
 
@@ -111,15 +114,18 @@ async def pokemon_utility(pokemon,lvl, data = {"lvlup": False, "catch": False, "
     utility_lvl = lvl/10
 
     utility = utility_bst * 0.7 + utility_lvl * 0.3
-    print('base utility = ', utility)
+    if verbose:
+        print('base utility = ', utility)
     try:
         # bonus fully evo all'inizio
         current_bst = await get_poke_bst(pokemon)
         if current_bst > 450 and get_casella()<=6:
-            print("bonus fullyevo = +1")
+            if verbose:
+                print("bonus fullyevo = +1")
             utility+=1
         elif current_bst > 450 and get_casella()<=12:
-            print("bonus fullyevo = +0.5")
+            if verbose:
+                print("bonus fullyevo = +0.5")
             utility+=0.5
     except Exception as e:
         print(f"Error calculating bonus fullyevo: {e}")
@@ -127,14 +133,16 @@ async def pokemon_utility(pokemon,lvl, data = {"lvlup": False, "catch": False, "
     try:
         malus_in = await malus_inallenabile(pokemon,lvl, **data)
         utility += malus_in
-        print('malus inallenabile = ', malus_in)
+        if verbose:
+            print('malus inallenabile = ', malus_in)
     except Exception as e:
         print(f"Error calculating malus inallenabile: {e}")
 
     try:
         next_gym_b = await next_gym_bonus(pokemon, lvl, **data)
         utility += next_gym_b
-        print('next gym bonus = ', next_gym_b)
+        if verbose:
+            print('next gym bonus = ', next_gym_b)
     except Exception as e:
         print(f"Error calculating next gym bonus: {e}")
 

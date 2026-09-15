@@ -773,7 +773,7 @@ async def replies_to_trainer(event, text, client, is_capopalestra, images = None
     print('\n Incontro Selvatici, le squadre sono:\n', "useful", useful, "\nuseless", useless, "\nlvl_100",lvl_100)
     try:
         p_of_victory, best_schieramento = await calculate_best_strategy(useful,enemy_team, enemy_powers, multiplier)
-        if 0 in p_of_victory:   # Si può fare di meglio?
+        if 0 in p_of_victory or len(p_of_victory) < len(enemy_team):   # Si può fare di meglio? / non arrivo manco al numero giusto?
             print('\nprovo a fare di meglio', sum(p_of_victory),'\n')
             new_useful = useful.copy()
             for uls in useless:
@@ -783,7 +783,7 @@ async def replies_to_trainer(event, text, client, is_capopalestra, images = None
                     break
 
         # TODO: migliorare logica di capopalestra (check se il punteggio non migliora, se vengono schierati useful o useless, etc...) 
-        if is_capopalestra and sum(p_of_victory)<600:
+        if is_capopalestra and sum(p_of_victory)<600: # Non serve controllare se ci stanno abbastanza mon, 600 significa 6 mon
             new_useful = useful.copy()
             for uls in useless:
                 new_useful.append(uls)
