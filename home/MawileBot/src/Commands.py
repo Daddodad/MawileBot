@@ -1242,9 +1242,9 @@ async def lega_team_main(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 async def lega_team_main_bonus(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     context.user_data['counter_team'] = await parse_pokemon_message_bonus(update.message.text, update)
 
-    for pokeee, liv in context.user_data['counter_team']:
+    for pokeee, lv_0 in context.user_data['counter_team']:
         if poke_exist(pokeee) == False:
-            await safe_reply(update, f'Mh... Sei sicuro {pokeee} esista? Prova a ripetermi la lista...')
+            await safe_reply(update, f'Mh... Sei sicuro {pokeee} esista davvero? Prova a ripetermi la lista...')
             return READ_LEGA_TEAM_BONUS
 
     await safe_reply(update, 'Buona fortuna per lo scontro. E attendi il prossimo messaggio...')
@@ -1257,11 +1257,11 @@ async def lega_team_main_bonus(update: Update, context: ContextTypes.DEFAULT_TYP
     return ConversationHandler.END
 
 async def lega_indizio_main(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    context.user_data['counter_team'] = await parse_pokemon_message(update.message.tex, update)
+    context.user_data['counter_team'] = await parse_pokemon_message(update.message.text, update)
 
     for pokeee, _ in context.user_data['counter_team']:
         if poke_exist(pokeee) == False:
-            await safe_reply(update, f'Mh... Sei sicuro {pokeee} esista? Prova a ripetermelo..')
+            await safe_reply(update, f'Mh... Sei sicuro {pokeee} esista? Prova a ripetermelo...')
             return READ_LEGA_INDIZIO
         
     for i, [pokeee, powww] in enumerate(context.user_data['counter_team']):
