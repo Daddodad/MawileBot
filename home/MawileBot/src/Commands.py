@@ -1152,10 +1152,16 @@ async def show_main_lega_single_menu(update: Update, context: ContextTypes.DEFAU
         return READ_POKEMON
 
 async def counter_main(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    context.user_data['counter_pokemon'] = update.message.text
+    
+    pokemon_name = update.message.text
+    pokemon = await similar_pokemon_name(pokemon_name.lower())
+    if pokemon.lower() != pokemon_name.lower():
+        await safe_effective_reply(update, f"Assumo che con {pokemon_name} intendessi {pokemon.capitalize()}...")
+    
+    context.user_data['counter_pokemon'] = pokemon
 
-    if poke_exist(context.user_data['counter_pokemon']) == False:
-        await safe_reply(update, f"Mh... Sei sicuro {context.user_data['counter_pokemon']} esista? Prova a ridirmelo...")
+    if poke_exist(pokemon) == False:
+        await safe_reply(update, f"Mh... Sei sicuro {pokemon} esista? Prova a ridirmelo...")
         return COUNTER_READ_POKEMON
 
     await safe_reply(update, 'Il messaggio si legge come:\nPokémon avversario\n(Bonus)\nBST\nCheck se può batterti\nLivello a cui può batterti\n\nAttendi il prossimo messaggio...')
@@ -1182,7 +1188,7 @@ async def counter_main(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         return ConversationHandler.END
 
 
-def parse_pokemon_message(message):
+async def parse_pokemon_message(message, update):
     parts = message.strip().split()
     pokemon_list = []
     for i in range(0, len(parts), 2):
@@ -1192,18 +1198,28 @@ def parse_pokemon_message(message):
             level = int(level_str)
         except (TypeError, ValueError):
             return None, level_str  # signal failure + the offending token
-        pokemon_list.append([name, level])
+
+        poke_name = await similar_pokemon_name(name.lower())
+        if poke_name.lower() != name.lower():
+            await safe_effective_reply(update, f"Assumo che con {name} intendessi {poke_name.capitalize()}...")
+        
+        pokemon_list.append([poke_name, level])
     return pokemon_list, None
 
-def parse_pokemon_message_bonus(message):
+async def parse_pokemon_message_bonus(message, update):
     parts = message.strip().split()
     pokemon_list = []
     for i in range(0, len(parts)):
-        pokemon_list.append([parts[i], 0])
+
+        poke_name = await similar_pokemon_name(parts[i].lower())
+        if poke_name.lower() != parts[i].lower():
+            await safe_effective_reply(update, f"Assumo che con {parts[i]} intendessi {poke_name.capitalize()}...")
+
+        pokemon_list.append([poke_name, 0])
     return pokemon_list
     
 async def lega_team_main(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    parsed, bad_token = parse_pokemon_message(update.message.text)
+    parsed, bad_token = await parse_pokemon_message(update.message.text, update)
     if parsed is None:
         await safe_reply(update, f'Mh... Ma sei sicuro {bad_token} sia un numero? Prova a ripetermi la lista...')
         return READ_LEGA_TEAM
@@ -1224,7 +1240,7 @@ async def lega_team_main(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     return ConversationHandler.END
 
 async def lega_team_main_bonus(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    context.user_data['counter_team'] = parse_pokemon_message_bonus(update.message.text)
+    context.user_data['counter_team'] = await parse_pokemon_message_bonus(update.message.text, update)
 
     for pokeee, liv in context.user_data['counter_team']:
         if poke_exist(pokeee) == False:
@@ -1241,7 +1257,7 @@ async def lega_team_main_bonus(update: Update, context: ContextTypes.DEFAULT_TYP
     return ConversationHandler.END
 
 async def lega_indizio_main(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    context.user_data['counter_team'] = parse_pokemon_message(update.message.text)
+    context.user_data['counter_team'] = await parse_pokemon_message(update.message.tex, update)
 
     for pokeee, _ in context.user_data['counter_team']:
         if poke_exist(pokeee) == False:
