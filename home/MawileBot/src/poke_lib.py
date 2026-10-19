@@ -890,10 +890,11 @@ def poke_evolve_not_async(chat_id,pokemon,lvl):
 
     return pokemon, evo_lvl
 
+#ritorna il livello a cui si evolve
 def poke_evo_level(chat_id,pokemon):
     with open(ENV_PATH+"/secret_player_data.json", 'r') as f:
         secret = json.load(f)
-    route = secret[chat_id]["route"]
+    route = secret[str(chat_id)]["route"]
 
     with open(ENV_PATH+f"/{route}_evo_file.json", 'r') as ef:
         evo_dict = json.load(ef)
@@ -911,6 +912,33 @@ def poke_evo_level(chat_id,pokemon):
             lvl= evo_dict[pokemon][-1][0]
 
     return lvl
+
+def poke_level_range(chat_id, pokemon, max_level=100):
+    """
+    Ritorna (livello_min, livello_max): i livelli a cui il Pokémon compare con
+    questo nome, coerenti con poke_check_if_evo_not_async.
+    """
+    with open(ENV_PATH + "/secret_player_data.json", 'r') as f:
+        secret = json.load(f)
+    route = secret[str(chat_id)]["route"]
+
+    with open(ENV_PATH + f"/{route}_evo_file.json", 'r') as ef:
+        evo_dict = json.load(ef)
+
+    entry = evo_dict.get(pokemon.lower())
+    lvl_min, lvl_max = 1, max_level
+
+    if entry:
+        stage = entry[0]
+        if stage == "base":
+            lvl_max = entry[1][0] - 1
+        elif stage == "mid":
+            lvl_min = entry[1][0] + 1
+            lvl_max = entry[2][0] - 1
+        elif stage == "last":
+            lvl_min = entry[-1][0] + 1
+
+    return lvl_min, lvl_max
 
 async def poke_cell_specific(route,cell,encounters):
     casella = get_casella()

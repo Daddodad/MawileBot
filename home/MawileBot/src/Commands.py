@@ -1,4 +1,5 @@
 import os
+import re
 import ast
 import asyncio
 import time
@@ -14,6 +15,7 @@ from telegram.ext import CommandHandler, ContextTypes, MessageHandler, filters, 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
 from telegram.error import BadRequest
 import pypokedex as poke
+import numpy as np
 
 from net_utils import (
     safe_reply, safe_reply_sticker, safe_send, safe_photo,
@@ -48,7 +50,7 @@ from poke_lib import calculate_bonus_answer, random_pokemon, random_player, get_
 from poke_lib import add_new_player, poke_lega_single, poke_lega_all, poke_gym, poke_exist, poke_dex1, poke_dex2, poke_cell
 from poke_lib import add_route,check_route, poke_check_if_evo, poke_fight, poke_counter, has_a_team, poke_gym_test, poke_lega_team_team
 from poke_lib import automatic_card_reader, gym_types, gym_cell, poke_cell_gym, load_fonts,randomly_shiny, similar_pokemon_name
-from poke_lib import has_lega_ended, get_poke_bst
+from poke_lib import has_lega_ended, get_poke_bst, poke_level_range
 
 # ----------------------------------------------------------------- GENERIC COMMANDS --------------------------------------------------------------------------------
 class UnauthorizedAccess(Exception):
@@ -417,7 +419,7 @@ async def show_command_help(update: Update, context: ContextTypes.DEFAULT_TYPE) 
         '\nIl moltiplicatore usato dipende dalla giornata, ma può essere cambiato seguendo le istruzioni\.\nE attento a non sbagliare i nomi\.'
     elif query.data == HELP_LEGA:
         text = "Il comando /lega da varie possibilità utili per combattimenti in endgame\."
-        text += """\n\n L'opzione "Team vs Indizio" è calcola la sorte del tuo team contro un indizio\. Comunica il pokèmon che stai affrontando, compreso di potenza, e ti darà informazioni su come battere il tuo nemico\!"""
+        text += """\n\n L'opzione "Team vs Indizio" è calcola la sorte del tuo team contro un indizio\. Comunica il Pokémon che stai affrontando, compreso di potenza, e ti darà informazioni su come battere il tuo nemico\!"""
         text += """\n\n L'opzione "Team vs Team" è lo state\-of\-the\-art di una lega a carte scoperte\. Comunica la squadra che stai fronteggiando, e ti darà informazioni su come battere il tuo nemico\!"""
         text += """\n\n L'opzione "Team vs Team (Bonus)" è utile per quantificare l'utilità del tuo team\. Comunica una lista di Pokémon\, e ti dirà tutti i bonus e malus del tuo team\!"""
     elif query.data == HELP_GYM:
@@ -449,7 +451,7 @@ async def show_command_help(update: Update, context: ContextTypes.DEFAULT_TYPE) 
         '\n\nSableyeBot ha 3 comandi segreti\. Alcuni possono usarli solo chi voglio io\. Però magari ci sono delle sorprese\.\.\.'\
         '\nUpdate: Sono /spy, /ping\_all, /card e /add\_meme\. Me li scordo, quindi li scrivo qui dove non li vedrà mai nessuno\.'\
         "\n\n\n*FAQ*\n\n"\
-        "*Q: Come si chiamano Pokèmon regionali e forme alternative?*\n*A:* Pokèmon\-forma; Per esempio, Arcanine\-hisui, Morpeko\-hangry o Tauros\-paldea\-aqua\-breed\. Usate sempre i nomi inglesi\.\n\n"\
+        "*Q: Come si chiamano Pokémon regionali e forme alternative?*\n*A:* Pokémon\-forma; Per esempio, Arcanine\-hisui, Morpeko\-hangry o Tauros\-paldea\-aqua\-breed\. Usate sempre i nomi inglesi\.\n\n"\
         "*Q: Come si chiama Farfetch\'d?*\n*A:* Farfetchd\n\n"\
         "*Q: Come si chiama Mega Sableye? E Mega Sableye Y?*\n*A:* Sableye\-mega e Sableye\-mega\-y\n\n"
     else:
@@ -1036,7 +1038,7 @@ def get_cell_handlers():
 
 # ---------------------------------------------------------------------------- LEGA ----------------------------------------------------------------------------------
 
-READ_POKEMON, READ_TRAINER, COUNTER_READ_POKEMON, READ_LEGA_TEAM, READ_LEGA_INDIZIO, READ_LEGA_TEAM_BONUS = range(6)
+READ_POKEMON, READ_TRAINER, COUNTER_READ_POKEMON, READ_LEGA_TEAM, READ_LEGA_INDIZIO, READ_LEGA_TEAM_BONUS, READ_LEGA_POWER = range(7)
 
 BEST_POKEMON = 'best_pokemon'
 ONE_VS_TEAM = 'one_vs_team'
@@ -1044,6 +1046,7 @@ LEGA_COUNTERS = 'lega_counters'
 LEGA_TEAM_VS_TEAM = 'lega_team_vs_team'
 LEGA_TEAM_VS_TEAM_BONUS = 'lega_team_vs_team_bonus'
 LEGA_INDIZIO = 'lega_indizio'
+LEGA_POWER = 'lega_power'
 CHANGE_MULT = "change_mult"
 REDO_LEGA_SINGLE = "redo_lega"
 MULT_PREFIX = "mult_"
@@ -1061,8 +1064,8 @@ async def lega_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         keyboard = [
             [InlineKeyboardButton("Team vs Indizio", callback_data=LEGA_INDIZIO)],
             [InlineKeyboardButton("Team vs Team", callback_data=LEGA_TEAM_VS_TEAM)],
-            [InlineKeyboardButton("Team vs Team (Bonus)", callback_data=LEGA_TEAM_VS_TEAM_BONUS)]
-
+            [InlineKeyboardButton("Team vs Team (Bonus)", callback_data=LEGA_TEAM_VS_TEAM_BONUS)],
+            [InlineKeyboardButton("Analisi Potenza", callback_data=LEGA_POWER)],
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
         await safe_reply(update, "Scegli cosa calcolare:", reply_markup=reply_markup)
@@ -1105,14 +1108,30 @@ async def lega_button_callback(update: Update, context: ContextTypes.DEFAULT_TYP
         context.user_data.clear()
         return READ_LEGA_TEAM_BONUS
     elif query.data == LEGA_INDIZIO:
-        text = "Dimmi il Pokèmon e la sua potenza, come nell'esempio:\n\n"
+        text = "Dimmi il Pokémon e la sua potenza, come nell'esempio:\n\n"
         rpoke = random_pokemon(troll=True)
         maxrpokepow = await get_poke_bst(rpoke)
         text += f'\n{rpoke} {random.randint(1, maxrpokepow)}'
         await safe_edit(query, text)
         context.user_data.clear()
         return READ_LEGA_INDIZIO
-
+    elif query.data == LEGA_POWER:
+        text = "In base alla potenza totale di un giocatore e le potenze dei suoi Pokémon, cerca di otterere le potenze della squadra. \nA seconda delle infomazioni date e della squadra del giocatore, i risultati potrebbero variare.\nProvare con dei guess può portare a risultati sbagliati, visto che si basa su numeri precisi.\n⚠️ WARNING potrebbe avere problemi con stadi base e mega non evolute (boh, ci penserò...).\n\nPer funzionare, inviare il prossimo messaggio al bot in risposta, compilando i '?' con le informazioni note."
+        await safe_edit(query, text)
+        context.user_data.clear()
+        power_text = "Potenza Totale: [?]\n\n" \
+        "Poké1: [?] Pow: [?]\n" \
+        "Poké2: [?] Pow: [?]\n" \
+        "Poké3: [?] Pow: [?]\n" \
+        "Poké4: [?] Pow: [?]\n" \
+        "Poké5: [?] Pow: [?]\n" \
+        "Poké6: [?] Pow: [?]\n" \
+        "Poké7: [?] Pow: [?]\n" \
+        "Poké8: [?] Pow: [?]\n" \
+        "Poké9: [?] Pow: [?]\n"
+        await safe_reply(update, power_text)
+        return READ_LEGA_POWER
+    
 async def lega_single_get_trainer(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.user_data['enemy_trainer'] = update.message.text
     with open(ENV_PATH+'/public_player_data.json', 'r') as file:
@@ -1257,7 +1276,12 @@ async def lega_team_main_bonus(update: Update, context: ContextTypes.DEFAULT_TYP
     return ConversationHandler.END
 
 async def lega_indizio_main(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    context.user_data['counter_team'] = await parse_pokemon_message(update.message.text, update)
+    
+    parsed, bad_token = await parse_pokemon_message(update.message.text, update)
+    if parsed is None:
+        await safe_reply(update, f'Mh... Ma sei sicuro {bad_token} sia un numero? Prova a ripetermelo...')
+        return READ_LEGA_INDIZIO
+    context.user_data['counter_team'] = parsed
 
     for pokeee, _ in context.user_data['counter_team']:
         if poke_exist(pokeee) == False:
@@ -1294,6 +1318,163 @@ async def lega_indizio_main(update: Update, context: ContextTypes.DEFAULT_TYPE) 
         await safe_photo(context, chat_id, image_file, caption=cap)
     return ConversationHandler.END
 
+async def parse_lega_power_message(message, update):
+    max_pokemon = 9
+    errors = []
+
+    parsed = {'Potenza Totale': None}
+    for i in range(1, max_pokemon + 1):
+        parsed[f'Poké{i}'] = None
+        parsed[f'Pow{i}'] = None
+
+    def to_int(value, label):
+        value = value.strip()
+        if value in ('', '?'):
+            return None
+        digits = re.sub(r'[.,\s]', '', value)  # accetta 1.234 / 1,234 / 1 234
+        if not digits.isdigit():
+            errors.append(f"{label}: '{value}' non è un numero valido.")
+            return None
+        return int(digits)
+
+    total_re = re.compile(r'^\s*Potenza\s+Totale\s*:\s*\[?(.*?)\]?\s*$', re.IGNORECASE)
+    row_re = re.compile(
+        r'^\s*Pok[eé]\s*(\d+)\s*:\s*\[?(.*?)\]?\s*Pow\s*:\s*\[?(.*?)\]?\s*$',
+        re.IGNORECASE,
+    )
+
+    rows = []  # (nome, potenza o None), solo righe con il nome compilato
+    for line in message.splitlines():
+        m = total_re.match(line)
+        if m:
+            parsed['Potenza Totale'] = to_int(m.group(1), 'Potenza Totale')
+            continue
+
+        m = row_re.match(line)
+        if not m:
+            continue
+
+        idx = int(m.group(1))
+        if not 1 <= idx <= max_pokemon:
+            errors.append(f"Poké{idx}: indice fuori range (1-{max_pokemon}).")
+            continue
+
+        name = m.group(2).strip()
+        name = None if name in ('', '?') else name
+        power = to_int(m.group(3), f'Pow{idx}')
+
+        if name is None:
+            if power is not None:
+                errors.append(f"Poké{idx}: hai indicato la potenza ma non il Pokémon.")
+            continue  # riga lasciata vuota: la ignoro
+        rows.append((name, power))
+
+    # Compatto le righe compilate in 1..n (nessun buco negli indici)
+    n_pokemon = len(rows)
+    for k, (name, power) in enumerate(rows, start=1):
+        new_p = await similar_pokemon_name(name.lower())
+        if new_p.lower() != name.lower():
+                await safe_reply(update, f"Assumo che con {name} intendessi {new_p.capitalize()}...")
+        parsed[f'Poké{k}'] = new_p
+        parsed[f'Pow{k}'] = power
+
+    # --- Validazioni ---
+    total = parsed['Potenza Totale']
+    if total is None:
+        errors.append("Manca la Potenza Totale.")
+    if n_pokemon == 0:
+        errors.append("Non hai indicato nessun Pokémon.")
+    else:
+        known = [p for _, p in rows if p]
+        if len(known) == n_pokemon:
+            errors.append("Tutte le potenze sono già note, non c'è nulla da calcolare.")
+        if total is not None and sum(known) > total:
+            errors.append("La somma delle potenze note supera la Potenza Totale.")
+
+    return parsed, n_pokemon, errors
+
+def livelli_compatibili(power_tables, target):
+    """
+    power_tables: lista di dict {livello: potenza}, uno per Pokémon incognito
+    target: potenza totale da raggiungere dai soli Pokémon incogniti
+    Ritorna: lista di liste di livelli compatibili (None se nessuna soluzione).
+    Assume potenze >= 0, così posso scartare le somme > target.
+    """
+    n = len(power_tables)
+
+    fwd = [{0}]
+    for tab in power_tables:
+        fwd.append({s + p for s in fwd[-1] for p in tab.values() if s + p <= target})
+    if target not in fwd[-1]:
+        return None
+
+    bwd = [None] * n + [{0}]
+    for j in range(n - 1, -1, -1):
+        bwd[j] = {s + p for s in bwd[j + 1] for p in power_tables[j].values() if s + p <= target}
+
+    risultato = []
+    for j, tab in enumerate(power_tables):
+        ok = [
+            lvl for lvl, p in tab.items()
+            if any((target - p - s) in bwd[j + 1] for s in fwd[j])
+        ]
+        risultato.append(ok)
+    return risultato
+
+async def lega_power_main(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    chat_id = str(update.effective_chat.id)
+    parsed, n_pokemon, errors = await parse_lega_power_message(update.message.text, update)
+    if errors:
+        await safe_reply(update, "⚠️ Ci sono dei problemi nel messaggio:\n" + "\n".join(f"- {e}" for e in errors))
+        return
+    
+    # --- Range di livelli per i Pokémon senza potenza ---
+    pokemon_non_noti = []
+    check_text = "Range dei Pokémon senza potenza specificata:\n\n"
+
+    for i in range(1, n_pokemon + 1):
+        if parsed[f'Pow{i}']:
+            continue
+        pokemon_non_noti.append(i)
+        poke_i = parsed[f'Poké{i}']
+        livello_min, livello_max = poke_level_range(chat_id, poke_i)
+        parsed[f'Min{i}'] = livello_min
+        parsed[f'Max{i}'] = livello_max
+        check_text += f"{poke_i}: [{livello_min} - {livello_max}]\n"
+
+    check_text += "\nAdesso provo a fare i calcoli..."
+    await safe_reply(update, check_text)
+
+    # --- Potenza dei Pokémon noti ---
+    starting_power = sum(parsed[f'Pow{i}'] for i in range(1, n_pokemon + 1) if parsed[f'Pow{i}'])
+
+    # --- Tabelle potenza per livello (get_power chiamata una volta sola per livello) ---
+    ranges = [range(parsed[f'Min{i}'], parsed[f'Max{i}'] + 1) for i in pokemon_non_noti]
+    power_tables = [
+        {lvl: await get_power(parsed[f'Poké{i}'], lvl) for lvl in r}
+        for i, r in zip(pokemon_non_noti, ranges)
+    ]
+
+    # --- Tutte le combo di livelli che danno la potenza totale giusta ---
+    target = parsed['Potenza Totale'] - starting_power
+    compat = livelli_compatibili(power_tables, target)
+
+    if compat is None:
+        await safe_reply(update, "Nessuna combinazione di livelli corrisponde alla potenza totale.")
+        return
+
+    final_text = "Ecco i range di potenze possibili per i Pokémon non noti:\n\n"
+    for j, i in enumerate(pokemon_non_noti):
+        lvls = compat[j]
+        pw = [power_tables[j][l] for l in lvls]
+        final_text += (
+            f"{parsed[f'Poké{i}']}: livelli [{min(lvls)} - {max(lvls)}] → "
+            f"potenza [{min(pw)} - {max(pw)}]\n"
+        )
+    await safe_reply(update, final_text)
+
+            
+
 async def show_command_lega_single(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.callback_query
     await query.answer()
@@ -1328,7 +1509,7 @@ async def lega_single_button_handler(update: Update, context: ContextTypes.DEFAU
 
 def get_lega_conversation_handler():
     return ConversationHandler(
-        entry_points=[CallbackQueryHandler(lega_button_callback, pattern=f"^({BEST_POKEMON}|{LEGA_COUNTERS}|{ONE_VS_TEAM}|{LEGA_TEAM_VS_TEAM}|{LEGA_TEAM_VS_TEAM_BONUS}|{LEGA_INDIZIO})$")],
+        entry_points=[CallbackQueryHandler(lega_button_callback, pattern=f"^({BEST_POKEMON}|{LEGA_COUNTERS}|{ONE_VS_TEAM}|{LEGA_TEAM_VS_TEAM}|{LEGA_TEAM_VS_TEAM_BONUS}|{LEGA_INDIZIO}|{LEGA_POWER})$")],
         states={
             READ_TRAINER: [MessageHandler(filters.TEXT & ~filters.COMMAND, lega_single_get_trainer)],
             READ_POKEMON: [
@@ -1339,6 +1520,7 @@ def get_lega_conversation_handler():
             READ_LEGA_TEAM: [MessageHandler(filters.TEXT & ~filters.COMMAND, lega_team_main)],
             READ_LEGA_TEAM_BONUS: [MessageHandler(filters.TEXT & ~filters.COMMAND, lega_team_main_bonus)],
             READ_LEGA_INDIZIO: [MessageHandler(filters.TEXT & ~filters.COMMAND, lega_indizio_main)],
+            READ_LEGA_POWER: [MessageHandler(filters.TEXT & ~filters.COMMAND, lega_power_main)],
         },
         fallbacks=[
             CommandHandler("cancel", cancel),
@@ -1703,12 +1885,12 @@ async def team_update(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
                                 await safe_reply(update, "⚠️ WARNING: Non sono sicuro di star leggendo bene questo nome... Ma se ho ragione, non c'è alcun problema!")
                                 print_warning = 1
                             if print_error == 0:
-                                await safe_reply(update, "🔞 ERROR: Secondo i miei calcoli, la potenza di questo Pokèmon è diversa... Questo mi farà sicuramente sballare i conti, tienilo a mente!")
+                                await safe_reply(update, "🔞 ERROR: Secondo i miei calcoli, la potenza di questo Pokémon è diversa... Questo mi farà sicuramente sballare i conti, tienilo a mente!")
                                 print_error = 1
                         if y == '01':
                             message_text += " (🔞)"
                             if print_error == 0:
-                                await safe_reply(update, "🔞 ERROR: Secondo i miei calcoli, la potenza di questo Pokèmon è diversa... Questo mi farà sicuramente sballare i conti, tienilo a mente!")
+                                await safe_reply(update, "🔞 ERROR: Secondo i miei calcoli, la potenza di questo Pokémon è diversa... Questo mi farà sicuramente sballare i conti, tienilo a mente!")
                                 print_error = 1
                         message_text += f' lvl {x[1]}\n'
                 if 'Sableye' in message_text:

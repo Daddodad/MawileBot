@@ -57,12 +57,12 @@ async def _retry(coro_fn, context=None):
 
 async def safe_reply(update, text, **kwargs):
     """update.message.reply_text with retries."""
-    return await _retry(lambda: update.message.reply_text(text, **kwargs))
+    return await _retry(lambda: update.effective_message.reply_text(text, **kwargs))
 
 
 async def safe_reply_sticker(update, sticker, **kwargs):
     """update.message.reply_sticker with retries."""
-    return await _retry(lambda: update.message.reply_sticker(sticker, **kwargs))
+    return await _retry(lambda: update.effective_message.reply_sticker(sticker, **kwargs))
 
 
 async def safe_send(context_obj, chat_id, text, **kwargs):
